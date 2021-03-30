@@ -13,20 +13,20 @@ class SearchCurrency
     private var imageUrl : String
     private var name : String
     private var symbol : String
-    private var number : String
+    private var marketCapRank : NSNumber
     
-    init(id: String, imageUrl: String, name: String, symbol: String, number: String)
+    init(id: String, imageUrl: String, name: String, symbol: String, marketCapRank : NSNumber)
     {
         self.id = id
         self.imageUrl = imageUrl
         self.name = name
         self.symbol = symbol
-        self.number = number
+        self.marketCapRank = marketCapRank
     }
     
     func getId() -> String {return id}
     func getImageUrl() -> String {return imageUrl}
     func getName() -> String {return name}
     func getSymbol() -> String {return symbol}
-    func getNumber() -> String{return number}
+    func getMarketCapRank() -> NSNumber {return marketCapRank}
 }
