@@ -1,0 +1,6 @@
+framework module Pods_Kriptofoni_KriptofoniUITests {
+  umbrella header "Pods-Kriptofoni-KriptofoniUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
