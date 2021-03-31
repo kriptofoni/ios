@@ -145,7 +145,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     func getMostIncIn24(page: Int)
     {
-        print(String(self.searchCurrencyArray.count) + "LOG")
+        print(String(self.searchCurrencyArray.count) + "LOhG")
         var copyArray = self.searchCurrencyArray
         
         if copyArray.count > 5500
