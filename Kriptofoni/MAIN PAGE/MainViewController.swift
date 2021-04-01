@@ -23,16 +23,17 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Currency]();var mostDecIn24H = [Currency]();var mostIncIn7D = [Currency]();var mostDecIn7D = [Currency]();var currencyArray = [Currency]()
     var searchCurrencyArray = [SearchCurrency](); var searchActiveArray = [SearchCurrency]()
-    var coinNumber = [String : Int]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0
     var tableViewPage = 1
     let currentCurrencySymbol = "$"
     var searchActive = false
+    var timer: Timer?
 
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        appStartingControls()
         addSwipeGesture()
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -48,15 +49,138 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         segmentedView.underlineSelected = true
         segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(MainViewController.segmentSelected(sender:)), for: .valueChanged)
-        getSearchArray()
-        getCoins(page: tableViewPage)
-        
         
     }
     
+   
+    
+    @objc func update()
+    {
+        getCoins(page: tableViewPage)
+        getSearchArray()
+    }
+    
+    
+    func appStartingControls()
+    {
+        getCoins(page: tableViewPage)
+        if CoreData.isEmpty()
+        {
+            print("CORE DATA EMPTY")
+            getSearchArray()
+            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        }
+        else
+        {
+            print("CORE DATA IS NOT EMPTY")
+            self.searchCurrencyArray = CoreData.getCurrencies()
+            getCoinsFor24(page: 1, type: "INC")
+            getCoinsFor24(page: 1, type: "DEC")
+            update()
+            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            
+        }
+    }
+    func getSearchArray()
+    {
+        let myGroup = DispatchGroup()
+        for n in 1...27
+        {
+            myGroup.enter()
+            coinGecko.getCoinMarkets(vs_currency: "usd", order: "id_asc", per_page: 250, page: n, sparkline: false, priceChangePercentage: "24h,7d", index: n) {(result) in
+                self.searchCurrencyArray.append(contentsOf: result)
+                DispatchQueue.main.async{self.tableView.reloadData()}
+                myGroup.leave()
+            }
+            onFailure: {print("Could not download from api")}
+        }
+        myGroup.notify(queue: .main)
+        {
+            self.getCoinsFor24(page: 1, type: "INC")
+            self.getCoinsFor24(page: 1, type: "DEC")
+            if CoreData.isEmpty()
+            {
+                for curr in self.searchCurrencyArray
+                {
+                    CoreData.createCurrency(currency: curr)
+                }
+            }
+            else
+            {
+                CoreData.deleteAll()
+                for curr in self.searchCurrencyArray
+                {
+                    CoreData.createCurrency(currency: curr)
+                }
+            }
+        }
+    }
+    
+    
+    //Gets coins from api
+    func getCoins(page : Int)
+    {
+        let emptyHashMap = [String : Int]()
+        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap ) { (result) in
+            self.currencyArray.append(contentsOf: result)
+            DispatchQueue.main.async{self.tableView.reloadData()}
+        }
+        onFailure: {print("Could not download from api")}
+    }
+    
+    func getCoinsFor24(page: Int, type : String)
+    {
+        var copyArray = self.searchCurrencyArray
+        var coinNumber = [String : Int]()
+        if copyArray.count > 5500
+        {
+            var newString = ""
+            if type == "INC"
+            {
+                copyArray = copyArray.sorted(by: {
+                    $0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue
+                })
+                
+            }
+            else
+            {
+                copyArray = copyArray.sorted(by: {
+                    $0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue
+                })
+            }
+            for m in 0...49
+            {
+                newString += copyArray[m].getId() + ","
+                print(type + copyArray[m].getPriceChangePercantage24H().stringValue + "LOGLOGLOG" + copyArray[m].getName())
+                coinNumber[copyArray[m].getId()] = m + 1
+            }
+            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber) { (result) in
+                
+                if type == "INC"
+                {
+                    self.mostIncIn24H.append(contentsOf: result)
+                    self.mostIncIn24H = self.mostIncIn24H.sorted(by: {
+                        $0.getCount() < $1.getCount()
+                    })
+                }
+                else
+                {
+                    self.mostDecIn24H.append(contentsOf: result)
+                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {
+                        $0.getCount() < $1.getCount()
+                    })
+                }
+                print(String(self.mostIncIn24H.count) + "COUNT1")
+                print(String(self.mostDecIn24H.count) + "COUNT2")
+                DispatchQueue.main.async{self.tableView.reloadData()}
+                
+                
+            }
+            onFailure: {print("Could not download from api")}
+        }
+    }
     
 
-    
     
     
     
@@ -89,8 +213,23 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if !searchActive
         {
+            var cellArrayGetIndex =  Currency()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
-            let cellArrayGetIndex = self.currencyArray[indexPath.row]
+            switch tableViewPosition {
+            case 0:
+                 cellArrayGetIndex = self.currencyArray[indexPath.row]
+            case 1:
+                 cellArrayGetIndex = self.mostIncIn24H[indexPath.row]
+            case 2:
+                 cellArrayGetIndex = self.mostDecIn24H[indexPath.row]
+                
+            case 3:
+                 cellArrayGetIndex = self.currencyArray[indexPath.row]
+            case 4:
+                 cellArrayGetIndex = self.currencyArray[indexPath.row]
+            default:
+                print("HATA")
+            }
             let url = URL(string: cellArrayGetIndex.getIconViewUrl())
             cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
             cell.name.text = cellArrayGetIndex.getName()
@@ -118,60 +257,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         
     }
-    
-    func getSearchArray()
-    {
-        for n in 1...27
-        {
-            //print(String(n) + "LOGLOG" )
-            coinGecko.getCoinMarkets(vs_currency: "usd", order: "id_asc", per_page: 250, page: n, sparkline: false, priceChangePercentage: "24h,7d", index: n) {(result) in
-                self.searchCurrencyArray.append(contentsOf: result)
-                DispatchQueue.main.async{self.tableView.reloadData()}
-                
-            }
-            onFailure: {print("Could not download from api")}
-        }
-    }
-    
-    func getCoins(page : Int)
-    {
-        var emptyHashMap = [String : Int]()
-        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap ) { (result) in
-            self.currencyArray.append(contentsOf: result)
-            DispatchQueue.main.async{self.tableView.reloadData()}
-        }
-        onFailure: {print("Could not download from api")}
-    }
-    
-    func getMostIncIn24(page: Int)
-    {
-        print(String(self.searchCurrencyArray.count) + "LOhG")
-        var copyArray = self.searchCurrencyArray
-        
-        if copyArray.count > 5500
-        {
-            var newString = ""
-            copyArray = copyArray.sorted(by: {
-                $0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue
 
-            })
-            for m in 0...49
-            {
-                newString += copyArray[m].getId() + ","
-                print(copyArray[m].getPriceChangePercantage24H().stringValue + "LOGLOGLOG" + copyArray[m].getName())
-                coinNumber[copyArray[m].getId()] = m + 1
-            }
-            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber) { (result) in
-                self.mostIncIn24H.append(contentsOf: result)
-                self.mostIncIn24H = self.mostIncIn24H.sorted(by: {
-                    $0.getCount() < $1.getCount()
-                })
-                print(self.mostIncIn24H)
-                DispatchQueue.main.async{self.tableView.reloadData()}
-            }
-            onFailure: {print("Could not download from api")}
-        }
-    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
@@ -185,6 +271,31 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
  
+    
+    
+    /// Pushs the necessary array to table view according to segmented control
+    @objc func segmentSelected(sender:ScrollableSegmentedControl)
+    {
+        print("Segment at index \(sender.selectedSegmentIndex)  selected")
+        switch sender.selectedSegmentIndex
+        {
+        case 0:
+            tableViewPosition = 0
+        case 1:
+            tableViewPosition = 1
+            print("COUNT12" + String(self.mostIncIn24H.count))
+        case 2:
+            tableViewPosition = 2
+            print("COUNT12" + String(self.mostDecIn24H.count))
+        case 3:
+            tableViewPosition = 3
+        case 4:
+            tableViewPosition = 4
+        default:
+            break
+        }
+        self.tableView.reloadData()
+    }
     
     @IBAction func searchButtonClicked(_ sender: Any)
     {
@@ -271,28 +382,22 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
        }
     
     
-    /// Pushs the necessary array to table view according to segmented control
-    @objc func segmentSelected(sender:ScrollableSegmentedControl)
-    {
-        print("Segment at index \(sender.selectedSegmentIndex)  selected")
-        switch sender.selectedSegmentIndex
-        {
-        case 0:
-            tableViewPosition = 0
-        case 1:
-            tableViewPosition = 1
-            getMostIncIn24(page: 1)
-        case 2:
-            tableViewPosition = 2
-        case 3:
-            tableViewPosition = 3
-        case 4:
-            tableViewPosition = 4
-        default:
-            break
-        }
-        self.tableView.reloadData()
-    }
+   
     
+
+}
+
+extension DispatchQueue {
+
+    static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
+        DispatchQueue.global(qos: .background).async {
+            background?()
+            if let completion = completion {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
+                    completion()
+                })
+            }
+        }
+    }
 
 }

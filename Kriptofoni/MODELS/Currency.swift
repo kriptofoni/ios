@@ -30,6 +30,17 @@ class Currency
         self.shortening = shortening
     }
     
+    
+    init() {
+        self.id = ""
+        self.count = 0
+        self.iconViewUrl = ""
+        self.name = ""
+        self.percent = 0
+        self.change = 0
+        self.price = 0
+        self.shortening = ""
+    }
     func getId() -> String{return id}
     func getCount() -> Int{return count}
     func getIconViewUrl() -> String{return iconViewUrl}

@@ -31,6 +31,18 @@ class SearchCurrency
         self.priceChangePercentage7D = priceChangePercentage7D
     }
     
+    init()
+    {
+        self.id = ""
+        self.imageUrl = ""
+        self.name = ""
+        self.symbol = ""
+        self.marketCapRank = 0
+        self.priceChange24H = 0
+        self.priceChangePercentage24H = 0
+        self.priceChangePercentage7D = 0
+    }
+    
     func getId() -> String {return id}
     func getImageUrl() -> String {return imageUrl}
     func getName() -> String {return name}
@@ -39,4 +51,13 @@ class SearchCurrency
     func getPriceChange24() -> NSNumber {return priceChange24H}
     func getPriceChangePercantage24H() -> NSNumber {return priceChangePercentage24H}
     func getPriceChangePercantage7D() -> NSNumber {return priceChangePercentage7D}
+    
+    func setId(id : String){self.id = id}
+    func setImageUrl(imageUrl : String){self.imageUrl = imageUrl}
+    func setName(name : String){self.name = name}
+    func setSymbol(symbol : String){self.symbol = symbol}
+    func setMarketCapRank(marketCapRank : NSNumber){self.marketCapRank = marketCapRank}
+    func setPriceChange24H(priceChange24H : NSNumber) {self.priceChange24H = priceChange24H}
+    func setPriceChangePercentage24H(priceChangePercentage24H : NSNumber) {self.priceChangePercentage24H = priceChangePercentage24H}
+    func setPriceChangePercentage7D(priceChangePercentage7D : NSNumber) {self.priceChangePercentage7D = priceChangePercentage7D}
 }
