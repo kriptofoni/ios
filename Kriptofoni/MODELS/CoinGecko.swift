@@ -59,10 +59,10 @@ class CoinGecko
                                 {
                                     if let image = jsonElement["image"] as? String
                                     {
-                                         let marketCapRank = (jsonElement["market_cap_rank"] as? NSNumber) ?? 100000000000
-                                         let priceChange24H = (jsonElement["price_change_24h"] as? NSNumber) ?? 0
-                                         let priceChangePercentage24H = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber) ?? 0
-                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0
+                                         let marketCapRank = (jsonElement["market_cap_rank"] as? NSNumber) ?? 100000000000 as NSNumber
+                                         let priceChange24H = (jsonElement["price_change_24h"] as? NSNumber) ?? 0 as NSNumber
+                                         let priceChangePercentage24H = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber) ?? 0 as NSNumber
+                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
                                          if symbol == "wet"
                                          {
                                             print("AVİİİİİ" + priceChangePercentage24H.stringValue)
@@ -89,7 +89,7 @@ class CoinGecko
         task.resume()
     }
     
-    func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], completionBlock: @escaping ([Currency]) -> Void,onFailure: () -> Void) -> Void
+    func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Currency]) -> Void,onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
@@ -102,7 +102,8 @@ class CoinGecko
             URLQueryItem(name: "per_page", value: String(per_page)),
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "sparkline", value: String(sparkline)),
-            URLQueryItem(name: "ids", value: ids)
+            URLQueryItem(name: "ids", value: ids),
+            URLQueryItem(name: "price_change_percentage", value: priceChangePercentage)
         ]
         var request = URLRequest(url: (components?.url)!)
         request.httpMethod = "GET"
@@ -135,15 +136,16 @@ class CoinGecko
                                     {
                                         let change = (jsonElement["price_change_24h"] as? NSNumber) ?? 0 as NSNumber
                                         let currentPrice = (jsonElement["current_price"] as? NSNumber) ?? 0 as NSNumber
-                                        let percent = (jsonElement["price_change_percentage_24h"] as? NSNumber)  ?? 0 as NSNumber
+                                        let percent = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber)  ?? 0 as NSNumber
+                                        let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
                                         if hashMap.isEmpty
                                         {
-                                            let currency = Currency(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol)
+                                            let currency = Currency(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D)
                                             array.append(currency)
                                         }
                                         else
                                         {
-                                            let currency = Currency(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol)
+                                            let currency = Currency(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D)
                                             array.append(currency)
                                         }
                                         

@@ -33,7 +33,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        appStartingControls()
+        //appStartingControls()
         addSwipeGesture()
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -49,17 +49,18 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         segmentedView.underlineSelected = true
         segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(MainViewController.segmentSelected(sender:)), for: .valueChanged)
-        
+        appStartingControls()
     }
     
    
-    
     @objc func update()
     {
         getCoins(page: tableViewPage)
-        getSearchArray()
+        getCoinsFor24(page: 1, type: "INC")
+        getCoinsFor24(page: 1, type: "DEC")
+        getCoinsFor7(page: 1, type: "INC")
+        getCoinsFor7(page: 1, type: "DEC")
     }
-    
     
     func appStartingControls()
     {
@@ -68,19 +69,19 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         {
             print("CORE DATA EMPTY")
             getSearchArray()
-            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            update()
+            //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
         else
         {
             print("CORE DATA IS NOT EMPTY")
             self.searchCurrencyArray = CoreData.getCurrencies()
-            getCoinsFor24(page: 1, type: "INC")
-            getCoinsFor24(page: 1, type: "DEC")
+            print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT1")
             update()
-            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
-            
+            timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
     }
+    
     func getSearchArray()
     {
         let myGroup = DispatchGroup()
@@ -96,13 +97,12 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         myGroup.notify(queue: .main)
         {
-            self.getCoinsFor24(page: 1, type: "INC")
-            self.getCoinsFor24(page: 1, type: "DEC")
             if CoreData.isEmpty()
             {
                 for curr in self.searchCurrencyArray
                 {
                     CoreData.createCurrency(currency: curr)
+                     
                 }
             }
             else
@@ -113,6 +113,11 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     CoreData.createCurrency(currency: curr)
                 }
             }
+            print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT2")
+            self.getCoinsFor24(page: 1, type: "INC")
+            self.getCoinsFor24(page: 1, type: "DEC")
+            self.getCoinsFor7(page: 1, type: "INC")
+            self.getCoinsFor24(page: 1, type: "DEC")
         }
     }
     
@@ -121,7 +126,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func getCoins(page : Int)
     {
         let emptyHashMap = [String : Int]()
-        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap ) { (result) in
+        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h_7d" ) { (result) in
             self.currencyArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
         }
@@ -132,55 +137,91 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     {
         var copyArray = self.searchCurrencyArray
         var coinNumber = [String : Int]()
-        if copyArray.count > 5500
+        if copyArray.count > 6000
         {
             var newString = ""
             if type == "INC"
             {
-                copyArray = copyArray.sorted(by: {
-                    $0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue
-                })
-                
+                self.mostIncIn24H.removeAll(keepingCapacity: false)
+                copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue})
             }
-            else
+            else if type == "DEC"
             {
-                copyArray = copyArray.sorted(by: {
-                    $0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue
-                })
+                self.mostDecIn24H.removeAll(keepingCapacity: false)
+                copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue})
+                print(copyArray)
             }
             for m in 0...49
             {
                 newString += copyArray[m].getId() + ","
-                print(type + copyArray[m].getPriceChangePercantage24H().stringValue + "LOGLOGLOG" + copyArray[m].getName())
+                print(type + copyArray[m].getPriceChangePercantage24H().stringValue + "LOGLOGLOG" + copyArray[m].getName() + String(m))
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber) { (result) in
-                
+            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn24H.append(contentsOf: result)
-                    self.mostIncIn24H = self.mostIncIn24H.sorted(by: {
-                        $0.getCount() < $1.getCount()
-                    })
+                    self.mostIncIn24H = self.mostIncIn24H.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                    print(String(self.mostIncIn24H.count) + "INCXXXX")
                 }
-                else
+                else if type == "DEC"
                 {
+                   
                     self.mostDecIn24H.append(contentsOf: result)
-                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {
-                        $0.getCount() < $1.getCount()
-                    })
+                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                    print(String(self.mostDecIn24H.count) + "DECXXX")
                 }
-                print(String(self.mostIncIn24H.count) + "COUNT1")
-                print(String(self.mostDecIn24H.count) + "COUNT2")
                 DispatchQueue.main.async{self.tableView.reloadData()}
-                
-                
             }
             onFailure: {print("Could not download from api")}
         }
     }
     
-
+    func getCoinsFor7(page: Int, type: String)
+    {
+        var copyArray = self.searchCurrencyArray
+        var coinNumber = [String : Int]()
+        if copyArray.count > 6000
+        {
+            var newString = ""
+            if type == "INC"
+            {
+                self.mostIncIn7D.removeAll(keepingCapacity: false)
+                copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue > $1.getPriceChangePercantage7D().doubleValue})
+            }
+            else if type == "DEC"
+            {
+                self.mostDecIn7D.removeAll(keepingCapacity: false)
+                copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue < $1.getPriceChangePercantage7D().doubleValue})
+            }
+            for m in 0...49
+            {
+                newString += copyArray[m].getId() + ","
+                print(type + copyArray[m].getPriceChangePercantage24H().stringValue + "LOGLOGLOG" + copyArray[m].getName() + String(m))
+                coinNumber[copyArray[m].getId()] = m + 1
+            }
+            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+                if type == "INC"
+                {
+                    self.mostIncIn7D.append(contentsOf: result)
+                    self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                }
+                else if type == "DEC"
+                {
+                   
+                    self.mostDecIn7D.append(contentsOf: result)
+                    self.mostDecIn7D = self.mostDecIn7D.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.mostDecIn7D  = self.mostDecIn7D.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                    print(self.mostIncIn7D)
+                }
+                DispatchQueue.main.async{self.tableView.reloadData()}
+            }
+            onFailure: {print("Could not download from api")}
+        }
+    }
     
     
     
@@ -222,11 +263,10 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                  cellArrayGetIndex = self.mostIncIn24H[indexPath.row]
             case 2:
                  cellArrayGetIndex = self.mostDecIn24H[indexPath.row]
-                
             case 3:
-                 cellArrayGetIndex = self.currencyArray[indexPath.row]
+                 cellArrayGetIndex = self.mostIncIn7D[indexPath.row]
             case 4:
-                 cellArrayGetIndex = self.currencyArray[indexPath.row]
+                 cellArrayGetIndex = self.mostDecIn7D[indexPath.row]
             default:
                 print("HATA")
             }
@@ -241,7 +281,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
             cell.change.text = change.stringValue
-            //cell.count.text = String(indexPath.row + 1)
             cell.price.text = "$" + cellArrayGetIndex.getPrice().stringValue
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
@@ -259,6 +298,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
 
     
+    /*
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
         let offsetY = scrollView.contentOffset.y
@@ -270,6 +310,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             print("scrolling" + String(self.currencyArray.count))
         }
     }
+    */
  
     
     
@@ -283,10 +324,10 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             tableViewPosition = 0
         case 1:
             tableViewPosition = 1
-            print("COUNT12" + String(self.mostIncIn24H.count))
+            
         case 2:
             tableViewPosition = 2
-            print("COUNT12" + String(self.mostDecIn24H.count))
+            
         case 3:
             tableViewPosition = 3
         case 4:
@@ -305,10 +346,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         navigationItem.leftBarButtonItems?.append(arrowButton)
     }
     
-    @IBAction func currencyButtonClicked(_ sender: Any)
-    {
-        print("ARRAY" + String(self.searchCurrencyArray.count))
-    }
+    @IBAction func currencyButtonClicked(_ sender: Any){print("ARRAY" + String(self.searchCurrencyArray.count))}
     
     @IBAction func arrowButtonClicked(_ sender: Any)
     {

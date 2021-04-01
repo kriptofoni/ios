@@ -17,8 +17,9 @@ class Currency
     private var change : NSNumber
     private var price : NSNumber
     private var shortening : String
+    private var percent7d : NSNumber
     
-    init(id: String, count: Int, iconViewUrl : String, name: String, percent: NSNumber, change : NSNumber, price : NSNumber, shortening : String)
+    init(id: String, count: Int, iconViewUrl : String, name: String, percent: NSNumber, change : NSNumber, price : NSNumber, shortening : String, percent7d : NSNumber)
     {
         self.id = id
         self.count = count
@@ -28,6 +29,7 @@ class Currency
         self.change = change
         self.price = price
         self.shortening = shortening
+        self.percent7d = percent7d
     }
     
     
@@ -40,6 +42,7 @@ class Currency
         self.change = 0
         self.price = 0
         self.shortening = ""
+        percent7d = 0
     }
     func getId() -> String{return id}
     func getCount() -> Int{return count}
@@ -49,4 +52,5 @@ class Currency
     func getChange() -> NSNumber{return change}
     func getPrice() -> NSNumber{return price}
     func getShortening() -> String{return shortening}
+    func getPercent7d() -> NSNumber{return percent7d}
 }
