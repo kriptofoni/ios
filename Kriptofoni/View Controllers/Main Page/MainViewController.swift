@@ -9,7 +9,6 @@ import UIKit
 import ScrollableSegmentedControl
 import SDWebImage
 import CoreData
-//import SwiftyJSON
 
 
 class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
@@ -22,6 +21,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
     var selectedIndexPath = IndexPath(row: 0, section: 0)
     var selectedAttributesIndexPath = IndexPath(row: 0, section: 1)
+    var selectedCoin = ""
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Currency]();var mostDecIn24H = [Currency]();var mostIncIn7D = [Currency]();var mostDecIn7D = [Currency]();var currencyArray = [Currency]()
     var searchCurrencyArray = [SearchCurrency](); var searchActiveArray = [SearchCurrency]()
@@ -37,19 +37,12 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         //appStartingControls()
         addSwipeGesture()
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.searchBar.delegate = self
-        buttons.append(searchButton)
-        buttons.append(currencyButton)
-        segmentedView.segmentStyle = .textOnly
-        segmentedView.insertSegment(withTitle: "COINS",  at: 0)
-        segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1)
-        segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
-        segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3)
-        segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
-        segmentedView.underlineSelected = true
-        segmentedView.selectedSegmentIndex = 0
+        self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
+        buttons.append(searchButton); buttons.append(currencyButton)
+        segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "COINS",  at: 0)
+        segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
+        segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
+        segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(MainViewController.segmentSelected(sender:)), for: .valueChanged)
         appStartingControls()
     }
@@ -82,12 +75,9 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     {
         print("UPDATED")
         getCoins(page: tableViewPage)
-        getCoinsFor24(page: 1, type: "INC")
-        getCoinsFor24(page: 1, type: "DEC")
-        getCoinsFor7(page: 1, type: "INC")
-        getCoinsFor7(page: 1, type: "DEC")
+        getCoinsFor24(page: 1, type: "INC");getCoinsFor24(page: 1, type: "DEC")
+        getCoinsFor7(page: 1, type: "INC");getCoinsFor7(page: 1, type: "DEC")
     }
-    
     
     
     func getSearchArray()
@@ -135,10 +125,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                         print("CURRENCIES ARE SAVED.")
                         CoreData.getCurrencies { [self] (result) in
                             self.searchCurrencyArray = result
-                            self.getCoinsFor24(page: 1, type: "INC")
-                            self.getCoinsFor24(page: 1, type: "DEC")
-                            self.getCoinsFor7(page: 1, type: "INC")
-                            self.getCoinsFor7(page: 1, type: "DEC")
+                            self.getCoinsFor24(page: 1, type: "INC");self.getCoinsFor24(page: 1, type: "DEC")
+                            self.getCoinsFor7(page: 1, type: "INC");self.getCoinsFor7(page: 1, type: "DEC")
                         } onFailure: {
                             print("CORE DATA GETTING CURRIENCIES ERROR")
                         }
@@ -187,7 +175,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
-    
     //Gets coins from api
     func getCoins(page : Int)
     {
@@ -200,7 +187,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         onFailure: {print("Could not download from api")}
     }
     
-    /// Get coins according to its options  for 24H
+    /// Get coins according to 24H changes
     func getCoinsFor24(page: Int, type : String)
     {
         var copyArray = self.searchCurrencyArray
@@ -222,7 +209,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     self.mostIncIn24H.append(contentsOf: result)
                     self.mostIncIn24H = self.mostIncIn24H.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
-                    print(String(self.mostIncIn24H.count) + "INCXXXX")
                 }
                 else if type == "DEC"
                 {
@@ -230,7 +216,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     self.mostDecIn24H.append(contentsOf: result)
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                    print(String(self.mostDecIn24H.count) + "DECXXX")
                 }
                 DispatchQueue.main.async{self.tableView.reloadData()}
             }
@@ -266,7 +251,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     self.mostDecIn7D.append(contentsOf: result)
                     self.mostDecIn7D = self.mostDecIn7D.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn7D  = self.mostDecIn7D.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                    print(self.mostIncIn7D)
                 }
                 DispatchQueue.main.async{self.tableView.reloadData()}
             }
@@ -334,7 +318,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         else
         {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCurrencyCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
             let cellSearchArrayGetIndex = self.searchActiveArray[indexPath.row]
             cell.label.text = cellSearchArrayGetIndex.getName()
             let url = URL(string: cellSearchArrayGetIndex.getImageUrl() )
@@ -343,7 +327,23 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         
     }
-
+ 
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        switch tableViewPosition
+        {
+            case 0:selectedCoin = self.currencyArray[indexPath.row].getId()
+            case 1:selectedCoin = self.mostIncIn24H[indexPath.row].getId()
+            case 2:selectedCoin = self.mostDecIn24H[indexPath.row].getId()
+            case 3:selectedCoin = self.mostIncIn7D[indexPath.row].getId()
+            case 4:selectedCoin = self.mostDecIn7D[indexPath.row].getId()
+            case 5:selectedCoin = self.searchActiveArray[indexPath.row].getId()
+            default:print("HATA")
+        }
+        performSegue(withIdentifier: "toCoinDetails", sender: self)
+        
+    }
     
     /*
     func scrollViewDidScroll(_ scrollView: UIScrollView)
@@ -359,8 +359,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     */
  
-    
-    
     /// Pushs the necessary array to table view according to segmented control
     @objc func segmentSelected(sender:ScrollableSegmentedControl)
     {
@@ -385,7 +383,10 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         navigationItem.leftBarButtonItems?.append(arrowButton)
     }
     
-    @IBAction func currencyButtonClicked(_ sender: Any){print("ARRAY" + String(self.searchCurrencyArray.count))}
+    @IBAction func currencyButtonClicked(_ sender: Any)
+    {
+        performSegue(withIdentifier: "toCurrencySelector", sender: self)
+    }
     
     @IBAction func arrowButtonClicked(_ sender: Any)
     {
@@ -408,7 +409,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         else
         {
-            
             searchActive = true
             print(searchText)
             print(self.searchCurrencyArray.count)
@@ -432,44 +432,28 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer)
     {
-
            if let swipeGesture = gesture as? UISwipeGestureRecognizer
            {
                switch swipeGesture.direction
                {
-               case UISwipeGestureRecognizer.Direction.right:
-                   if (tableViewPosition != 4)
-                   {
-                      segmentedView.selectedSegmentIndex += 1
-                   }
-               case UISwipeGestureRecognizer.Direction.left:
-                   if (tableViewPosition != 0)
-                   {
-                      segmentedView.selectedSegmentIndex -= 1
-                   }
-                   default:
-                       break
+                   case UISwipeGestureRecognizer.Direction.right: if (tableViewPosition != 4) {segmentedView.selectedSegmentIndex += 1}
+                   case UISwipeGestureRecognizer.Direction.left:  if (tableViewPosition != 0) {segmentedView.selectedSegmentIndex -= 1}
+                   default:break
                }
            }
-       }
+    }
     
-    
-   
-    
-
-}
-
-extension DispatchQueue {
-
-    static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
-        DispatchQueue.global(qos: .background).async {
-            background?()
-            if let completion = completion {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
-                    completion()
-                })
-            }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toCoinDetails"//We give our selected restaurant to next page
+        {
+            let destinationVC = segue.destination as! SelectedCoinViewController
+            destinationVC.coinId = self.selectedCoin
         }
     }
-
+    
 }
+
+
+
+

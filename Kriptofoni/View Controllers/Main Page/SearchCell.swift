@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchCurrencyCell: UITableViewCell {
+class SearchCell: UITableViewCell {
 
     
     @IBOutlet weak var icon: UIImageView!
