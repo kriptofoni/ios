@@ -18,7 +18,7 @@ class CoreData
     static func createCurrency(currency: SearchCurrency)
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
+        let context = appDelegate.persistentContainer.newBackgroundContext()
         let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "NewCurrency", into: context)
         newCurrency.setValue(currency.getId(), forKey: "id")
         newCurrency.setValue(currency.getImageUrl(), forKey: "imageUrl")
@@ -40,7 +40,7 @@ class CoreData
     {
         var newCurrencies = [SearchCurrency]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
+        let context = appDelegate.persistentContainer.newBackgroundContext()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewCurrency")
         fetchRequest.returnsObjectsAsFaults = false
         do

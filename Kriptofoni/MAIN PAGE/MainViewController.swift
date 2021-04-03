@@ -8,6 +8,7 @@
 import UIKit
 import ScrollableSegmentedControl
 import SDWebImage
+import CoreData
 
 
 class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
@@ -55,6 +56,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
    
     @objc func update()
     {
+        print(String(self.searchCurrencyArray.count) + "UPDATED")
         getCoins(page: tableViewPage)
         getCoinsFor24(page: 1, type: "INC")
         getCoinsFor24(page: 1, type: "DEC")
@@ -65,20 +67,19 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func appStartingControls()
     {
         getCoins(page: tableViewPage)
-        if CoreData.isEmpty()
+        if CoreData.isEmpty()// First opening after downloading app
         {
-            print("CORE DATA EMPTY")
+            print("EMPTY")
             getSearchArray()
-            update()
-            //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
         else
         {
             print("CORE DATA IS NOT EMPTY")
             self.searchCurrencyArray = CoreData.getCurrencies()
-            print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT1")
             update()
-            timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            //getSearchArray()
+            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
     }
     
@@ -97,12 +98,42 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         myGroup.notify(queue: .main)
         {
+            let myGroup2 = DispatchGroup()
             if CoreData.isEmpty()
             {
+                
                 for curr in self.searchCurrencyArray
                 {
-                    CoreData.createCurrency(currency: curr)
+                    myGroup2.enter()
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    let context = appDelegate.persistentContainer.newBackgroundContext()
+                    
+                    let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "NewCurrency", into: context)
+                    newCurrency.setValue(curr.getId(), forKey: "id")
+                    newCurrency.setValue(curr.getImageUrl(), forKey: "imageUrl")
+                    newCurrency.setValue(curr.getMarketCapRank().int32Value, forKey: "marketCapRank")
+                    newCurrency.setValue(curr.getName(), forKey: "name")
+                    newCurrency.setValue(curr.getPriceChange24().int32Value, forKey: "priceChange24H")
+                    newCurrency.setValue(curr.getPriceChangePercantage24H().int32Value, forKey: "priceChangePercentage24H")
+                    newCurrency.setValue(curr.getPriceChangePercantage7D(), forKey: "priceChangePercentage7D")
+                    newCurrency.setValue(curr.getSymbol(), forKey: "symbol")
+                    do
+                    {
+                        try context.save()
+                        print("SAVED")
+                        myGroup2.leave()
+                    }
+                    catch{print("error")}
                      
+                }
+                myGroup2.notify(queue: .main)
+                {
+                    print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT2")
+                    self.getCoinsFor24(page: 1, type: "INC")
+                    self.getCoinsFor24(page: 1, type: "DEC")
+                    self.getCoinsFor7(page: 1, type: "INC")
+                    self.getCoinsFor7(page: 1, type: "DEC")
+            
                 }
             }
             else
@@ -110,14 +141,33 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 CoreData.deleteAll()
                 for curr in self.searchCurrencyArray
                 {
-                    CoreData.createCurrency(currency: curr)
+                    myGroup2.enter()
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    let context = appDelegate.persistentContainer.newBackgroundContext()
+                    let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "NewCurrency", into: context)
+                    newCurrency.setValue(curr.getId(), forKey: "id")
+                    newCurrency.setValue(curr.getImageUrl(), forKey: "imageUrl")
+                    newCurrency.setValue(curr.getMarketCapRank().int32Value, forKey: "marketCapRank")
+                    newCurrency.setValue(curr.getName(), forKey: "name")
+                    newCurrency.setValue(curr.getPriceChange24().int32Value, forKey: "priceChange24H")
+                    newCurrency.setValue(curr.getPriceChangePercantage24H().int32Value, forKey: "priceChangePercentage24H")
+                    newCurrency.setValue(curr.getPriceChangePercantage7D(), forKey: "priceChangePercentage7D")
+                    newCurrency.setValue(curr.getSymbol(), forKey: "symbol")
+                    do
+                    {
+                        
+                        try context.save()
+                        print("SAVED")
+                        myGroup2.leave()
+                    }
+                    catch{print("error")}
+                }
+                myGroup2.notify(queue: .main)
+                {
+                    print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT2")
                 }
             }
-            print(String(self.searchCurrencyArray.count) + "SEARCH CURRENCY COUNT2")
-            self.getCoinsFor24(page: 1, type: "INC")
-            self.getCoinsFor24(page: 1, type: "DEC")
-            self.getCoinsFor7(page: 1, type: "INC")
-            self.getCoinsFor24(page: 1, type: "DEC")
+            
         }
     }
     
@@ -125,12 +175,16 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     //Gets coins from api
     func getCoins(page : Int)
     {
+       
         let emptyHashMap = [String : Int]()
-        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h_7d" ) { (result) in
+        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
+            self.currencyArray.removeAll(keepingCapacity: false)
             self.currencyArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
         }
         onFailure: {print("Could not download from api")}
+        
+        
     }
     
     func getCoinsFor24(page: Int, type : String)
@@ -142,12 +196,11 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             var newString = ""
             if type == "INC"
             {
-                self.mostIncIn24H.removeAll(keepingCapacity: false)
+                
                 copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue})
             }
             else if type == "DEC"
             {
-                self.mostDecIn24H.removeAll(keepingCapacity: false)
                 copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue})
                 print(copyArray)
             }
@@ -160,6 +213,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
+                    self.mostIncIn24H.removeAll(keepingCapacity: false)
                     self.mostIncIn24H.append(contentsOf: result)
                     self.mostIncIn24H = self.mostIncIn24H.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
@@ -167,7 +221,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 }
                 else if type == "DEC"
                 {
-                   
+                    self.mostDecIn24H.removeAll(keepingCapacity: false)
                     self.mostDecIn24H.append(contentsOf: result)
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
@@ -188,12 +242,10 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             var newString = ""
             if type == "INC"
             {
-                self.mostIncIn7D.removeAll(keepingCapacity: false)
                 copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue > $1.getPriceChangePercantage7D().doubleValue})
             }
             else if type == "DEC"
             {
-                self.mostDecIn7D.removeAll(keepingCapacity: false)
                 copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue < $1.getPriceChangePercantage7D().doubleValue})
             }
             for m in 0...49
@@ -205,13 +257,14 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
+                    self.mostIncIn7D.removeAll(keepingCapacity: false)
                     self.mostIncIn7D.append(contentsOf: result)
                     self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
                 }
                 else if type == "DEC"
                 {
-                   
+                    self.mostDecIn7D.removeAll(keepingCapacity: false)
                     self.mostDecIn7D.append(contentsOf: result)
                     self.mostDecIn7D = self.mostDecIn7D.sorted(by: {$0.getCount() < $1.getCount()})
                     self.mostDecIn7D  = self.mostDecIn7D.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
