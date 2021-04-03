@@ -13,16 +13,9 @@ import UIKit
 class CoreData
 
 {
-    
-    //Creates currency object for keeping currency data for fetching them more quickly
-    static func saveCoreData(array : [SearchCurrency])
+    static func getCoins(completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
     {
-        
-    }
-    
-    static func getCurrencies(completionBlock: @escaping ([SearchCurrency]) -> Void,onFailure: () -> Void) -> Void
-    {
-        var newCurrencies = [SearchCurrency]()
+        var newCurrencies = [SearchCoin]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.newBackgroundContext()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
@@ -32,7 +25,7 @@ class CoreData
             let results = try context.fetch(fetchRequest)
             if results.count > 0
             {
-                let newCurrency = SearchCurrency()
+                let newCurrency = SearchCoin()
                 for result in results as! [NSManagedObject]
                 {
                     if let string = result.value(forKey: "string") as? String
@@ -58,7 +51,7 @@ class CoreData
                                                          let priceChange24H = (jsonElement["price_change_24h"] as? NSNumber) ?? 0 as NSNumber
                                                          let priceChangePercentage24H = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber) ?? 0 as NSNumber
                                                          let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
-                                                         let newCurrency = SearchCurrency(id: id, imageUrl: image, name: name, symbol: symbol, marketCapRank: marketCapRank, priceChange24H: priceChange24H,priceChangePercentage24H: priceChangePercentage24H, priceChangePercentage7D: priceChangePercentage7D)
+                                                         let newCurrency = SearchCoin(id: id, imageUrl: image, name: name, symbol: symbol, marketCapRank: marketCapRank, priceChange24H: priceChange24H,priceChangePercentage24H: priceChangePercentage24H, priceChangePercentage7D: priceChangePercentage7D)
                                                          newCurrencies.append(newCurrency)
                                                     }
                                                     else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
@@ -124,22 +117,57 @@ class CoreData
     
     
     
-    static func updateCurrentUserOnAccount(age: String, country: String, gender:String){
-        let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
-        let result = try? managedObjectContext.fetch(fetchRequest)
-        let resultData = result as! [NSManagedObject]
-        for object in resultData
-        {
-            object.setValue(age, forKey: "age")
-            object.setValue(country, forKey: "country")
-            object.setValue(gender, forKey: "gender")
+    static func getSupportedCurrencies(type : String, completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
+    {
+        var concatedString = String()
+        let baseUrl = "https://api.coingecko.com/api/v3/"
+        let newString = baseUrl + "/simple/supported_vs_currencies"
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrenyTypes")
+        let url = NSURL(string: newString)
+        var request = URLRequest(url: url! as URL)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Check if Error took place
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            // Read HTTP Res3ponse Status code
+            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            // Convert HTTP Response Data to a simple String
+            if let data = data
+            {
+                do
+                {
+                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
+                    for jsonElement in jSONResult as! [String]
+                    {
+                        concatedString = concatedString + jsonElement + ","
+                    }
+                    /*
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    let context = appDelegate.persistentContainer.newBackgroundContext()
+                    if type == "first"
+                    {
+                        
+                    }
+                    else
+                    {
+                        
+                    }
+                    */
+                    completionBlock(concatedString)
+                }
+                catch
+                {
+                    print("Error when fetching currency types")
+                }
+            }
         }
-        do
-        {
-            try managedObjectContext.save()
-        } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
-        }
+        task.resume()
     }
+ 
 }

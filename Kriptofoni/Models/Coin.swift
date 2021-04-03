@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Currency
+class Coin
 {
     private var id : String
     private var count : Int

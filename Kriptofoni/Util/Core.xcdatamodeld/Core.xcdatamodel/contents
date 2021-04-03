@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Array" representedClassName="Array" syncable="YES" codeGenerationType="class"/>
-    <entity name="NewCurrency" representedClassName="NewCurrency" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="String"/>
-        <attribute name="imageUrl" optional="YES" attributeType="String"/>
-        <attribute name="marketCapRank" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="priceChange24H" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="priceChangePercentage7D" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="priceChangePercentage24H" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="symbol" optional="YES" attributeType="String"/>
+    <entity name="CurrencyTypes" representedClassName="CurrencyTypes" syncable="YES" codeGenerationType="class">
+        <attribute name="string" optional="YES" attributeType="String"/>
     </entity>
     <entity name="StringCurrency" representedClassName="StringCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="string" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="NewCurrency" positionX="-63" positionY="-18" width="128" height="149"/>
-        <element name="Array" positionX="-63" positionY="45" width="128" height="29"/>
         <element name="StringCurrency" positionX="-54" positionY="54" width="128" height="44"/>
+        <element name="CurrencyTypes" positionX="-54" positionY="63" width="128" height="44"/>
     </elements>
 </model>

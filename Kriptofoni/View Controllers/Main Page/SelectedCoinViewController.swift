@@ -10,7 +10,8 @@ import UIKit
 class SelectedCoinViewController: UIViewController {
 
     var coinId = ""
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         self.navigationItem.title = coinId
         // Do any additional setup after loading the view.

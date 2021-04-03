@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchCurrency
+class SearchCoin
 {
     private var id : String
     private var imageUrl : String

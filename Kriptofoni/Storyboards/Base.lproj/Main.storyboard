@@ -218,9 +218,9 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9mJ-Tt-wRK">
-                                                    <rect key="frame" x="76" y="9" width="87" height="32"/>
+                                                    <rect key="frame" x="76" y="9" width="181" height="32"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="87" id="FoU-AW-tdu"/>
+                                                        <constraint firstAttribute="width" constant="181" id="FoU-AW-tdu"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -257,6 +257,7 @@
                             <constraint firstItem="K2K-ub-Y4K" firstAttribute="leading" secondItem="iPG-oI-gUv" secondAttribute="leading" id="QO1-Hm-qED"/>
                             <constraint firstItem="K2K-ub-Y4K" firstAttribute="trailing" secondItem="K4d-Ru-TlL" secondAttribute="trailing" id="VoP-fs-ocJ"/>
                             <constraint firstItem="K4d-Ru-TlL" firstAttribute="bottom" secondItem="iPG-oI-gUv" secondAttribute="bottom" id="ZaN-n4-Bbn"/>
+                            <constraint firstItem="K2K-ub-Y4K" firstAttribute="width" secondItem="QgI-tf-lv3" secondAttribute="width" id="olH-0A-kSI"/>
                             <constraint firstItem="K4d-Ru-TlL" firstAttribute="top" secondItem="iPG-oI-gUv" secondAttribute="top" constant="48" id="rGP-vQ-ibu"/>
                             <constraint firstItem="K2K-ub-Y4K" firstAttribute="centerX" secondItem="QgI-tf-lv3" secondAttribute="centerX" id="s4w-0X-UCM"/>
                             <constraint firstItem="K2K-ub-Y4K" firstAttribute="leading" secondItem="K4d-Ru-TlL" secondAttribute="leading" id="sKI-fv-qxt"/>
