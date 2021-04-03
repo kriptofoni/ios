@@ -3,20 +3,24 @@ PODS:
   - SDWebImage (5.10.4):
     - SDWebImage/Core (= 5.10.4)
   - SDWebImage/Core (5.10.4)
+  - SwiftyJSON (4.3.0)
 
 DEPENDENCIES:
   - ScrollableSegmentedControl (~> 1.5.0)
   - SDWebImage (~> 5.0)
+  - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
   trunk:
     - ScrollableSegmentedControl
     - SDWebImage
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   ScrollableSegmentedControl: 2e64bbe8968a7fcd8aae5014434481464fcdfe60
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: 124fc555b694d2486b468d7d048cab65f44350fc
+PODFILE CHECKSUM: d03f40a0a3dafa81715124a44bf95ffd46296765
 
 COCOAPODS: 1.10.0

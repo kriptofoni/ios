@@ -6,6 +6,7 @@ target 'Kriptofoni' do
   use_frameworks!
 
   # Pods for Kriptofoni
+  pod 'SwiftyJSON', '~> 4.0'
   pod 'ScrollableSegmentedControl', '~> 1.5.0'
   pod 'SDWebImage', '~> 5.0'
   target 'KriptofoniTests' do

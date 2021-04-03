@@ -15,96 +15,94 @@ class CoreData
 {
     
     //Creates currency object for keeping currency data for fetching them more quickly
-    static func createCurrency(currency: SearchCurrency)
+    static func saveCoreData(array : [SearchCurrency])
     {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.newBackgroundContext()
-        let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "NewCurrency", into: context)
-        newCurrency.setValue(currency.getId(), forKey: "id")
-        newCurrency.setValue(currency.getImageUrl(), forKey: "imageUrl")
-        newCurrency.setValue(currency.getMarketCapRank().int32Value, forKey: "marketCapRank")
-        newCurrency.setValue(currency.getName(), forKey: "name")
-        newCurrency.setValue(currency.getPriceChange24().int32Value, forKey: "priceChange24H")
-        newCurrency.setValue(currency.getPriceChangePercantage24H().int32Value, forKey: "priceChangePercentage24H")
-        newCurrency.setValue(currency.getPriceChangePercantage7D(), forKey: "priceChangePercentage7D")
-        newCurrency.setValue(currency.getSymbol(), forKey: "symbol")
-        do
-        {
-            try context.save()
-            print("SAVED")
-        }
-        catch{print("error")}
+        
     }
     
-    static func getCurrencies() -> [SearchCurrency]
+    static func getCurrencies(completionBlock: @escaping ([SearchCurrency]) -> Void,onFailure: () -> Void) -> Void
     {
         var newCurrencies = [SearchCurrency]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.newBackgroundContext()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewCurrency")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
         fetchRequest.returnsObjectsAsFaults = false
         do
         {
             let results = try context.fetch(fetchRequest)
             if results.count > 0
             {
-                
+                let newCurrency = SearchCurrency()
                 for result in results as! [NSManagedObject]
                 {
-                    let newCurrency = SearchCurrency()
-                    if let id = result.value(forKey: "id") as? String
+                    if let string = result.value(forKey: "string") as? String
                     {
-                        newCurrency.setId(id: id)
+                        do
+                        {
+                            if let json = string.data(using: String.Encoding.utf8)
+                            {
+                                if let jsonData = try JSONSerialization.jsonObject(with: json, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSArray
+                                {
+                                    for jsonElement in jsonData as! [[String: Any]]
+                                    {
+                                        if let id = jsonElement["id"] as? String
+                                        {
+                                            if let symbol = jsonElement["symbol"] as? String
+                                            {
+                                                
+                                                if let name = jsonElement["name"] as? String
+                                                {
+                                                    if let image = jsonElement["image"] as? String
+                                                    {
+                                                         let marketCapRank = (jsonElement["market_cap_rank"] as? NSNumber) ?? 100000000000 as NSNumber
+                                                         let priceChange24H = (jsonElement["price_change_24h"] as? NSNumber) ?? 0 as NSNumber
+                                                         let priceChangePercentage24H = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber) ?? 0 as NSNumber
+                                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
+                                                         let newCurrency = SearchCurrency(id: id, imageUrl: image, name: name, symbol: symbol, marketCapRank: marketCapRank, priceChange24H: priceChange24H,priceChangePercentage24H: priceChangePercentage24H, priceChangePercentage7D: priceChangePercentage7D)
+                                                         newCurrencies.append(newCurrency)
+                                                    }
+                                                    else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                                }
+                                                else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                            }
+                                            else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                        }
+                                        else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                    }
+                                    completionBlock(newCurrencies);
+                                }
+                                else
+                                {
+                                    
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            print(error.localizedDescription)
+                        }
+                        
                     }
-                    if let imageUrl = result.value(forKey: "imageUrl") as? String
-                    {
-                        newCurrency.setImageUrl(imageUrl: imageUrl)
-                    }
-                    if let marketCapRank = result.value(forKey: "marketCapRank") as? Int32
-                    {
-                        newCurrency.setMarketCapRank(marketCapRank: NSNumber(value: marketCapRank))
-                    }
-                    if let name = result.value(forKey: "name") as? String
-                    {
-                        newCurrency.setName(name: name)
-                    }
-                    if let priceChange24H = result.value(forKey: "priceChange24H") as? Int32
-                    {
-                        newCurrency.setPriceChange24H(priceChange24H: NSNumber(value: priceChange24H))
-                    }
-                    if let priceChangePercentage24H = result.value(forKey: "priceChangePercentage24H") as? Int32
-                    {
-                        newCurrency.setPriceChangePercentage24H(priceChangePercentage24H: NSNumber(value: priceChangePercentage24H))
-                    }
-                    if let priceChangePercentage7D = result.value(forKey: "priceChangePercentage7D") as? Int32
-                    {
-                        newCurrency.setPriceChangePercentage7D(priceChangePercentage7D: NSNumber(value: priceChangePercentage7D))
-                    }
-                    if let symbol = result.value(forKey: "symbol") as? String
-                    {
-                        newCurrency.setSymbol(symbol: symbol)
-                    }
-                    newCurrencies.append(newCurrency)
+                    
                 }
             }
             else
             {
-                print("There is no currency in core data...")
+                print("There is no crypto-currency in core data...")
             }
         }
         catch
         {
             print("There is a error")
         }
-        return newCurrencies
     }
     
 
     static func isEmpty() -> Bool
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewCurrency")
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
         var bool = true
         fetchRequest.returnsObjectsAsFaults = false
         do
@@ -124,29 +122,24 @@ class CoreData
         return bool
     }
     
-    static func deleteAll()
-    {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let context = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "NewCurrency")
-        // Configure Fetch Request
-        fetchRequest.includesPropertyValues = false
-
+    
+    
+    static func updateCurrentUserOnAccount(age: String, country: String, gender:String){
+        let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
+        let result = try? managedObjectContext.fetch(fetchRequest)
+        let resultData = result as! [NSManagedObject]
+        for object in resultData
+        {
+            object.setValue(age, forKey: "age")
+            object.setValue(country, forKey: "country")
+            object.setValue(gender, forKey: "gender")
+        }
         do
         {
-            let items = try context.fetch(fetchRequest) as! [NSManagedObject]
-            for item in items
-            {
-                context.delete(item)
-                print("DELETED")
-            }
-            // Save Changes
-            try context.save()
-
-        }
-        catch
-        {
-           
+            try managedObjectContext.save()
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
         }
     }
 }
