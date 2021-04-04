@@ -15,6 +15,7 @@ class CoinGecko
     
     }
     
+  
     
     func getSupportedCurrencies (completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
     {
@@ -123,6 +124,49 @@ class CoinGecko
             }
         }
         task.resume()
+    }
+    
+    func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void, onFailure: () -> Void) -> Void
+    {
+        var navigationTitle = String()
+        let baseUrl = "https://api.coingecko.com/api/v3/global"
+        let url = NSURL(string: baseUrl)
+        var request = URLRequest(url: url! as URL)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Check if Error took place
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            // Read HTTP Res3ponse Status code
+            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            if let data = data
+            {
+                do
+                {
+                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: Any]
+                    if let data = jSONResult["data"] as? [String : Any]
+                    {
+                        if let totalVolumeDict = data["total_market_cap"] as? [String:Any]
+                        {
+                            if let totalVolumeForCurrency = totalVolumeDict[currency] as? NSNumber
+                            {
+                                navigationTitle = totalVolumeForCurrency.stringValue + " " + symbol
+                                completionBlock(navigationTitle);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    print("Error when fetching currency types")
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Coin]) -> Void,onFailure: () -> Void) -> Void

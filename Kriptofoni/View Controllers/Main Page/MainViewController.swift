@@ -19,18 +19,16 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
-    var selectedIndexPath = IndexPath(row: 0, section: 0)
-    var selectedAttributesIndexPath = IndexPath(row: 0, section: 1)
-    var selectedCoin = ""
+    var selectedIndexPath = IndexPath(row: 0, section: 0);var selectedAttributesIndexPath = IndexPath(row: 0, section: 1)
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Coin]();var mostDecIn24H = [Coin]();var mostIncIn7D = [Coin]();var mostDecIn7D = [Coin]();var coinArray = [Coin]()
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;var tableViewPage = 1
-    let currentCurrencySymbol = "$"
+    var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd";var selectedCoin = ""
     var searchActive = false
     var timer: Timer?
-    var currentCurrencyKey = "usd"
+   
 
     override func viewDidLoad()
     {
@@ -52,11 +50,14 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
+            coinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+                DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
+            } onFailure: {print("Error: While trying to fetch total market cap")}
             saveCurrencies()
             getSearchArray()
             timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
-        else// Core must not be empty, it should update itself
+        else//Core must not be empty, it should update itself
         {
             print("CORE DATA IS NOT EMPTY")
             CoreData.getSupportedCurrencies { (currencies) in
@@ -77,6 +78,9 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     @objc func update()
     {
         print("UPDATED")
+        coinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+            DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
+        } onFailure: {print("Error: While trying to fetch total market cap")}
         getCoins(page: tableViewPage)
         getCoinsFor24(page: 1, type: "INC");getCoinsFor24(page: 1, type: "DEC")
         getCoinsFor7(page: 1, type: "INC");getCoinsFor7(page: 1, type: "DEC")
@@ -136,10 +140,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     }
                     catch{print("error")}
                 }
-                catch
-                {
-                    print("ERROR")
-                }
+                catch{print("ERROR")}
             }
             else//Updating session
             {
@@ -178,7 +179,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
-    //Gets coins from api
+    ///Gets COINS from api
     func getCoins(page : Int)
     {
         let emptyHashMap = [String : Int]()
@@ -190,7 +191,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         onFailure: {print("Could not download from api")}
     }
     
-    /// Get coins according to 24H changes
+    /// Get coins according to 24H changes, type is for selecting INC or DEC
     func getCoinsFor24(page: Int, type : String)
     {
         var copyArray = self.searchCoinArray
@@ -226,6 +227,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
+    /// Gets coins according to 7D changes, type is for selecting INC or DEC
     func getCoinsFor7(page: Int, type: String)
     {
         var copyArray = self.searchCoinArray
@@ -264,7 +266,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func saveCurrencies()
     {
         coinGecko.getSupportedCurrencies() { (resultString) in
-            DispatchQueue.main.async{
+            DispatchQueue.main.async
+            {
                 let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
                 do
                 {
@@ -279,7 +282,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                     catch{print("error")}
                 }
             }
-            
         } onFailure: {print("HATA")}
     }
     
@@ -301,7 +303,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                         try managedObjectContext.save()
                         print("CURRENCY TYPES ARE UPDATED.")
                         self.currencyTypes = resultString.components(separatedBy: ",")//first index will be empty so be careful in table view
-            
                     }
                     catch{print("Error")}
                 }
@@ -319,23 +320,23 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         var count = 0
         switch tableViewPosition
         {
-        case 0:
-            if searchActive{count =  self.searchActiveArray.count}
-            else{count = self.coinArray.count}
-        case 1:
-            if searchActive{count =  self.searchActiveArray.count}
-            else{count = self.mostIncIn24H.count}
-        case 2:
-            if searchActive{count = self.searchActiveArray.count}
-            else{count = self.mostDecIn24H.count}
-        case 3:
-            if searchActive{count = self.searchActiveArray.count}
-            else{count = self.mostIncIn7D.count}
-        case 4:
-            if searchActive{count =  self.searchActiveArray.count}
-            else{count = self.mostDecIn7D.count}
-        default:
-            print("error")
+            case 0:
+                if searchActive{count =  self.searchActiveArray.count}
+                else{count = self.coinArray.count}
+            case 1:
+                if searchActive{count =  self.searchActiveArray.count}
+                else{count = self.mostIncIn24H.count}
+            case 2:
+                if searchActive{count = self.searchActiveArray.count}
+                else{count = self.mostDecIn24H.count}
+            case 3:
+                if searchActive{count = self.searchActiveArray.count}
+                else{count = self.mostIncIn7D.count}
+            case 4:
+                if searchActive{count =  self.searchActiveArray.count}
+                else{count = self.mostDecIn7D.count}
+            default:
+                print("error")
         }
         return count
     }
@@ -361,12 +362,12 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             let percent = cellArrayGetIndex.getPercent()
             if percent.intValue > 0{cell.percent.textColor = UIColor.green}
             else{cell.percent.textColor = UIColor.red}
-            cell.percent.text = "%" + percent.stringValue
+            cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
             let change = cellArrayGetIndex.getChange()
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
-            cell.change.text = change.stringValue
-            cell.price.text = "$" + cellArrayGetIndex.getPrice().stringValue
+            cell.change.text = String(format: "%.3f", change.doubleValue)
+            cell.price.text = currentCurrencySymbol + " " + cellArrayGetIndex.getPrice().stringValue
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
         }
@@ -382,7 +383,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
  
-    
+    /// Table view func that is called when user press any cell, we are getting index of the selected cell and we are getting id of this currency
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         if searchActive{ selectedCoin = self.searchActiveArray[indexPath.row].getId()}
@@ -452,7 +453,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     @IBAction func arrowButtonClicked(_ sender: Any)
     {
         self.navigationItem.titleView = nil
-        self.navigationItem.title = "30000000000$"
         navigationItem.leftBarButtonItems?.removeAll()
         navigationItem.leftBarButtonItems?.append(self.buttons[0])
         navigationItem.rightBarButtonItems?.append(self.buttons[1])
@@ -480,7 +480,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
-    //Adds swipe gestures for segmentedView
+    ///Adds swipe gestures for segmentedView
     func addSwipeGesture()
     {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))

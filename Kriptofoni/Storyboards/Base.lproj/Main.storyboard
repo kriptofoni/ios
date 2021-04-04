@@ -13,7 +13,7 @@
             <objects>
                 <viewController id="db0-3R-3L1" customClass="CurrencySelectorViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Vn-1d-r6G">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fgQ-wy-nQY">
@@ -276,7 +276,7 @@
                                 </connections>
                             </barButtonItem>
                         </leftBarButtonItems>
-                        <barButtonItem key="rightBarButtonItem" title="KUR" id="6Ug-El-sGM">
+                        <barButtonItem key="rightBarButtonItem" title="CUR" id="6Ug-El-sGM">
                             <color key="tintColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="currencyButtonClicked:" destination="JQw-oj-lID" id="6M1-kf-ga9"/>
@@ -365,6 +365,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="tS1-2f-B3P"/>
         <segue reference="ToA-Je-Os9"/>
     </inferredMetricsTieBreakers>
     <resources>
