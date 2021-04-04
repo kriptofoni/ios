@@ -161,7 +161,7 @@ class CoinGecko
                 }
                 catch
                 {
-                    print("Error when fetching currency types")
+                    print("Error when fetching total market value.")
                 }
             }
         }

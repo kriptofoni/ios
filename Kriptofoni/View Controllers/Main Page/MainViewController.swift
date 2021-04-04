@@ -28,6 +28,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd";var selectedCoin = ""
     var searchActive = false
     var timer: Timer?
+    var isAfterCurrencyChanging = false
    
 
     override func viewDidLoad()
@@ -67,8 +68,11 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             CoreData.getCoins { (result) in
                 self.searchCoinArray = result
                 self.update()
-                self.getSearchArray()
-                self.updateCurrencies()
+                if !self.isAfterCurrencyChanging // if it is coming from currency type selector page, do not update any data in core data
+                {
+                    self.getSearchArray()
+                    self.updateCurrencies()
+                }
                 self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
             } onFailure: {print("HATAAA")}
 
@@ -85,7 +89,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         getCoinsFor24(page: 1, type: "INC");getCoinsFor24(page: 1, type: "DEC")
         getCoinsFor7(page: 1, type: "INC");getCoinsFor7(page: 1, type: "DEC")
     }
-    
     
     func getSearchArray()
     {
@@ -318,25 +321,18 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         var count = 0
-        switch tableViewPosition
+        if searchActive{count = self.searchActiveArray.count}
+        else
         {
-            case 0:
-                if searchActive{count =  self.searchActiveArray.count}
-                else{count = self.coinArray.count}
-            case 1:
-                if searchActive{count =  self.searchActiveArray.count}
-                else{count = self.mostIncIn24H.count}
-            case 2:
-                if searchActive{count = self.searchActiveArray.count}
-                else{count = self.mostDecIn24H.count}
-            case 3:
-                if searchActive{count = self.searchActiveArray.count}
-                else{count = self.mostIncIn7D.count}
-            case 4:
-                if searchActive{count =  self.searchActiveArray.count}
-                else{count = self.mostDecIn7D.count}
-            default:
-                print("error")
+            switch tableViewPosition
+            {
+                case 0:count = self.coinArray.count
+                case 1:count = self.mostIncIn24H.count
+                case 2:count = self.mostDecIn24H.count
+                case 3:count = self.mostIncIn7D.count
+                case 4:count = self.mostDecIn7D.count
+                default: return 0
+            }
         }
         return count
     }
@@ -347,13 +343,39 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         {
             var cellArrayGetIndex =  Coin()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
+            print(String(indexPath.row) + "INDEX")
             switch tableViewPosition
             {
-                case 0:cellArrayGetIndex = self.coinArray[indexPath.row]
-                case 1:cellArrayGetIndex = self.mostIncIn24H[indexPath.row]
-                case 2:cellArrayGetIndex = self.mostDecIn24H[indexPath.row]
-                case 3:cellArrayGetIndex = self.mostIncIn7D[indexPath.row]
-                case 4:cellArrayGetIndex = self.mostDecIn7D[indexPath.row]
+                case 0:
+                    if !coinArray.isEmpty {cellArrayGetIndex = self.coinArray[indexPath.row]}
+                    if indexPath.row > 60
+                    {
+                        
+                    }
+                case 1:
+                    if !mostIncIn24H.isEmpty{cellArrayGetIndex = self.mostIncIn24H[indexPath.row]}
+                    if indexPath.row > 30
+                    {
+                        
+                    }
+                case 2:
+                    if !mostDecIn24H.isEmpty{cellArrayGetIndex = self.mostDecIn24H[indexPath.row]}
+                    if indexPath.row > 30
+                    {
+                        
+                    }
+                case 3:
+                    if !mostIncIn7D.isEmpty {cellArrayGetIndex = self.mostIncIn7D[indexPath.row]}
+                    if indexPath.row > 30
+                    {
+                        
+                    }
+                case 4:
+                    if !mostDecIn7D.isEmpty {cellArrayGetIndex = self.mostDecIn7D[indexPath.row]}
+                    if indexPath.row > 30
+                    {
+                        
+                    }
                 default:print("HATA")
             }
             let url = URL(string: cellArrayGetIndex.getIconViewUrl())
@@ -367,7 +389,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
             cell.change.text = String(format: "%.3f", change.doubleValue)
-            cell.price.text = currentCurrencySymbol + " " + cellArrayGetIndex.getPrice().stringValue
+            cell.price.text = currentCurrencySymbol + " " + String(format: "%.3f", cellArrayGetIndex.getPrice().doubleValue)
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
         }
@@ -471,8 +493,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         else
         {
             searchActive = true
-            print(searchText)
-            print(self.searchCoinArray.count)
             self.searchActiveArray = self.searchCoinArray.filter{currencies in return currencies.getName().lowercased().contains(searchText.lowercased())}.sorted(by: {
                 $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
             })
@@ -513,7 +533,6 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         else if segue.identifier == "toCurrencySelector"
         {
-            print(String(self.currencyTypes.count) + "COUNT3")
             let destinationVC = segue.destination as! CurrencySelectorViewController
             destinationVC.currencyArray = self.currencyTypes
         }

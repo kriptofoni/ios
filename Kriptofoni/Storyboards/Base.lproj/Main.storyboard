@@ -73,7 +73,7 @@
                     <navigationItem key="navigationItem" id="akk-Yu-cIU"/>
                     <connections>
                         <outlet property="tableView" destination="fgQ-wy-nQY" id="mzc-wu-Z2z"/>
-                        <segue destination="A3O-hu-FUX" kind="presentation" identifier="toBackFromSelector" modalPresentationStyle="fullScreen" id="ToA-Je-Os9"/>
+                        <segue destination="Leh-9D-fbB" kind="presentation" identifier="toBackFromSelector" modalPresentationStyle="fullScreen" id="1sl-WD-JaE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -89,7 +89,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2K-ub-Y4K">
-                                <rect key="frame" x="0.0" y="78" width="375" height="98"/>
+                                <rect key="frame" x="0.0" y="78" width="375" height="49"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" id="Zrk-vo-DlU" customClass="ScrollableSegmentedControl" customModule="ScrollableSegmentedControl">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
@@ -101,7 +101,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="K4d-Ru-TlL">
-                                <rect key="frame" x="0.0" y="126" width="375" height="541"/>
+                                <rect key="frame" x="0.0" y="126" width="375" height="492"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="56" id="HO6-91-6ob" customClass="CurrencyCell" customModule="Kriptofoni" customModuleProvider="target">
@@ -330,6 +330,7 @@
             <objects>
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Leh-9D-fbB" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="gpx-TD-ERz"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ont-2K-Fpi">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -364,10 +365,6 @@
             <point key="canvasLocation" x="38" y="940"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="tS1-2f-B3P"/>
-        <segue reference="ToA-Je-Os9"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow" width="24" height="24"/>
         <image name="market-icon-_10_24x24" width="24" height="24"/>

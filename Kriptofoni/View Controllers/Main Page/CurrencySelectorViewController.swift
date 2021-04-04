@@ -54,15 +54,12 @@ class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UIT
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if let nav = segue.destination as? UINavigationController, segue.identifier == "toBackFromSelector"
-        {
-            if let vc = nav.visibleViewController as? MainViewController
-            {
-                vc.currentCurrencyKey =  self.selectedCurrency
-                vc.currentCurrencySymbol = self.selectedCurrencySymbol
-                print(self.selectedCurrency  + "SELECTED CURRENCY")
-            }
-        }
+        let barControllers = segue.destination as! UITabBarController
+        let nav = barControllers.viewControllers![0] as! UINavigationController
+        let destinationViewController = nav.topViewController as? MainViewController
+        destinationViewController?.currentCurrencyKey = self.selectedCurrency
+        destinationViewController?.currentCurrencySymbol = self.selectedCurrencySymbol
+        destinationViewController?.isAfterCurrencyChanging = true
     }
     
     func getCountryCode(currencyCode : String) -> [String]
