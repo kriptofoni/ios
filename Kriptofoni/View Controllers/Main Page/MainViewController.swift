@@ -24,13 +24,13 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var selectedCoin = ""
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Coin]();var mostDecIn24H = [Coin]();var mostIncIn7D = [Coin]();var mostDecIn7D = [Coin]();var coinArray = [Coin]()
-    var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyArray = [String]()
+    var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
-    var tableViewPosition = 0
-    var tableViewPage = 1
+    var tableViewPosition = 0;var tableViewPage = 1
     let currentCurrencySymbol = "$"
     var searchActive = false
     var timer: Timer?
+    var currentCurrencyKey = "usd"
 
     override func viewDidLoad()
     {
@@ -52,55 +52,24 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
-            coinGecko.getSupportedCurrencies() { (result) in
-                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-                do
-                {
-                    let type = NSEntityDescription.insertNewObject(forEntityName: "CurrencyTypes", into: managedObjectContext)
-                    type.setValue(result, forKey: "string")
-                    do
-                    {
-                        try managedObjectContext.save()
-                        print("CURRENCY TYPES ARE SAVED.")
-                        
-                    }
-                    catch{print("error")}
-                }
-            } onFailure: {
-                print("HATA")
-            }
+            saveCurrencies()
             getSearchArray()
             timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
         else// Core must not be empty, it should update itself
         {
             print("CORE DATA IS NOT EMPTY")
-            coinGecko.getSupportedCurrencies() { (result) in
-                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrencyTypes")
-                let result = try? managedObjectContext.fetch(fetchRequest)
-                let resultData = result?[0] as! NSManagedObject
-                do
-                {
-                    resultData.setValue(result, forKey: "string")
-                    do
-                    {
-                        try managedObjectContext.save()
-                        print("CURRENCY TYPES ARE UPDATED.")
-                    }
-                    catch{print("Error")}
-                }
-            } onFailure: {
-                print("HATA")
-            }
+            CoreData.getSupportedCurrencies { (currencies) in
+                self.currencyTypes = currencies
+                print(String(self.currencyTypes.count) + "COUNT")
+            } onFailure: {print("Error: Failed to load currencies.")}
             CoreData.getCoins { (result) in
                 self.searchCoinArray = result
                 self.update()
                 self.getSearchArray()
+                self.updateCurrencies()
                 self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-            } onFailure: {
-                print("HATAAA")
-            }
+            } onFailure: {print("HATAAA")}
 
         }
     }
@@ -213,7 +182,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func getCoins(page : Int)
     {
         let emptyHashMap = [String : Int]()
-        coinGecko.getCoins(vs_currency: "usd",ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
+        coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
             self.coinArray.removeAll(keepingCapacity: false)
             self.coinArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
@@ -236,7 +205,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn24H.removeAll(keepingCapacity: false)
@@ -271,7 +240,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            coinGecko.getCoins(vs_currency: "usd",ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn7D.removeAll(keepingCapacity: false)
@@ -291,6 +260,57 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             onFailure: {print("Could not download from api")}
         }
     }
+    
+    func saveCurrencies()
+    {
+        coinGecko.getSupportedCurrencies() { (resultString) in
+            DispatchQueue.main.async{
+                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+                do
+                {
+                    let type = NSEntityDescription.insertNewObject(forEntityName: "CurrencyTypes", into: managedObjectContext)
+                    type.setValue(resultString, forKey: "types")
+                    do
+                    {
+                        try managedObjectContext.save()
+                        print("CURRENCY TYPES ARE SAVED.")
+                        self.currencyTypes = resultString.components(separatedBy: ",")//first index will be empty so be careful in table view
+                    }
+                    catch{print("error")}
+                }
+            }
+            
+        } onFailure: {print("HATA")}
+    }
+    
+    func updateCurrencies()
+    {
+        coinGecko.getSupportedCurrencies() { (resultString) in
+            DispatchQueue.main.async
+            {
+                
+                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrencyTypes")
+                do
+                {
+                    let result = try? managedObjectContext.fetch(fetchRequest)
+                    let resultData = result?[0] as! NSManagedObject
+                    resultData.setValue(resultString, forKey: "types")
+                    do
+                    {
+                        try managedObjectContext.save()
+                        print("CURRENCY TYPES ARE UPDATED.")
+                        self.currencyTypes = resultString.components(separatedBy: ",")//first index will be empty so be careful in table view
+            
+                    }
+                    catch{print("Error")}
+                }
+            }
+        } onFailure: {
+            print("HATA")
+        }
+    }
+    
     
     
     
@@ -365,18 +385,20 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        switch tableViewPosition
+        if searchActive{ selectedCoin = self.searchActiveArray[indexPath.row].getId()}
+        else
         {
-            case 0:selectedCoin = self.coinArray[indexPath.row].getId()
-            case 1:selectedCoin = self.mostIncIn24H[indexPath.row].getId()
-            case 2:selectedCoin = self.mostDecIn24H[indexPath.row].getId()
-            case 3:selectedCoin = self.mostIncIn7D[indexPath.row].getId()
-            case 4:selectedCoin = self.mostDecIn7D[indexPath.row].getId()
-            case 5:selectedCoin = self.searchActiveArray[indexPath.row].getId()
-            default:print("HATA")
+            switch tableViewPosition
+            {
+                case 0:selectedCoin = self.coinArray[indexPath.row].getId()
+                case 1:selectedCoin = self.mostIncIn24H[indexPath.row].getId()
+                case 2:selectedCoin = self.mostDecIn24H[indexPath.row].getId()
+                case 3:selectedCoin = self.mostIncIn7D[indexPath.row].getId()
+                case 4:selectedCoin = self.mostDecIn7D[indexPath.row].getId()
+                default:print("HATA")
+            }
         }
         performSegue(withIdentifier: "toCoinDetails", sender: self)
-        
     }
     
     /*
@@ -419,11 +441,11 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     @IBAction func currencyButtonClicked(_ sender: Any)
     {
-        //print(String(self.currencyArray.count) + "Currency Array")
-        //if self.currencyArray.count > 0
-        //{
-        performSegue(withIdentifier: "toCurrencySelector", sender: self)
-        //}
+        print(String(self.currencyTypes.count) + "COUNT2")
+        if self.currencyTypes.count > 0
+        {
+            performSegue(withIdentifier: "toCurrencySelector", sender: self)
+        }
         
     }
     
@@ -489,10 +511,11 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             let destinationVC = segue.destination as! SelectedCoinViewController
             destinationVC.coinId = self.selectedCoin
         }
-        else if segue.identifier == "toCurrenySelector"
+        else if segue.identifier == "toCurrencySelector"
         {
-            //let destinationVC = segue.destination as! CurrencySelectorViewController
-            //destinationVC.currencyArray = self.currencyArray
+            print(String(self.currencyTypes.count) + "COUNT3")
+            let destinationVC = segue.destination as! CurrencySelectorViewController
+            destinationVC.currencyArray = self.currencyTypes
         }
     }
     

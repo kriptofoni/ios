@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fgQ-wy-nQY">
-                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="searchCell" rowHeight="50" id="ToT-B2-sba" customClass="SearchCell" customModule="Kriptofoni" customModuleProvider="target">
@@ -73,6 +73,7 @@
                     <navigationItem key="navigationItem" id="akk-Yu-cIU"/>
                     <connections>
                         <outlet property="tableView" destination="fgQ-wy-nQY" id="mzc-wu-Z2z"/>
+                        <segue destination="A3O-hu-FUX" kind="presentation" identifier="toBackFromSelector" modalPresentationStyle="fullScreen" id="ToA-Je-Os9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -88,7 +89,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2K-ub-Y4K">
-                                <rect key="frame" x="0.0" y="78" width="375" height="49"/>
+                                <rect key="frame" x="0.0" y="78" width="375" height="98"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" id="Zrk-vo-DlU" customClass="ScrollableSegmentedControl" customModule="ScrollableSegmentedControl">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
@@ -100,7 +101,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="K4d-Ru-TlL">
-                                <rect key="frame" x="0.0" y="126" width="375" height="492"/>
+                                <rect key="frame" x="0.0" y="126" width="375" height="541"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="56" id="HO6-91-6ob" customClass="CurrencyCell" customModule="Kriptofoni" customModuleProvider="target">
@@ -290,7 +291,7 @@
                         <outlet property="segmentedView" destination="Zrk-vo-DlU" id="ldR-ZE-7ln"/>
                         <outlet property="tableView" destination="K4d-Ru-TlL" id="ZcN-x6-BbE"/>
                         <segue destination="UeQ-yQ-1Sj" kind="show" identifier="toCoinDetails" id="Lf7-dZ-sEB"/>
-                        <segue destination="db0-3R-3L1" kind="show" identifier="toCurrencySelector" id="tS1-2f-B3P"/>
+                        <segue destination="db0-3R-3L1" kind="showDetail" identifier="toCurrencySelector" id="tS1-2f-B3P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rgq-fb-YRz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -363,6 +364,9 @@
             <point key="canvasLocation" x="38" y="940"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="ToA-Je-Os9"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow" width="24" height="24"/>
         <image name="market-icon-_10_24x24" width="24" height="24"/>

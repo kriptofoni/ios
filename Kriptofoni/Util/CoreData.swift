@@ -64,30 +64,16 @@ class CoreData
                                     }
                                     completionBlock(newCurrencies);
                                 }
-                                else
-                                {
-                                    
-                                }
+                                else{print("JSON Error")}
                             }
                         }
-                        catch
-                        {
-                            print(error.localizedDescription)
-                        }
-                        
+                        catch{print(error.localizedDescription)}
                     }
-                    
                 }
             }
-            else
-            {
-                print("There is no crypto-currency in core data...")
-            }
+            else{print("There is no crypto-currency in core data...")}
         }
-        catch
-        {
-            print("There is a error")
-        }
+        catch{print("There is a error")}
     }
     
 
@@ -117,57 +103,43 @@ class CoreData
     
     
     
-    static func getSupportedCurrencies(type : String, completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
+    
+    /// Gets saved currency types from core data and convert these types to string array from a string
+    static func getSupportedCurrencies(completionBlock: @escaping ([String]) -> Void,onFailure: () -> Void) -> Void
     {
-        var concatedString = String()
-        let baseUrl = "https://api.coingecko.com/api/v3/"
-        let newString = baseUrl + "/simple/supported_vs_currencies"
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.newBackgroundContext()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrenyTypes")
-        let url = NSURL(string: newString)
-        var request = URLRequest(url: url! as URL)
-        request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            // Check if Error took place
-            if let error = error
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CurrencyTypes")
+        fetchRequest.returnsObjectsAsFaults = false
+        do
+        {
+            let results = try context.fetch(fetchRequest)
+            if results.count > 0
             {
-                print("Error took place \(error)")
-                return
+                for result in results as! [NSManagedObject]
+                {
+                    if let types = result.value(forKey: "types") as? String
+                    {
+                        
+                        var currencyTypes = types.components(separatedBy: ",")//first index will be empty so be careful in table view
+                        completionBlock(currencyTypes)
+                    }
+                    
+                }
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
-            // Convert HTTP Response Data to a simple String
-            if let data = data
+            else
             {
-                do
-                {
-                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
-                    for jsonElement in jSONResult as! [String]
-                    {
-                        concatedString = concatedString + jsonElement + ","
-                    }
-                    /*
-                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                    let context = appDelegate.persistentContainer.newBackgroundContext()
-                    if type == "first"
-                    {
-                        
-                    }
-                    else
-                    {
-                        
-                    }
-                    */
-                    completionBlock(concatedString)
-                }
-                catch
-                {
-                    print("Error when fetching currency types")
-                }
+                print("Error : There is no currency type in core data")
             }
         }
-        task.resume()
+        catch
+        {
+            print("Error: Core Data Currency")
+        }
     }
+    
+    
+  
  
 }
+

@@ -40,7 +40,8 @@ class CoinGecko
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
-                        concatedString = concatedString + jsonElement + ","
+                        
+                        concatedString = concatedString + "," + jsonElement
                     }
                     completionBlock(concatedString)
                 }
