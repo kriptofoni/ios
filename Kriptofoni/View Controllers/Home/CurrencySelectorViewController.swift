@@ -28,18 +28,20 @@ class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
         let arrayIndex = currencyArray[indexPath.row]
-        cell.label.text = arrayIndex.uppercased()
+        
         if getCountryCode(currencyCode: arrayIndex)[0] != ""
         {
             let urlLink =  "https://www.countryflags.io/" +  getCountryCode(currencyCode: arrayIndex)[0] + "/flat/64.png"
             let url = URL(string: urlLink)
             cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
+            cell.label.text = arrayIndex.uppercased() + " (" + getCountryCode(currencyCode: arrayIndex)[1] + ")"
         }
         else
         {
             let urlLink =  "https://cryptoicons.org/api/icon/" +  arrayIndex + "/32"
             let url = URL(string: urlLink)
             cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
+            cell.label.text = arrayIndex.uppercased()
         }
         return cell
     }

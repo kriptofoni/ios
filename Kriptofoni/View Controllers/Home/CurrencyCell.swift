@@ -7,7 +7,8 @@
 
 import UIKit
 
-class CurrencyCell: UITableViewCell {
+class CurrencyCell: UITableViewCell
+{
 
     @IBOutlet weak var count: UILabel!
     @IBOutlet weak var iconView: UIImageView!

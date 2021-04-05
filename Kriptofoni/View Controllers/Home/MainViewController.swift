@@ -25,7 +25,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;var tableViewPage = 1
-    var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd";var selectedCoin = ""
+    var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd";var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
     var searchActive = false
     var timer: Timer?
     var isAfterCurrencyChanging = false
@@ -408,16 +408,16 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     /// Table view func that is called when user press any cell, we are getting index of the selected cell and we are getting id of this currency
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if searchActive{ selectedCoin = self.searchActiveArray[indexPath.row].getId()}
+        if searchActive{ self.selectedSearchCoin = self.searchActiveArray[indexPath.row]}
         else
         {
             switch tableViewPosition
             {
-                case 0:selectedCoin = self.coinArray[indexPath.row].getId()
-                case 1:selectedCoin = self.mostIncIn24H[indexPath.row].getId()
-                case 2:selectedCoin = self.mostDecIn24H[indexPath.row].getId()
-                case 3:selectedCoin = self.mostIncIn7D[indexPath.row].getId()
-                case 4:selectedCoin = self.mostDecIn7D[indexPath.row].getId()
+                case 0: self.selectedCoin = self.coinArray[indexPath.row]
+                case 1:self.selectedCoin = self.mostIncIn24H[indexPath.row]
+                case 2:self.selectedCoin = self.mostDecIn24H[indexPath.row]
+                case 3:self.selectedCoin = self.mostIncIn7D[indexPath.row]
+                case 4:self.selectedCoin = self.mostDecIn7D[indexPath.row]
                 default:print("HATA")
             }
         }
@@ -529,7 +529,17 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         if segue.identifier == "toCoinDetails"//We give our selected restaurant to next page
         {
             let destinationVC = segue.destination as! SelectedCoinViewController
-            destinationVC.coinId = self.selectedCoin
+            if searchActive
+            {
+                destinationVC.selectedSearchCoin = self.selectedSearchCoin
+                destinationVC.type = 0 //it means we will come this page from a search operation
+            }
+            else
+            {
+                destinationVC.selectedCoin = self.selectedCoin
+                destinationVC.type = 1 // it means we will come this page from a normal selection operation
+            }
+           
         }
         else if segue.identifier == "toCurrencySelector"
         {

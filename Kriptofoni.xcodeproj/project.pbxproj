@@ -22,8 +22,15 @@
 		B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8AE2611104A007E3A4E /* CoinGecko.swift */; };
 		B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8B326111A2D007E3A4E /* SearchCoin.swift */; };
 		B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */; };
+		B2548033261B507A009A4DE5 /* SocialMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2548032261B507A009A4DE5 /* SocialMediaCell.swift */; };
 		B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D0D89260FD317004DA9F9 /* MainViewController.swift */; };
 		B271A8AD261241700088C94D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271A8AC261241700088C94D /* Coin.swift */; };
+		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
+		B2CB6EB7261B234900F8FF30 /* SecondCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EB6261B234900F8FF30 /* SecondCell.swift */; };
+		B2CB6EBC261B237D00F8FF30 /* ThirdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EBB261B237D00F8FF30 /* ThirdCell.swift */; };
+		B2CB6EC1261B238F00F8FF30 /* TwoButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EC0261B238F00F8FF30 /* TwoButtonCell.swift */; };
+		B2CB6EC7261B23F300F8FF30 /* OneButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EC6261B23F200F8FF30 /* OneButtonCell.swift */; };
+		B2CB6ED4261B243E00F8FF30 /* OneToOneCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6ED3261B243E00F8FF30 /* OneToOneCell.swift */; };
 		B2CF09D42618B3FD006445D6 /* CurrencySelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CF09D32618B3FD006445D6 /* CurrencySelectorViewController.swift */; };
 		B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D75CB02614FBCB000C0259 /* CoreData.swift */; };
 		B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EB6B26261338690056AAB0 /* SearchCell.swift */; };
@@ -73,8 +80,15 @@
 		B230F8AE2611104A007E3A4E /* CoinGecko.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGecko.swift; sourceTree = "<group>"; };
 		B230F8B326111A2D007E3A4E /* SearchCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoin.swift; sourceTree = "<group>"; };
 		B242DFED261591AD000A5F6A /* Core.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Core.xcdatamodel; sourceTree = "<group>"; };
+		B2548032261B507A009A4DE5 /* SocialMediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaCell.swift; sourceTree = "<group>"; };
 		B25D0D89260FD317004DA9F9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B271A8AC261241700088C94D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
+		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
+		B2CB6EB6261B234900F8FF30 /* SecondCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCell.swift; sourceTree = "<group>"; };
+		B2CB6EBB261B237D00F8FF30 /* ThirdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdCell.swift; sourceTree = "<group>"; };
+		B2CB6EC0261B238F00F8FF30 /* TwoButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonCell.swift; sourceTree = "<group>"; };
+		B2CB6EC6261B23F200F8FF30 /* OneButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneButtonCell.swift; sourceTree = "<group>"; };
+		B2CB6ED3261B243E00F8FF30 /* OneToOneCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToOneCell.swift; sourceTree = "<group>"; };
 		B2CF09D32618B3FD006445D6 /* CurrencySelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorViewController.swift; sourceTree = "<group>"; };
 		B2D75CB02614FBCB000C0259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		B2EB6B26261338690056AAB0 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
@@ -163,7 +177,7 @@
 		B218BAF32618B2EB00E45732 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B223BAB6260CEBF30071AEB9 /* Main Page */,
+				B223BAB6260CEBF30071AEB9 /* Home */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -222,16 +236,31 @@
 			path = KriptofoniUITests;
 			sourceTree = "<group>";
 		};
-		B223BAB6260CEBF30071AEB9 /* Main Page */ = {
+		B223BAB6260CEBF30071AEB9 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				B25D0D89260FD317004DA9F9 /* MainViewController.swift */,
-				B218BAEE2618B26500E45732 /* SelectedCoinViewController.swift */,
 				B2CF09D32618B3FD006445D6 /* CurrencySelectorViewController.swift */,
 				B20792D12611004400216530 /* CurrencyCell.swift */,
 				B2EB6B26261338690056AAB0 /* SearchCell.swift */,
+				B2CB6EAA261B212400F8FF30 /* Coin Detail */,
 			);
-			path = "Main Page";
+			path = Home;
+			sourceTree = "<group>";
+		};
+		B2CB6EAA261B212400F8FF30 /* Coin Detail */ = {
+			isa = PBXGroup;
+			children = (
+				B218BAEE2618B26500E45732 /* SelectedCoinViewController.swift */,
+				B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */,
+				B2CB6EB6261B234900F8FF30 /* SecondCell.swift */,
+				B2CB6EBB261B237D00F8FF30 /* ThirdCell.swift */,
+				B2CB6EC0261B238F00F8FF30 /* TwoButtonCell.swift */,
+				B2CB6EC6261B23F200F8FF30 /* OneButtonCell.swift */,
+				B2CB6ED3261B243E00F8FF30 /* OneToOneCell.swift */,
+				B2548032261B507A009A4DE5 /* SocialMediaCell.swift */,
+			);
+			path = "Coin Detail";
 			sourceTree = "<group>";
 		};
 		B2D75CAF2614FBBD000C0259 /* Util */ = {
@@ -481,18 +510,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2CB6EBC261B237D00F8FF30 /* ThirdCell.swift in Sources */,
 				B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */,
 				B20792D22611004400216530 /* CurrencyCell.swift in Sources */,
+				B2CB6EC1261B238F00F8FF30 /* TwoButtonCell.swift in Sources */,
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorViewController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
+				B2CB6ED4261B243E00F8FF30 /* OneToOneCell.swift in Sources */,
 				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* SelectedCoinViewController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
 				B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */,
 				B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */,
+				B2CB6EB7261B234900F8FF30 /* SecondCell.swift in Sources */,
 				B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */,
 				B271A8AD261241700088C94D /* Coin.swift in Sources */,
+				B2548033261B507A009A4DE5 /* SocialMediaCell.swift in Sources */,
 				B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */,
+				B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */,
+				B2CB6EC7261B23F300F8FF30 /* OneButtonCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
