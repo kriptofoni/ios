@@ -15,6 +15,42 @@ class CoinGecko
     
     }
     
+    func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void, onFailure: () -> Void) -> Void
+    {
+        let baseUrl = "https://api.coingecko.com/api/v3/simple/price?ids=\(id)&vs_currencies=\(currency)&include_24hr_vol=true"
+        let url = NSURL(string: baseUrl)
+        var request = URLRequest(url: url! as URL)
+        request.httpMethod = "GET"
+        var volumefor24H : NSNumber = 0
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Check if Error took place
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            // Read HTTP Res3ponse Status code
+            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            if let data = data
+            {
+                do
+                {
+                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
+                    let dict = jSONResult[id] as! [String:Any]
+                    var newStr = currency + "_24h_vol"
+                    volumefor24H = (dict[newStr] as? NSNumber) ?? 0
+                    completionBlock(volumefor24H)
+                }
+                catch
+                {
+                    print("Error when fetching currency types")
+                }
+            }
+        }
+        task.resume()
+        
+    }
+    
     func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : NSNumber]) -> Void, onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/coins" + "/" + id
@@ -42,17 +78,30 @@ class CoinGecko
                     if let price_change_24h_in_currency = marketData["price_change_24h_in_currency"] as? [String:Any]
                     {
                         coinDict["price_change_percentage_24h"] = (price_change_24h_in_currency[currencyType] as? NSNumber) ?? 0 as NSNumber
+                        coinDict["price_change_percentage_24h_bitcoin"] = (price_change_24h_in_currency["btc"] as? NSNumber) ?? 0 as NSNumber
                     }
                     else{coinDict["price_change_percentage_24h"] = 0}
+                    if let price_change_percentage_1h_in_currency = marketData["price_change_percentage_1h_in_currency"] as? [String:Any]
+                    {
+                        coinDict["price_change_percentage_1h_in_currency"] = (price_change_percentage_1h_in_currency[currencyType] as? NSNumber) ?? 0 as NSNumber
+                    }
+                    else{coinDict["price_change_percentage_1h_in_currency"] = 0}
+                    if let price_change_percentage_7d_in_currency = marketData["price_change_percentage_7d_in_currency"] as? [String:Any]
+                    {
+                        coinDict["price_change_percentage_7d_in_currency"] = (price_change_percentage_7d_in_currency[currencyType] as? NSNumber) ?? 0 as NSNumber
+                    }
+                    else{coinDict["price_change_percentage_7d_in_currency"] = 0}
                     coinDict["current_price_for_currency"] = (current_price[currencyType] as? NSNumber) ?? 0 as NSNumber
                     coinDict["current_price_for_bitcoin"] = (current_price["btc"] as? NSNumber) ?? 0 as NSNumber
                     coinDict["market_cap"] = (market_cap[currencyType] as? NSNumber) ?? 0 as NSNumber
-                    coinDict["total_supply"] = (market_cap["total_supply"] as? NSNumber) ?? 0 as NSNumber
-                    coinDict["circulating_supply"] = (market_cap["circulating_supply"] as? NSNumber) ?? 0 as NSNumber
-                    
-        
-                    //coinDict["max_supply"] = max_supply
-                    completionBlock(coinDict)
+                    coinDict["total_supply"] = (marketData["total_supply"] as? NSNumber) ?? 0 as NSNumber
+                    coinDict["circulating_supply"] = (marketData["circulating_supply"] as? NSNumber) ?? 0 as NSNumber
+                    self.getCoinVolume(id: id, currency: currencyType) { (result) in
+                        coinDict["volumeFor24H"] = result
+                        completionBlock(coinDict)
+                    } onFailure: {
+                        print("Error: when fetching volume")
+                    }
                 }
                 catch
                 {

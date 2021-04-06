@@ -13,7 +13,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     let coingecko = CoinGecko.init()
     var dict : [String:NSNumber] = [:]
     @IBOutlet weak var tableView: UITableView!
-    var stringArray = ["Coin Stats Score","Price","Price For Btc","Market Capital","Volume For 24H","Supply For Now","Total Supply","Change For 1H", "Change For 1D", "Change For 1W"]
+    var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
     var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd"
     var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
@@ -60,7 +60,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     {
         if dict.count > 0
         {
-            return stringArray.count + 9
+            return stringArray.count + 8
         }
         else
         {
@@ -74,7 +74,8 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         if indexPath.row == 0 {height =  59}
         else if indexPath.row == 1 {height =  218}
         else if indexPath.row == 2 {height = 42}
-        else if (2 < indexPath.row) && (indexPath.row < 3 + stringArray.count) {height = 43}
+        else if indexPath.row == 3 || indexPath.row == 4 {height = 85}
+        else if indexPath.row > 4 && indexPath.row < 13 {height = 43}
         else if indexPath.row == stringArray.count + 3 {height = 50}
         else if indexPath.row == stringArray.count + 4 {height = 50}
         else if indexPath.row > stringArray.count + 4 {height = 45}
@@ -103,44 +104,70 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
             let cell = tableView.dequeueReusableCell(withIdentifier: "thirdCell", for: indexPath) as! ThirdCell
             return cell
         }
-        else if (2 < indexPath.row) && (indexPath.row < 3 + stringArray.count)
+        else if indexPath.row == 3
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
+            cell.leftLabel.text = stringArray[indexPath.row-3]
+            if self.dict["price_change_percentage_24h"]!.intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
+            else{cell.rightLabelUp.textColor = UIColor.red}
+            cell.rightLabelUp.text = "%" + String(format: "%.3f", self.dict["price_change_percentage_24h"]!.doubleValue)
+            cell.rightLabelDown.text = currentCurrencySymbol + " " + self.dict["current_price_for_currency"]!.stringValue
+            return cell
+        }
+        else if indexPath.row == 4
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
+            cell.leftLabel.text = stringArray[indexPath.row-3]
+            if self.dict["price_change_percentage_24h_bitcoin"]!.intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
+            else{cell.rightLabelUp.textColor = UIColor.red}
+            cell.rightLabelUp.text = "%" + String(format: "%.5f", self.dict["price_change_percentage_24h_bitcoin"]!.doubleValue)
+            cell.rightLabelDown.text = "BTC " + String(format: "%.3f", self.dict["current_price_for_bitcoin"]!.doubleValue)
+        }
+        else if indexPath.row > 4 && indexPath.row < 12
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToOneCell", for: indexPath) as! OneToOneCell
             cell.leftLabel.text = stringArray[indexPath.row-3]
-            switch indexPath.row-3 {
-            case 0:cell.rightLabel.text = "0"
-            case 1:
-                cell.rightLabel.text = currentCurrencySymbol + self.dict["current_price_for_currency"]!.stringValue
-                //if self.dict["price_change_percentage_24h"]!.intValue > 0 {cell.extraLabel.textColor = UIColor.green}
-                //else {cell.extraLabel.textColor = UIColor.red}
-                //cell.extraLabel.text = "%" + self.dict["price_change_percentage_24h"]!.stringValue
-            case 2:
-                cell.rightLabel.text = "BTC " + String(format: "%.3f", self.dict["current_price_for_bitcoin"]!.doubleValue)
-            case 3:cell.rightLabel.text = currentCurrencySymbol + self.dict["market_cap"]!.stringValue
-            case 4:cell.rightLabel.text = "0"
-            case 5:cell.rightLabel.text = self.dict["circulating_supply"]!.stringValue
-            case 6:cell.rightLabel.text = self.dict["total_supply"]!.stringValue
-            case 7:cell.rightLabel.text = "0"
-            case 8:cell.rightLabel.text = "0"
-            case 9:cell.rightLabel.text = "0"
+            switch indexPath.row {
+            case 5:
+                let element = self.dict["price_change_percentage_1h_in_currency"];
+                if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
+                else {cell.rightLabel.textColor = UIColor.red}
+                cell.rightLabel.text = "%" +  String(format: "%.3f", self.dict["price_change_percentage_1h_in_currency"]!.doubleValue)
+                
+            case 6:
+                let element = self.dict["price_change_percentage_24h"];
+                if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
+                else {cell.rightLabel.textColor = UIColor.red}
+                cell.rightLabel.text =  "%" +  String(format: "%.3f", self.dict["price_change_percentage_24h"]!.doubleValue)
+                
+            case 7:
+                let element = self.dict["price_change_percentage_7d_in_currency"];
+                if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
+                else {cell.rightLabel.textColor = UIColor.red}
+                cell.rightLabel.text = "%" + String(format: "%.3f", self.dict[ "price_change_percentage_7d_in_currency"]!.doubleValue)
+                
+            case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  String(format: "%.1f", self.dict["market_cap"]!.doubleValue)
+            case 9:  cell.rightLabel.text = self.currentCurrencySymbol + " "  + String(format: "%.1f", self.dict["volumeFor24H"]!.doubleValue)
+            case 10: cell.rightLabel.text = self.currentCurrencySymbol + " "  + String(format: "%.1f", self.dict["circulating_supply"]!.doubleValue)
+            case 11: cell.rightLabel.text = self.currentCurrencySymbol + " " + String(format: "%.1f", self.dict["total_supply"]!.doubleValue)
             default:
-                print("Error")
+                print("Error: table view error. ")
+                    
             }
             return cell
         }
-        else if indexPath.row > stringArray.count + 2 && indexPath.row < stringArray.count + 6
+        else if indexPath.row >= 12 && indexPath.row < 15
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "socialMediaCell", for: indexPath) as! SocialMediaCell
-            print("indexPath" + String(indexPath.row))
             cell.label.text = socialMediaTexture[indexPath.row - (stringArray.count + 3)]
             return cell
         }
-        else if indexPath.row == stringArray.count + 6
+        else if indexPath.row == 15
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonCell", for: indexPath) as! TwoButtonCell
             return cell
         }
-        else if indexPath.row ==  stringArray.count + 7
+        else if indexPath.row ==  16
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneButtonCell", for: indexPath) as! OneButtonCell
             return cell

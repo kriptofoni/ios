@@ -24,6 +24,7 @@
 		B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */; };
 		B2548033261B507A009A4DE5 /* SocialMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2548032261B507A009A4DE5 /* SocialMediaCell.swift */; };
 		B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D0D89260FD317004DA9F9 /* MainViewController.swift */; };
+		B26E56E4261CDFF400E913DB /* OneToTwoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26E56E3261CDFF400E913DB /* OneToTwoCell.swift */; };
 		B271A8AD261241700088C94D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271A8AC261241700088C94D /* Coin.swift */; };
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
@@ -83,6 +84,7 @@
 		B242DFED261591AD000A5F6A /* Core.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Core.xcdatamodel; sourceTree = "<group>"; };
 		B2548032261B507A009A4DE5 /* SocialMediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaCell.swift; sourceTree = "<group>"; };
 		B25D0D89260FD317004DA9F9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		B26E56E3261CDFF400E913DB /* OneToTwoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneToTwoCell.swift; sourceTree = "<group>"; };
 		B271A8AC261241700088C94D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				B2CB6EC6261B23F200F8FF30 /* OneButtonCell.swift */,
 				B2CB6ED3261B243E00F8FF30 /* OneToOneCell.swift */,
 				B2548032261B507A009A4DE5 /* SocialMediaCell.swift */,
+				B26E56E3261CDFF400E913DB /* OneToTwoCell.swift */,
 			);
 			path = "Coin Detail";
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				B2548033261B507A009A4DE5 /* SocialMediaCell.swift in Sources */,
 				B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */,
 				B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */,
+				B26E56E4261CDFF400E913DB /* OneToTwoCell.swift in Sources */,
 				B2CB6EC7261B23F300F8FF30 /* OneButtonCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
