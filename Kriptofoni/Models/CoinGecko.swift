@@ -15,6 +15,55 @@ class CoinGecko
     
     }
     
+    func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : NSNumber]) -> Void, onFailure: () -> Void) -> Void
+    {
+        let baseUrl = "https://api.coingecko.com/api/v3/coins" + "/" + id
+        var coinDict = [String : NSNumber]()
+        let url = NSURL(string: baseUrl)
+        var request = URLRequest(url: url! as URL)
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Check if Error took place
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            // Read HTTP Res3ponse Status code
+            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            if let data = data
+            {
+                do
+                {
+                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
+                    guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
+                    guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
+                    guard let current_price = marketData["current_price"] as? [String:Any] else {return}
+                    if let price_change_24h_in_currency = marketData["price_change_24h_in_currency"] as? [String:Any]
+                    {
+                        coinDict["price_change_percentage_24h"] = (price_change_24h_in_currency[currencyType] as? NSNumber) ?? 0 as NSNumber
+                    }
+                    else{coinDict["price_change_percentage_24h"] = 0}
+                    coinDict["current_price_for_currency"] = (current_price[currencyType] as? NSNumber) ?? 0 as NSNumber
+                    coinDict["current_price_for_bitcoin"] = (current_price["btc"] as? NSNumber) ?? 0 as NSNumber
+                    coinDict["market_cap"] = (market_cap[currencyType] as? NSNumber) ?? 0 as NSNumber
+                    coinDict["total_supply"] = (market_cap["total_supply"] as? NSNumber) ?? 0 as NSNumber
+                    coinDict["circulating_supply"] = (market_cap["circulating_supply"] as? NSNumber) ?? 0 as NSNumber
+                    
+        
+                    //coinDict["max_supply"] = max_supply
+                    completionBlock(coinDict)
+                }
+                catch
+                {
+                    print("Error when fetching currency types")
+                }
+            }
+        }
+        task.resume()
+        
+        
+    }
   
     
     func getSupportedCurrencies (completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void

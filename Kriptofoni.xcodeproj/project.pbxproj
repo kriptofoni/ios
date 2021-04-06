@@ -25,6 +25,7 @@
 		B2548033261B507A009A4DE5 /* SocialMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2548032261B507A009A4DE5 /* SocialMediaCell.swift */; };
 		B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D0D89260FD317004DA9F9 /* MainViewController.swift */; };
 		B271A8AD261241700088C94D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271A8AC261241700088C94D /* Coin.swift */; };
+		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
 		B2CB6EB7261B234900F8FF30 /* SecondCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EB6261B234900F8FF30 /* SecondCell.swift */; };
 		B2CB6EBC261B237D00F8FF30 /* ThirdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EBB261B237D00F8FF30 /* ThirdCell.swift */; };
@@ -83,6 +84,7 @@
 		B2548032261B507A009A4DE5 /* SocialMediaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaCell.swift; sourceTree = "<group>"; };
 		B25D0D89260FD317004DA9F9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B271A8AC261241700088C94D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
+		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
 		B2CB6EB6261B234900F8FF30 /* SecondCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondCell.swift; sourceTree = "<group>"; };
 		B2CB6EBB261B237D00F8FF30 /* ThirdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdCell.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				B230F8B326111A2D007E3A4E /* SearchCoin.swift */,
 				B271A8AC261241700088C94D /* Coin.swift */,
 				B230F8AE2611104A007E3A4E /* CoinGecko.swift */,
+				B27E6D19261C47AF004E817A /* CoinDetail.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -517,6 +520,7 @@
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorViewController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
 				B2CB6ED4261B243E00F8FF30 /* OneToOneCell.swift in Sources */,
+				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
 				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* SelectedCoinViewController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
