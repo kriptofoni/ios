@@ -19,6 +19,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
+    var activityView: UIActivityIndicatorView?
     var selectedIndexPath = IndexPath(row: 0, section: 0);var selectedAttributesIndexPath = IndexPath(row: 0, section: 1)
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Coin]();var mostDecIn24H = [Coin]();var mostIncIn7D = [Coin]();var mostDecIn7D = [Coin]();var coinArray = [Coin]()
@@ -34,6 +35,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.currencyButton.title = currentCurrencyKey.uppercased()
+        showActivityIndicator()
         appStartingControls()
         addSwipeGesture()
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
@@ -48,11 +51,15 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func appStartingControls()
     {
         getCoins(page: tableViewPage)
+       
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
             coinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
-                DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
+                DispatchQueue.main.async{
+                    self.navigationItem.title = navigationTitle
+                    self.hideActivityIndicator()
+                }
             } onFailure: {print("Error: While trying to fetch total market cap")}
             saveCurrencies()
             getSearchArray()
@@ -66,6 +73,9 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 print(String(self.currencyTypes.count) + "COUNT")
             } onFailure: {print("Error: Failed to load currencies.")}
             CoreData.getCoins { (result) in
+                DispatchQueue.main.async{
+                    self.hideActivityIndicator()
+                }
                 self.searchCoinArray = result
                 self.update()
                 if !self.isAfterCurrencyChanging // if it is coming from currency type selector page, do not update any data in core data
@@ -343,7 +353,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         {
             var cellArrayGetIndex =  Coin()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
-            print(String(indexPath.row) + "INDEX")
+            //print(String(indexPath.row) + "INDEX")
             switch tableViewPosition
             {
                 case 0:
@@ -388,8 +398,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             let change = cellArrayGetIndex.getChange()
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
-            cell.change.text = String(format: "%.3f", change.doubleValue)
-            cell.price.text = currentCurrencySymbol + " " + String(format: "%.3f", cellArrayGetIndex.getPrice().doubleValue)
+            cell.change.text = String(format: "%.2f", change.doubleValue)
+            cell.price.text = currentCurrencySymbol + " " + String(format: "%.2f", cellArrayGetIndex.getPrice().doubleValue)
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
         }
@@ -549,6 +559,28 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         {
             let destinationVC = segue.destination as! CurrencySelectorViewController
             destinationVC.currencyArray = self.currencyTypes
+        }
+    }
+    
+    //shows spinner
+    func showActivityIndicator()
+    {
+        if #available(iOS 13.0, *) {
+            activityView = UIActivityIndicatorView(style: .medium)
+        } else {
+            activityView = UIActivityIndicatorView(style: .gray)
+        }
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    //hides spinner
+    func hideActivityIndicator()
+    {
+        if (activityView != nil)
+        {
+            activityView?.stopAnimating()
         }
     }
     

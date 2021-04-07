@@ -1,26 +1,32 @@
 PODS:
+  - Charts (3.6.0):
+    - Charts/Core (= 3.6.0)
+  - Charts/Core (3.6.0)
   - ScrollableSegmentedControl (1.5.0)
   - SDWebImage (5.10.4):
     - SDWebImage/Core (= 5.10.4)
   - SDWebImage/Core (5.10.4)
-  - SwiftyJSON (4.3.0)
+  - TinyConstraints (4.0.1)
 
 DEPENDENCIES:
+  - Charts
   - ScrollableSegmentedControl (~> 1.5.0)
   - SDWebImage (~> 5.0)
-  - SwiftyJSON (~> 4.0)
+  - TinyConstraints
 
 SPEC REPOS:
   trunk:
+    - Charts
     - ScrollableSegmentedControl
     - SDWebImage
-    - SwiftyJSON
+    - TinyConstraints
 
 SPEC CHECKSUMS:
+  Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   ScrollableSegmentedControl: 2e64bbe8968a7fcd8aae5014434481464fcdfe60
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
-  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
+  TinyConstraints: 8dd91295e56797648c7bc335dd20e1d91ec4c192
 
-PODFILE CHECKSUM: d03f40a0a3dafa81715124a44bf95ffd46296765
+PODFILE CHECKSUM: 06bb46b87f2179bfcea03f57ceb30409e485b034
 
 COCOAPODS: 1.10.0

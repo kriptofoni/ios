@@ -5,16 +5,14 @@
 //  Created by Cem Sertkaya on 3.04.2021.
 //
 
-import UIKit
-import SDWebImage
-class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+import UIKit;import SDWebImage;import TinyConstraints; import Charts
+class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate {
     
-    
+    @IBOutlet weak var tableView: UITableView!
+    var values = [ChartDataEntry]()
     let coingecko = CoinGecko.init()
-    
     var activityView: UIActivityIndicatorView?
     var dict : [String:NSNumber] = [:]
-    @IBOutlet weak var tableView: UITableView!
     var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
@@ -32,10 +30,16 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
             
             coingecko.getCoinDetails(id: selectedSearchCoin.getId(),currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                DispatchQueue.main.async{
-                    self.hideActivityIndicator()
-                    self.tableView.reloadData()
+                self.coingecko.getDataForCharts(id: self.selectedSearchCoin.getId(), currency: self.currentCurrencyKey, type: "twentyFour_hours") { (chartdata) in
+                    self.values = chartdata
+                    DispatchQueue.main.async{
+                        self.hideActivityIndicator()
+                        self.tableView.reloadData()
+                    }
+                } onFailure: {
+                    print("Error")
                 }
+                
             } onFailure: {
                 print("Error: When getting coin detais.")
             }
@@ -46,9 +50,14 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         {
             coingecko.getCoinDetails(id: selectedCoin.getId(), currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                DispatchQueue.main.async{
-                    self.hideActivityIndicator()
-                    self.tableView.reloadData()
+                self.coingecko.getDataForCharts(id: self.selectedCoin.getId(), currency: self.currentCurrencyKey, type: "twentyFour_hours") { (chartdata) in
+                    self.values = chartdata
+                    DispatchQueue.main.async{
+                        self.hideActivityIndicator()
+                        self.tableView.reloadData()
+                    }
+                } onFailure: {
+                    print("Error")
                 }
             } onFailure: {
                 print("Error: When getting coin detais.")
@@ -72,7 +81,8 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
         var height = 0
         if indexPath.row == 0 {height =  59}
         else if indexPath.row == 1 {height =  218}
@@ -100,6 +110,29 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         else if indexPath.row == 1
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! SecondCell
+            cell.chartView.delegate = self
+            switch traitCollection.userInterfaceStyle
+            {
+                case .light, .unspecified: cell.chartView.backgroundColor = .white
+                case .dark: cell.chartView.backgroundColor = .black
+                @unknown default: cell.chartView.backgroundColor = .white
+            }
+            cell.chartView.chartDescription!.enabled = false
+            cell.chartView.dragEnabled = true
+            cell.chartView.setScaleEnabled(true)
+            cell.chartView.pinchZoomEnabled = true
+            cell.chartView.rightAxis.enabled = false
+            cell.chartView.xAxis.labelPosition = .bottom
+            let set1 = LineChartDataSet(entries: values ,label: "Prices")
+            set1.drawCirclesEnabled = false
+            set1.lineWidth = 1.5
+            let data = LineChartData(dataSet: set1)
+            cell.chartView.data = data
+            //cell.view.addSubview(lineChartView)
+            //lineChartView.centerInSuperview()
+            //lineChartView.width(to: cell.view)
+            //lineChartView.heightToWidth(of: view)
+            //setData()
             return cell
         }
         else if indexPath.row == 2
@@ -219,14 +252,20 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
 
     }
     
+    //shows spinner
     func showActivityIndicator()
     {
-        activityView = UIActivityIndicatorView(style: .gray)
+        if #available(iOS 13.0, *) {
+            activityView = UIActivityIndicatorView(style: .medium)
+        } else {
+            activityView = UIActivityIndicatorView(style: .gray)
+        }
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }
     
+    //hides spinner
     func hideActivityIndicator()
     {
         if (activityView != nil)
@@ -234,6 +273,14 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
             activityView?.stopAnimating()
         }
     }
+    
+    
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        print(entry)
+    }
+    
+   
+   
 }
 
 extension UIView {

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Leh-9D-fbB">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -78,7 +79,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1042" y="1601"/>
+            <point key="canvasLocation" x="1482" y="861"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="Cpm-7h-oHV">
@@ -321,7 +322,7 @@
                                 <rect key="frame" x="0.0" y="44" width="375" height="707"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="firstCell" rowHeight="59" id="jbD-r9-kml" customClass="FirstCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="firstCell" rowHeight="59" id="jbD-r9-kml" customClass="FirstCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="59"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="jbD-r9-kml" id="iZf-GI-sW5">
@@ -365,8 +366,22 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="giu-Dk-gyA" id="NgH-m1-cct">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FPp-9B-VEQ" customClass="LineChartView" customModule="Charts">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="FPp-9B-VEQ" firstAttribute="top" secondItem="NgH-m1-cct" secondAttribute="topMargin" constant="-11" id="9Gj-nk-rch"/>
+                                                <constraint firstItem="FPp-9B-VEQ" firstAttribute="centerY" secondItem="NgH-m1-cct" secondAttribute="centerY" id="HMl-Js-Q5I"/>
+                                                <constraint firstItem="FPp-9B-VEQ" firstAttribute="centerX" secondItem="NgH-m1-cct" secondAttribute="centerX" id="UTU-w2-1KN"/>
+                                                <constraint firstItem="FPp-9B-VEQ" firstAttribute="leading" secondItem="NgH-m1-cct" secondAttribute="leadingMargin" constant="-16" id="rih-XI-fwf"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="systemGreenColor"/>
+                                        <connections>
+                                            <outlet property="chartView" destination="FPp-9B-VEQ" id="SFL-IG-XDH"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="thirdCell" rowHeight="42.5" id="vmf-3R-bqs" customClass="ThirdCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="305" width="375" height="42.5"/>
@@ -490,7 +505,7 @@
                                             <outlet property="secondButton" destination="Guy-om-esg" id="WZk-Op-aCR"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToOneCell" rowHeight="43" id="2P4-3g-hlS" customClass="OneToOneCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToOneCell" rowHeight="43" id="2P4-3g-hlS" customClass="OneToOneCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="347.5" width="375" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2P4-3g-hlS" id="APY-JK-d6o">
@@ -507,9 +522,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWD-OA-ed0">
-                                                    <rect key="frame" x="211" y="0.0" width="159" height="37"/>
+                                                    <rect key="frame" x="196" y="0.0" width="163" height="37"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="159" id="CeV-26-Eav"/>
+                                                        <constraint firstAttribute="width" constant="163" id="CeV-26-Eav"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -522,7 +537,7 @@
                                                 <constraint firstItem="xd3-Gr-6gW" firstAttribute="firstBaseline" secondItem="wWD-OA-ed0" secondAttribute="firstBaseline" id="ENO-nS-BkA"/>
                                                 <constraint firstItem="xd3-Gr-6gW" firstAttribute="centerY" secondItem="APY-JK-d6o" secondAttribute="centerY" constant="-3" id="IhC-zg-7lv"/>
                                                 <constraint firstItem="xd3-Gr-6gW" firstAttribute="leading" secondItem="APY-JK-d6o" secondAttribute="leadingMargin" id="bdE-aB-4R5"/>
-                                                <constraint firstItem="wWD-OA-ed0" firstAttribute="leading" secondItem="xd3-Gr-6gW" secondAttribute="trailing" constant="30" id="nIm-GA-ZEC"/>
+                                                <constraint firstItem="wWD-OA-ed0" firstAttribute="leading" secondItem="xd3-Gr-6gW" secondAttribute="trailing" constant="15" id="nIm-GA-ZEC"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -594,7 +609,7 @@
                                             <outlet property="favoritesButton" destination="vD4-cl-w49" id="N86-n9-lru"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneButtonCell" rowHeight="50" id="UaY-p6-6RO" customClass="OneButtonCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneButtonCell" rowHeight="50" id="UaY-p6-6RO" customClass="OneButtonCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="440.5" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UaY-p6-6RO" id="gjn-EF-ife">
@@ -670,7 +685,7 @@
                                             <outlet property="socialMediaIcon" destination="dYX-Ba-P0M" id="ArY-Wx-3GH"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToTwoCell" rowHeight="85" id="cch-4r-69V" customClass="OneToTwoCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToTwoCell" rowHeight="85" id="cch-4r-69V" customClass="OneToTwoCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="535.5" width="375" height="85"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cch-4r-69V" id="EUt-YI-PB9">
@@ -678,13 +693,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VCF-Sc-kEF">
-                                                    <rect key="frame" x="230" y="18.5" width="134" height="20.5"/>
+                                                    <rect key="frame" x="230" y="19.5" width="129" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QPE-I4-a9c">
-                                                    <rect key="frame" x="230" y="47" width="134" height="36"/>
+                                                    <rect key="frame" x="230" y="47" width="129" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="36" id="cI7-9V-ydr"/>
                                                     </constraints>
@@ -709,8 +724,8 @@
                                                 <constraint firstAttribute="bottomMargin" secondItem="QPE-I4-a9c" secondAttribute="bottom" constant="-9" id="cmf-Db-ouA"/>
                                                 <constraint firstItem="VCF-Sc-kEF" firstAttribute="leading" secondItem="FWg-NC-27M" secondAttribute="trailing" constant="49" id="dfL-3x-ZSe"/>
                                                 <constraint firstItem="QPE-I4-a9c" firstAttribute="trailing" secondItem="VCF-Sc-kEF" secondAttribute="trailing" id="exc-05-J6G"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="QPE-I4-a9c" secondAttribute="trailing" constant="-5" id="kuB-IG-bej"/>
-                                                <constraint firstItem="QPE-I4-a9c" firstAttribute="top" secondItem="VCF-Sc-kEF" secondAttribute="bottom" constant="8" id="rMz-FM-JLL"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="QPE-I4-a9c" secondAttribute="trailing" id="kuB-IG-bej"/>
+                                                <constraint firstItem="QPE-I4-a9c" firstAttribute="top" secondItem="VCF-Sc-kEF" secondAttribute="bottom" constant="7" id="rMz-FM-JLL"/>
                                                 <constraint firstItem="FWg-NC-27M" firstAttribute="leading" secondItem="EUt-YI-PB9" secondAttribute="leadingMargin" id="yj6-e0-IRx"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -732,9 +747,7 @@
                             <constraint firstItem="dnc-zR-Qvc" firstAttribute="top" secondItem="4RN-78-qLi" secondAttribute="top" id="hKi-Dr-Xia"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="oRm-Et-o4h">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="26w-CO-8Hd"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="oRm-Et-o4h"/>
                     <size key="freeformSize" width="375" height="800"/>
                     <connections>
                         <outlet property="tableView" destination="dnc-zR-Qvc" id="qR6-xy-L8F"/>
@@ -742,7 +755,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vr3-7R-Lke" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="38" y="2453"/>
+            <point key="canvasLocation" x="37.600000000000001" y="2431.4842578710645"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="AMK-k6-p2R">
@@ -781,7 +794,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pj1-v9-DB8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="38" y="873"/>
+            <point key="canvasLocation" x="38" y="862"/>
         </scene>
     </scenes>
     <resources>

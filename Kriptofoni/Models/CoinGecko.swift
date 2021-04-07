@@ -7,12 +7,70 @@
 
 import Foundation
 import CoreData
+import Charts
 
 class CoinGecko
 {
     init()
     {
     
+    }
+    //completionBlock: @escaping ([String: [ChartDataEntry]]) -> Void, onFailure: () -> Void)  -> Void
+    
+    func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void, onFailure: () -> Void)  -> Void
+    {
+        var array = [ChartDataEntry]()
+        let now = NSDate().timeIntervalSince1970
+        let nowString = String(now)
+        var secondTime = ""
+        switch type {
+        case "twentyFour_hours": secondTime  = String(now - (60*60*24))
+        case "one_week_before": secondTime = String(now - (60*60*24*7))
+        case "one_month_before": secondTime = String(now - (60*60*24*31))
+        case "three_months_before": secondTime = String(now - (60*60*24*31*3))
+        case "six_months_before": secondTime = String(now - (60*60*24*31*6))
+        case "one_year_before": secondTime = String(now - (60*60*24*31*12))
+        default:
+            print("HATA")
+        }
+        let urlFor24H = "https://api.coingecko.com/api/v3/coins/\(id)/market_chart/range?vs_currency=\(currency)&from=\(secondTime)&to=\(nowString)"
+        let url = NSURL(string: urlFor24H)
+        var request = URLRequest(url: url! as URL)
+        request.httpMethod = "GET"
+        var volumefor24H : NSNumber = 0
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            // Check if Error took place
+            if let error = error
+            {
+                print("Error took place \(error)")
+                return
+            }
+            // Read HTTP Res3ponse Status code
+            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            if let data = data
+            {
+                do
+                {
+                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
+                    let prices = jSONResult["prices"] as! [[NSNumber]]
+                    var x: Double = 1.0
+                    for price in prices
+                    {
+                        let charData = ChartDataEntry(x: x, y: price[1].doubleValue)
+                        array.append(charData)
+                        x = x + 1
+                    }
+                    completionBlock(array)
+                    
+                }
+                catch
+                {
+                    print("Error when fetching chart datas.")
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void, onFailure: () -> Void) -> Void
@@ -37,7 +95,7 @@ class CoinGecko
                 {
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let dict = jSONResult[id] as! [String:Any]
-                    var newStr = currency + "_24h_vol"
+                    let newStr = currency + "_24h_vol"
                     volumefor24H = (dict[newStr] as? NSNumber) ?? 0
                     completionBlock(volumefor24H)
                 }
@@ -75,7 +133,7 @@ class CoinGecko
                     guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
                     guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
                     guard let current_price = marketData["current_price"] as? [String:Any] else {return}
-                    if let price_change_24h_in_currency = marketData["price_change_24h_in_currency"] as? [String:Any]
+                    if let price_change_24h_in_currency = marketData["price_change_percentage_24h_in_currency"] as? [String:Any]
                     {
                         coinDict["price_change_percentage_24h"] = (price_change_24h_in_currency[currencyType] as? NSNumber) ?? 0 as NSNumber
                         coinDict["price_change_percentage_24h_bitcoin"] = (price_change_24h_in_currency["btc"] as? NSNumber) ?? 0 as NSNumber

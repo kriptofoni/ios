@@ -121,7 +121,7 @@ class CoreData
                     if let types = result.value(forKey: "types") as? String
                     {
                         
-                        var currencyTypes = types.components(separatedBy: ",")//first index will be empty so be careful in table view
+                        let currencyTypes = types.components(separatedBy: ",")//first index will be empty so be careful in table view
                         completionBlock(currencyTypes)
                     }
                     
