@@ -173,8 +173,8 @@
 		B20792DB261104F200216530 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				B223BA81260CD7E10071AEB9 /* LaunchScreen.storyboard */,
 				B223BA7C260CD7DE0071AEB9 /* Main.storyboard */,
+				B223BA81260CD7E10071AEB9 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";

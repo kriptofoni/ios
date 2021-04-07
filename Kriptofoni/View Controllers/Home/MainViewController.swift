@@ -533,11 +533,15 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             {
                 destinationVC.selectedSearchCoin = self.selectedSearchCoin
                 destinationVC.type = 0 //it means we will come this page from a search operation
+                destinationVC.currentCurrencyKey = self.currentCurrencyKey
+                destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
             }
             else
             {
                 destinationVC.selectedCoin = self.selectedCoin
                 destinationVC.type = 1 // it means we will come this page from a normal selection operation
+                destinationVC.currentCurrencyKey = self.currentCurrencyKey
+                destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
             }
            
         }

@@ -11,9 +11,12 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     
     
     let coingecko = CoinGecko.init()
+    
+    var activityView: UIActivityIndicatorView?
     var dict : [String:NSNumber] = [:]
     @IBOutlet weak var tableView: UITableView!
     var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
+    var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
     var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd"
     var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
@@ -22,35 +25,35 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.navigationItem.title = "2000"
+        showActivityIndicator()
         self.tableView.delegate = self; self.tableView.dataSource = self;
         if type == 0
         {
             
             coingecko.getCoinDetails(id: selectedSearchCoin.getId(),currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                DispatchQueue.main.async
-                {self.tableView.reloadData()}
-                
-                
+                DispatchQueue.main.async{
+                    self.hideActivityIndicator()
+                    self.tableView.reloadData()
+                }
             } onFailure: {
                 print("Error: When getting coin detais.")
             }
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedSearchCoin.getName() + " " + selectedSearchCoin.getSymbol().uppercased(), imageUrl: selectedSearchCoin.getImageUrl())
-            self.navigationItem.prompt = selectedSearchCoin.getName() + " " + selectedSearchCoin.getSymbol().uppercased()
             
         }
         else
         {
             coingecko.getCoinDetails(id: selectedCoin.getId(), currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                DispatchQueue.main.async
-                {self.tableView.reloadData()}
+                DispatchQueue.main.async{
+                    self.hideActivityIndicator()
+                    self.tableView.reloadData()
+                }
             } onFailure: {
                 print("Error: When getting coin detais.")
             }
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedCoin.getName() + " " + selectedCoin.getShortening().uppercased(), imageUrl: selectedCoin.getIconViewUrl())
-            self.navigationItem.prompt = selectedCoin.getName() + " " + selectedCoin.getShortening().uppercased()
         }
         
         
@@ -160,6 +163,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "socialMediaCell", for: indexPath) as! SocialMediaCell
             cell.label.text = socialMediaTexture[indexPath.row - (stringArray.count + 3)]
+            cell.socialMediaIcon.image = UIImage(named: iconNames[indexPath.row - stringArray.count - 3])
             return cell
         }
         else if indexPath.row == 15
@@ -182,16 +186,14 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
 
         // Creates a new text label
         let label = UILabel()
-        label.text = titleText
+        label.text = " " + titleText
         label.sizeToFit()
         label.center = titleView.center
         label.textAlignment = NSTextAlignment.center
-
         // Creates the image view
         let image = UIImageView()
         let url = URL(string: imageUrl)
         image.sd_setImage(with: url) { (_, _, _, _) in}
-
         // Maintains the image's aspect ratio:
         let imageAspect = image.image!.size.width / image.image!.size.height
 
@@ -215,6 +217,22 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
 
         return titleView
 
+    }
+    
+    func showActivityIndicator()
+    {
+        activityView = UIActivityIndicatorView(style: .gray)
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    func hideActivityIndicator()
+    {
+        if (activityView != nil)
+        {
+            activityView?.stopAnimating()
+        }
     }
 }
 
