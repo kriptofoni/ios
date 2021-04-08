@@ -23,17 +23,19 @@ class CoinGecko
         let now = NSDate().timeIntervalSince1970
         let nowString = String(now)
         var secondTime = ""
-        switch type {
-        case "twentyFour_hours": secondTime  = String(now - (60*60*24))
-        case "one_week_before": secondTime = String(now - (60*60*24*7))
-        case "one_month_before": secondTime = String(now - (60*60*24*31))
-        case "three_months_before": secondTime = String(now - (60*60*24*31*3))
-        case "six_months_before": secondTime = String(now - (60*60*24*31*6))
-        case "one_year_before": secondTime = String(now - (60*60*24*31*12))
-        default:
-            print("HATA")
+        switch type
+        {
+            case "twentyFour_hours": secondTime  = String(now - (60*60*24))
+            case "one_week_before": secondTime = String(now - (60*60*24*7))
+            case "one_month_before": secondTime = String(now - (60*60*24*31))
+            case "three_months_before": secondTime = String(now - (60*60*24*31*3))
+            case "six_months_before": secondTime = String(now - (60*60*24*31*6))
+            case "one_year_before": secondTime = String(now - (60*60*24*31*12))
+            case "all": secondTime = String(0)
+            default:print("HATA")
         }
         let urlFor24H = "https://api.coingecko.com/api/v3/coins/\(id)/market_chart/range?vs_currency=\(currency)&from=\(secondTime)&to=\(nowString)"
+        print(urlFor24H + "URL" + id)
         let url = NSURL(string: urlFor24H)
         var request = URLRequest(url: url! as URL)
         request.httpMethod = "GET"

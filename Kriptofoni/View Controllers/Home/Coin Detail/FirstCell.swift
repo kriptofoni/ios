@@ -32,6 +32,8 @@ class SecondCell: UITableViewCell {
 
     
     @IBOutlet weak var chartView: LineChartView!
+    @IBOutlet weak var candleStickChartView: CandleStickChartView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
@@ -66,24 +68,102 @@ class ThirdCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    @IBAction func firstButtonClicked(_ sender: Any) {
+    @IBAction func firstButtonClicked(_ sender: Any)
+    {
+        if firstButton.backgroundColor == UIColor.yellow {firstButton.backgroundColor = UIColor.white}
+        else {firstButton.backgroundColor = UIColor.yellow}
+        
+        
     }
-    @IBAction func secondButtonClicked(_ sender: Any) {
+    
+    @IBAction func secondButtonClicked(_ sender: Any)
+    {
+        if secondButton.backgroundColor == UIColor.yellow {secondButton.backgroundColor = UIColor.white}
+        else {secondButton.backgroundColor = UIColor.white}
     }
-    @IBAction func button24HClicked(_ sender: Any) {
+    @IBAction func button24HClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.yellow
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func button1WClicked(_ sender: Any) {
+    @IBAction func button1WClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.yellow
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func button1MClicked(_ sender: Any) {
+    @IBAction func button1MClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.yellow
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func button3MClicked(_ sender: Any) {
+    @IBAction func button3MClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.yellow
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func button6MClicked(_ sender: Any) {
+    @IBAction func button6MClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.yellow
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func button1YClicked(_ sender: Any) {
+    @IBAction func button1YClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.yellow
+        buttonAll.backgroundColor = UIColor.white
     }
-    @IBAction func buttonAllClicked(_ sender: Any) {
-        print("cem")
+    @IBAction func buttonAllClicked(_ sender: Any)
+    {
+        firstButton.backgroundColor = UIColor.white
+        secondButton.backgroundColor = UIColor.white
+        button24H.backgroundColor = UIColor.white
+        button1W.backgroundColor = UIColor.white
+        button1M.backgroundColor = UIColor.white
+        button3M.backgroundColor = UIColor.white
+        button6M.backgroundColor = UIColor.white
+        button1Y.backgroundColor = UIColor.white
+        buttonAll.backgroundColor = UIColor.yellow
     }
     
 }
