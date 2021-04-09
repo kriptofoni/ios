@@ -9,14 +9,18 @@ import UIKit
 
 class TwoButtonOperationCell: UITableViewCell {
 
-    override func awakeFromNib() {
+    @IBOutlet weak var buyButton: UIButton!
+    @IBOutlet weak var sellButton: UIButton!
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
+        self.selectionStyle = .none
         // Initialization code
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool)
+    {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 
@@ -25,8 +29,11 @@ class TwoButtonOperationCell: UITableViewCell {
 
 class OperationInputCell: UITableViewCell {
 
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textField: UITextField!
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
         // Initialization code
     }
 
@@ -38,10 +45,13 @@ class OperationInputCell: UITableViewCell {
 
 }
 
-class OperationCell: UITableViewCell {
+class OperationDateCell: UITableViewCell {
 
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var textField: UITextField!
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
         // Initialization code
     }
 
@@ -54,8 +64,13 @@ class OperationCell: UITableViewCell {
 
 class AddOperationButtonCell: UITableViewCell {
 
+    
+    
+    
+    @IBOutlet weak var addOperationButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
         // Initialization code
     }
 
@@ -64,7 +79,12 @@ class AddOperationButtonCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    @IBAction func addOperationButtonClicked(_ sender: Any) {
+    }
+    
+   
+    
 }
 
 

@@ -9,7 +9,7 @@ import UIKit;import SDWebImage;import TinyConstraints; import Charts
 class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var values = [ChartDataEntry]()
+    var values = [ChartDataEntry]();var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
     let coingecko = CoinGecko.init()
     var activityView: UIActivityIndicatorView?
     var dict : [String:NSNumber] = [:]
@@ -17,7 +17,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
     var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd"; var currentCoinId = ""
-    var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
+    
     var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
     var type = 0 // 0 means that we are coming this page from a search operation, 1 means that we are coming this page from normal currency selecting. I check that becuase we have two models as Coin and Search Coin and we need to know which one is usable or not to escape bugs.
     override func viewDidLoad()
@@ -251,10 +251,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         }
         else
         {
-            if sender.tag == 0
-            {
-                
-            }
+            if sender.tag == 0{self.performSegue(withIdentifier: "toFullScreen", sender: self)}
             else if sender.tag == 1
             {
                 if !isLineCharts {isLineCharts = true}
@@ -265,13 +262,10 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    
-    
     func navTitleWithImageAndText(titleText: String, imageUrl: String) -> UIView {
 
         // Creates a new UIView
         let titleView = UIView()
-
         // Creates a new text label
         let label = UILabel()
         label.text = " " + titleText
@@ -284,37 +278,27 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         image.sd_setImage(with: url) { (_, _, _, _) in}
         // Maintains the image's aspect ratio:
         let imageAspect = image.image!.size.width / image.image!.size.height
-
+        //BUGGG
         // Sets the image frame so that it's immediately before the text:
         let imageX = label.frame.origin.x - label.frame.size.height * imageAspect
         let imageY = label.frame.origin.y
-
         let imageWidth = label.frame.size.height * imageAspect
         let imageHeight = label.frame.size.height
-
         image.frame = CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight)
-
         image.contentMode = UIView.ContentMode.scaleAspectFit
-
         // Adds both the label and image view to the titleView
         titleView.addSubview(label)
         titleView.addSubview(image)
-
         // Sets the titleView frame to fit within the UINavigation Title
         titleView.sizeToFit()
-
         return titleView
-
     }
     
     //shows spinner
     func showActivityIndicator()
     {
-        if #available(iOS 13.0, *) {
-            activityView = UIActivityIndicatorView(style: .medium)
-        } else {
-            activityView = UIActivityIndicatorView(style: .gray)
-        }
+        if #available(iOS 13.0, *) {activityView = UIActivityIndicatorView(style: .medium)}
+        else {activityView = UIActivityIndicatorView(style: .gray)}
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
@@ -323,11 +307,21 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
     
-    
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {print(entry)}
     
-   
-   
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toFullScreen"
+        {
+            let destinationVC = segue.destination as! DetailedChartViewController
+            destinationVC.values = values
+            destinationVC.charType = isLineCharts
+        }
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait //return the value as per the required orientation
+        }
 }
 
 extension UIView {

@@ -21,6 +21,7 @@
 		B223BA99260CD7E10071AEB9 /* KriptofoniUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA98260CD7E10071AEB9 /* KriptofoniUITests.swift */; };
 		B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8AE2611104A007E3A4E /* CoinGecko.swift */; };
 		B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8B326111A2D007E3A4E /* SearchCoin.swift */; };
+		B23965212620360700D6CD5F /* DetailedChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23965202620360700D6CD5F /* DetailedChartViewController.swift */; };
 		B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */; };
 		B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D0D89260FD317004DA9F9 /* MainViewController.swift */; };
 		B271A8AD261241700088C94D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271A8AC261241700088C94D /* Coin.swift */; };
@@ -76,6 +77,7 @@
 		B223BA9A260CD7E10071AEB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B230F8AE2611104A007E3A4E /* CoinGecko.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGecko.swift; sourceTree = "<group>"; };
 		B230F8B326111A2D007E3A4E /* SearchCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoin.swift; sourceTree = "<group>"; };
+		B23965202620360700D6CD5F /* DetailedChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedChartViewController.swift; sourceTree = "<group>"; };
 		B242DFED261591AD000A5F6A /* Core.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Core.xcdatamodel; sourceTree = "<group>"; };
 		B25D0D89260FD317004DA9F9 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B271A8AC261241700088C94D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
@@ -243,13 +245,22 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
+		B24B13A026202B5700123E78 /* Operation Page */ = {
+			isa = PBXGroup;
+			children = (
+				B2734EDA261EFC6F004F4296 /* OperationViewController.swift */,
+				B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */,
+			);
+			path = "Operation Page";
+			sourceTree = "<group>";
+		};
 		B2CB6EAA261B212400F8FF30 /* Coin Detail */ = {
 			isa = PBXGroup;
 			children = (
 				B218BAEE2618B26500E45732 /* SelectedCoinViewController.swift */,
+				B23965202620360700D6CD5F /* DetailedChartViewController.swift */,
 				B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */,
-				B2734EDA261EFC6F004F4296 /* OperationViewController.swift */,
-				B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */,
+				B24B13A026202B5700123E78 /* Operation Page */,
 			);
 			path = "Coin Detail";
 			sourceTree = "<group>";
@@ -513,6 +524,7 @@
 				B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */,
 				B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */,
 				B2734EDB261EFC6F004F4296 /* OperationViewController.swift in Sources */,
+				B23965212620360700D6CD5F /* DetailedChartViewController.swift in Sources */,
 				B271A8AD261241700088C94D /* Coin.swift in Sources */,
 				B25D0D8A260FD317004DA9F9 /* MainViewController.swift in Sources */,
 				B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */,

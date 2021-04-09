@@ -472,15 +472,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         navigationItem.leftBarButtonItems?.append(arrowButton)
     }
     
-    @IBAction func currencyButtonClicked(_ sender: Any)
-    {
-        print(String(self.currencyTypes.count) + "COUNT2")
-        if self.currencyTypes.count > 0
-        {
-            performSegue(withIdentifier: "toCurrencySelector", sender: self)
-        }
-        
-    }
+    @IBAction func currencyButtonClicked(_ sender: Any){if self.currencyTypes.count > 0{performSegue(withIdentifier: "toCurrencySelector", sender: self)}}
     
     @IBAction func arrowButtonClicked(_ sender: Any)
     {
@@ -583,6 +575,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             activityView?.stopAnimating()
         }
     }
+    
     
 }
 
