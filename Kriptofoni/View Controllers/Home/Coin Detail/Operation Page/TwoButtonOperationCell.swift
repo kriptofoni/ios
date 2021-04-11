@@ -15,6 +15,8 @@ class TwoButtonOperationCell: UITableViewCell {
     {
         super.awakeFromNib()
         self.selectionStyle = .none
+        buyButton.borderColor = UIColor.green
+        buyButton.setTitleColor(UIColor.green, for: .normal)
         // Initialization code
     }
 
@@ -23,11 +25,27 @@ class TwoButtonOperationCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
-
+    @IBAction func buyButtonAction(_ sender: Any)
+    {
+        buyButton.borderColor = UIColor.green
+        buyButton.setTitleColor(UIColor.green, for: .normal)
+        sellButton.borderColor = UIColor.gray
+        sellButton.setTitleColor(UIColor.gray, for: .normal)
+    }
+    
+    @IBAction func sellButtonAction(_ sender: Any)
+    {
+        buyButton.borderColor = UIColor.gray
+        buyButton.setTitleColor(UIColor.gray, for: .normal)
+        sellButton.borderColor = UIColor.red
+        sellButton.setTitleColor(UIColor.red, for: .normal)
+    }
+    
 }
 
 
-class OperationInputCell: UITableViewCell {
+class OperationInputCell: UITableViewCell
+{
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
@@ -45,7 +63,8 @@ class OperationInputCell: UITableViewCell {
 
 }
 
-class OperationDateCell: UITableViewCell {
+class OperationDateCell: UITableViewCell
+{
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
@@ -62,11 +81,8 @@ class OperationDateCell: UITableViewCell {
     }
 }
 
-class AddOperationButtonCell: UITableViewCell {
-
-    
-    
-    
+class AddOperationButtonCell: UITableViewCell
+{
     @IBOutlet weak var addOperationButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -82,9 +98,6 @@ class AddOperationButtonCell: UITableViewCell {
     
     @IBAction func addOperationButtonClicked(_ sender: Any) {
     }
-    
-   
-    
 }
 
 

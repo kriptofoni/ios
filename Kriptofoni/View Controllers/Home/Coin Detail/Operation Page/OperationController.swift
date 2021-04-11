@@ -7,13 +7,15 @@
 
 import UIKit
 
-class OperationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class OperationController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
    
-    
-
+    @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
+    var currencyTypes = [String]()
     var currencyType  = "usd"
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
         // Do any additional setup after loading the view.
@@ -74,6 +76,21 @@ class OperationViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
+    @IBAction func currencyTypeButtonClicked(_ sender: Any)
+    {
+        self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)
+    }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        
+         if segue.identifier == "toCurrencySelectorFromOperation"
+        {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = currencyTypes
+        }
+        
+    }
 
 }

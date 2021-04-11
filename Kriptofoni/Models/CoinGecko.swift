@@ -39,7 +39,6 @@ class CoinGecko
         let url = NSURL(string: urlFor24H)
         var request = URLRequest(url: url! as URL)
         request.httpMethod = "GET"
-        var volumefor24H : NSNumber = 0
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             // Check if Error took place
             if let error = error
@@ -241,7 +240,7 @@ class CoinGecko
             // Read HTTP Res3ponse Status code
             //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
             // Convert HTTP Response Data to a simple String
-            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            if let data = data
             {
                // print("Response data string:\n \(dataString)")
                 do
@@ -355,13 +354,12 @@ class CoinGecko
             // Read HTTP Res3ponse Status code
             //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
             // Convert HTTP Response Data to a simple String
-            if let data = data, let dataString = String(data: data, encoding: .utf8)
+            if let data = data
             {
                // print("Response data string:\n \(dataString)")
                 do
                 {
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
-                    let number = 1
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
                         if let id = jsonElement["id"] as? String

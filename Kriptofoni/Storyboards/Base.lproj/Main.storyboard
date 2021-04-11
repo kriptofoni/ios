@@ -9,16 +9,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Currency Selector View Controller-->
+        <!--Currency Selector Controller-->
         <scene sceneID="Dqf-Vz-UVy">
             <objects>
-                <viewController id="db0-3R-3L1" customClass="CurrencySelectorViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="db0-3R-3L1" customClass="CurrencySelectorController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Vn-1d-r6G">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fgQ-wy-nQY">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="searchCell" rowHeight="50" id="ToT-B2-sba" customClass="SearchCell" customModule="Kriptofoni" customModuleProvider="target">
@@ -71,20 +71,26 @@
                             <constraint firstItem="fgQ-wy-nQY" firstAttribute="leading" secondItem="FaL-E9-3YM" secondAttribute="leading" id="xpE-ji-60F"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="akk-Yu-cIU"/>
+                    <navigationItem key="navigationItem" id="akk-Yu-cIU">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="uov-5M-A4F">
+                            <connections>
+                                <action selector="backButtonAction:" destination="db0-3R-3L1" id="xTo-KS-8wr"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="tableView" destination="fgQ-wy-nQY" id="mzc-wu-Z2z"/>
-                        <segue destination="Leh-9D-fbB" kind="presentation" identifier="toBackFromSelector" modalPresentationStyle="fullScreen" id="1sl-WD-JaE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2182" y="1601"/>
+            <point key="canvasLocation" x="1370" y="2034"/>
         </scene>
-        <!--Main View Controller-->
+        <!--Main Controller-->
         <scene sceneID="Cpm-7h-oHV">
             <objects>
-                <viewController id="JQw-oj-lID" customClass="MainViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="JQw-oj-lID" customClass="MainController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QgI-tf-lv3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -292,7 +298,7 @@
                         <outlet property="segmentedView" destination="Zrk-vo-DlU" id="ldR-ZE-7ln"/>
                         <outlet property="tableView" destination="K4d-Ru-TlL" id="ZcN-x6-BbE"/>
                         <segue destination="UeQ-yQ-1Sj" kind="show" identifier="toCoinDetails" id="Lf7-dZ-sEB"/>
-                        <segue destination="db0-3R-3L1" kind="showDetail" identifier="toCurrencySelector" id="tS1-2f-B3P"/>
+                        <segue destination="db0-3R-3L1" kind="show" identifier="toCurrencySelector" id="tS1-2f-B3P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rgq-fb-YRz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -310,10 +316,10 @@
             </objects>
             <point key="canvasLocation" x="38" y="1601"/>
         </scene>
-        <!--Selected Coin View Controller-->
+        <!--Coin Details Controller-->
         <scene sceneID="IQV-AB-ATY">
             <objects>
-                <viewController id="UeQ-yQ-1Sj" customClass="SelectedCoinViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="UeQ-yQ-1Sj" customClass="CoinDetailsController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TFe-Ob-JaM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -405,9 +411,14 @@
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3a-qC-1PR">
                                                             <rect key="frame" x="0.0" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" title="24H">
+                                                            <state key="normal" backgroundImage="fullchart">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="firstButtonClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="mTc-Kf-wlb"/>
                                                             </connections>
@@ -415,9 +426,14 @@
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Guy-om-esg">
                                                             <rect key="frame" x="39" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" title="24H">
+                                                            <state key="normal" backgroundImage="linechart">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="secondButtonClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="oyu-sI-4G7"/>
                                                             </connections>
@@ -429,6 +445,11 @@
                                                             <state key="normal" title="24H">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button24HClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="4ui-aP-xfJ"/>
                                                             </connections>
@@ -439,6 +460,11 @@
                                                             <state key="normal" title="1W">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button1WClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="l2Q-PA-Kfw"/>
                                                             </connections>
@@ -449,6 +475,11 @@
                                                             <state key="normal" title="1M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button1MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="apL-SS-yUp"/>
                                                             </connections>
@@ -459,6 +490,11 @@
                                                             <state key="normal" title="3M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button3MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="4Xa-ns-idF"/>
                                                             </connections>
@@ -469,6 +505,11 @@
                                                             <state key="normal" title="6M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button6MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="Aw8-yo-3yl"/>
                                                             </connections>
@@ -479,6 +520,11 @@
                                                             <state key="normal" title="1Y">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="button1YClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="nJV-id-kaO"/>
                                                             </connections>
@@ -489,6 +535,11 @@
                                                             <state key="normal" title="All">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                             <connections>
                                                                 <action selector="buttonAllClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="m7P-2G-gke"/>
                                                             </connections>
@@ -602,7 +653,6 @@
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="addOperationButtonClicked:" destination="Ejc-Zv-iXs" eventType="touchUpInside" id="SpS-F9-17M"/>
-                                                        <segue destination="GTX-aM-nyO" kind="show" id="4kQ-cF-ObK"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -758,31 +808,173 @@
                             <constraint firstItem="dnc-zR-Qvc" firstAttribute="top" secondItem="4RN-78-qLi" secondAttribute="top" id="hKi-Dr-Xia"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="oRm-Et-o4h"/>
+                    <navigationItem key="navigationItem" id="oRm-Et-o4h">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="Z1c-wL-2KF">
+                            <color key="tintColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="currencyTypeButtonClicked:" destination="UeQ-yQ-1Sj" id="7FO-9C-GSS"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <size key="freeformSize" width="375" height="800"/>
                     <connections>
+                        <outlet property="currencyTypeButton" destination="Z1c-wL-2KF" id="qov-7A-2Tu"/>
                         <outlet property="tableView" destination="dnc-zR-Qvc" id="qR6-xy-L8F"/>
-                        <segue destination="jtQ-ps-65g" kind="show" identifier="toFullScreen" id="EBq-EN-CpI"/>
+                        <segue destination="jtQ-ps-65g" kind="presentation" identifier="toFullScreen" modalPresentationStyle="fullScreen" id="EBq-EN-CpI"/>
+                        <segue destination="db0-3R-3L1" kind="show" identifier="toCurrencySelectorFromDetails" id="6TI-yt-nup"/>
+                        <segue destination="GTX-aM-nyO" kind="show" identifier="toOperationCoinDetails" id="XYr-1L-vq5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vr3-7R-Lke" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="37.600000000000001" y="2431.4842578710645"/>
         </scene>
-        <!--Detailed Chart View Controller-->
+        <!--Full Screen Chart Controller-->
         <scene sceneID="Hiu-V1-a7W">
             <objects>
-                <viewController id="jtQ-ps-65g" customClass="DetailedChartViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="jtQ-ps-65g" customClass="FullScreenChartController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gXW-0J-A29">
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" spacing="47" translatesAutoresizingMaskIntoConstraints="NO" id="Y5u-Tb-Fht">
+                                <rect key="frame" x="0.0" y="0.0" width="650" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cV6-m8-tCP">
+                                        <rect key="frame" x="0.0" y="0.0" width="34" height="30"/>
+                                        <state key="normal" title="Back"/>
+                                        <connections>
+                                            <action selector="backButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="JLl-eX-cIC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3MM-OU-RJf">
+                                        <rect key="frame" x="81" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="changeChartTypeButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="JJu-oH-d1h"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bEQ-gc-elU">
+                                        <rect key="frame" x="158" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="24H">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="twentyFourButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="aCW-M8-ptu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Yn-gB-ZoQ">
+                                        <rect key="frame" x="235" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="1W">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="oneWeekButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="TFl-KT-0Fd"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ed9-mu-81Y">
+                                        <rect key="frame" x="312" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="1M">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="oneMonthButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="bQJ-1j-2cC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1wE-fc-WUr">
+                                        <rect key="frame" x="389" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="3M">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="threeMonthButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="NkY-64-lp5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKW-xb-shy">
+                                        <rect key="frame" x="466" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="6M">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="sixMonthButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="fYR-KU-aOQ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z2J-Hs-BZc">
+                                        <rect key="frame" x="543" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="1Y">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="oneYearButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="4sq-gZ-a0v"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpJ-hN-abZ">
+                                        <rect key="frame" x="620" y="0.0" width="30" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="All">
+                                            <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="allButtonClicked:" destination="jtQ-ps-65g" eventType="touchUpInside" id="Tdm-6o-NvO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfN-qs-dcj" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="44" width="667" height="282"/>
+                                <rect key="frame" x="0.0" y="28" width="667" height="347"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWL-dF-ITS" customClass="CandleStickChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="44" width="667" height="282"/>
+                                <rect key="frame" x="0.0" y="28" width="667" height="347"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
@@ -791,7 +983,7 @@
                             <constraint firstAttribute="bottomMargin" secondItem="bfN-qs-dcj" secondAttribute="bottom" id="31M-he-nqC"/>
                             <constraint firstItem="bfN-qs-dcj" firstAttribute="centerX" secondItem="gXW-0J-A29" secondAttribute="centerX" id="3z6-sz-eDz"/>
                             <constraint firstItem="bfN-qs-dcj" firstAttribute="leading" secondItem="UWL-dF-ITS" secondAttribute="leading" id="LNS-hd-1WO"/>
-                            <constraint firstItem="bfN-qs-dcj" firstAttribute="top" secondItem="cYN-Yc-eaZ" secondAttribute="top" id="W88-rW-Ntq"/>
+                            <constraint firstItem="bfN-qs-dcj" firstAttribute="top" secondItem="cYN-Yc-eaZ" secondAttribute="top" constant="28" id="W88-rW-Ntq"/>
                             <constraint firstItem="bfN-qs-dcj" firstAttribute="trailing" secondItem="UWL-dF-ITS" secondAttribute="trailing" id="ZFL-xq-cbs"/>
                             <constraint firstItem="bfN-qs-dcj" firstAttribute="leading" secondItem="cYN-Yc-eaZ" secondAttribute="leading" id="cr0-Xp-qUL"/>
                             <constraint firstItem="bfN-qs-dcj" firstAttribute="top" secondItem="UWL-dF-ITS" secondAttribute="top" id="nSE-yb-kg2"/>
@@ -801,23 +993,31 @@
                     <navigationItem key="navigationItem" id="Ddu-yj-22l"/>
                     <size key="freeformSize" width="667" height="375"/>
                     <connections>
+                        <outlet property="all" destination="tpJ-hN-abZ" id="dPg-TX-EZB"/>
                         <outlet property="candleView" destination="UWL-dF-ITS" id="FV9-3k-xgQ"/>
+                        <outlet property="changeChartTypeButton" destination="3MM-OU-RJf" id="WvV-ar-ZSG"/>
                         <outlet property="chartView" destination="bfN-qs-dcj" id="gce-gm-XlZ"/>
+                        <outlet property="oneMonth" destination="ed9-mu-81Y" id="CFL-nY-yoJ"/>
+                        <outlet property="oneYear" destination="Z2J-Hs-BZc" id="isN-Ny-gOc"/>
+                        <outlet property="oneweek" destination="1Yn-gB-ZoQ" id="HeO-Ue-XWb"/>
+                        <outlet property="sixMonth" destination="UKW-xb-shy" id="sT2-Uz-FSI"/>
+                        <outlet property="threeMonth" destination="1wE-fc-WUr" id="vHe-LT-dpP"/>
+                        <outlet property="twentyFour" destination="bEQ-gc-elU" id="Mr3-Tg-7NL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xop-Of-Kd9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-591.20000000000005" y="3146.176911544228"/>
+            <point key="canvasLocation" x="-1058.4000000000001" y="3129.0854572713647"/>
         </scene>
-        <!--Operation View Controller-->
+        <!--Operation Controller-->
         <scene sceneID="ufD-mV-Shx">
             <objects>
-                <viewController id="GTX-aM-nyO" customClass="OperationViewController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="GTX-aM-nyO" customClass="OperationController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EY0-qm-PpL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="weG-vh-qbC">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="weG-vh-qbC">
                                 <rect key="frame" x="0.0" y="44" width="375" height="574"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -847,6 +1047,9 @@
                                                             <integer key="value" value="8"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="buyButtonAction:" destination="AOd-Y5-e3E" eventType="touchUpInside" id="Obz-tb-s5j"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hPX-0P-GNB">
                                                     <rect key="frame" x="137.5" y="20" width="100" height="31"/>
@@ -867,6 +1070,9 @@
                                                             <color key="value" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="sellButtonAction:" destination="AOd-Y5-e3E" eventType="touchUpInside" id="fUx-tm-eY9"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -1013,14 +1219,23 @@
                             <constraint firstItem="weG-vh-qbC" firstAttribute="top" secondItem="ChC-kk-nsD" secondAttribute="top" id="weX-1q-nPr"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="m3O-iZ-tG5"/>
+                    <navigationItem key="navigationItem" id="m3O-iZ-tG5">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="Ht7-Zl-pMp">
+                            <color key="tintColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="currencyTypeButtonClicked:" destination="GTX-aM-nyO" id="X3Y-XJ-YFT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="currencyTypeButton" destination="Ht7-Zl-pMp" id="N6k-3I-Ntx"/>
                         <outlet property="tableView" destination="weG-vh-qbC" id="vKe-aj-sTo"/>
+                        <segue destination="db0-3R-3L1" kind="show" identifier="toCurrencySelectorFromOperation" id="dKn-95-bcY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RNU-X9-f0E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="530" y="3262"/>
+            <point key="canvasLocation" x="1006" y="3260"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="AMK-k6-p2R">
@@ -1062,8 +1277,13 @@
             <point key="canvasLocation" x="38" y="862"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="tS1-2f-B3P"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow" width="24" height="24"/>
+        <image name="fullchart" width="30" height="27"/>
+        <image name="linechart" width="30" height="27"/>
         <image name="market-icon-_10_24x24" width="24" height="24"/>
         <image name="search" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">

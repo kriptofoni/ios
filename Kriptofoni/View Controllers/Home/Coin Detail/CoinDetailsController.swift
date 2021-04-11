@@ -6,23 +6,27 @@
 //
 
 import UIKit;import SDWebImage;import TinyConstraints; import Charts
-class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate {
+class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var values = [ChartDataEntry]();var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
-    let coingecko = CoinGecko.init()
-    var activityView: UIActivityIndicatorView?
-    var dict : [String:NSNumber] = [:]
+    @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
     var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd"; var currentCoinId = ""
+    var values = [ChartDataEntry]();var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
+    let coingecko = CoinGecko.init()
+    var activityView: UIActivityIndicatorView?
+    var dict : [String:NSNumber] = [:]
+    var currencyTypes = [String]()
     
     var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
     var type = 0 // 0 means that we are coming this page from a search operation, 1 means that we are coming this page from normal currency selecting. I check that becuase we have two models as Coin and Search Coin and we need to know which one is usable or not to escape bugs.
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.currencyTypeButton.title = currentCurrencyKey.uppercased()
         showActivityIndicator()
         self.tableView.delegate = self; self.tableView.dataSource = self;
         if type == 0
@@ -39,7 +43,6 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
                 } onFailure: {print("Error")}
             } onFailure: {print("Error: When getting coin detais.")}
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedSearchCoin.getName() + " " + selectedSearchCoin.getSymbol().uppercased(), imageUrl: selectedSearchCoin.getImageUrl())
-            
         }
         else
         {
@@ -63,6 +66,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         
         
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -139,7 +143,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "thirdCell", for: indexPath) as! ThirdCell
             cell.firstButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.firstButton.tag = 0
-            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1
+            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1;
             cell.button24H.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button24H.tag = 2
             cell.button1W.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside);  cell.button1W.tag = 3
             cell.button1M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1M.tag = 4
@@ -212,6 +216,7 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         else if indexPath.row == 15
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonCell", for: indexPath) as! TwoButtonCell
+            cell.addOperation.addTarget(self, action: #selector(self.operationButtonClicked(sender:)), for: .touchUpInside)
             return cell
         }
         else if indexPath.row ==  16
@@ -221,7 +226,11 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
         }
         return cell
     }
-     
+    
+    @objc func operationButtonClicked(sender: UIButton)
+    {
+        self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)
+    }
     
     @objc func tappedButton(sender : UIButton)
     {
@@ -254,8 +263,8 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
             if sender.tag == 0{self.performSegue(withIdentifier: "toFullScreen", sender: self)}
             else if sender.tag == 1
             {
-                if !isLineCharts {isLineCharts = true}
-                else {isLineCharts = false}
+                if !isLineCharts {isLineCharts = true; sender.setBackgroundImage(UIImage(named: "candlestick"), for: .normal)}
+                else {isLineCharts = false; sender.setBackgroundImage(UIImage(named: "linechart"), for: .normal)}
                 DispatchQueue.main.async{self.tableView.reloadData()}
             }
         }
@@ -309,13 +318,32 @@ class SelectedCoinViewController: UIViewController, UITableViewDelegate, UITable
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {print(entry)}
     
+    
+    
+    @IBAction func currencyTypeButtonClicked(_ sender: Any)
+    {
+        self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "toFullScreen"
         {
-            let destinationVC = segue.destination as! DetailedChartViewController
+            let destinationVC = segue.destination as! FullScreenChartController
             destinationVC.values = values
             destinationVC.charType = isLineCharts
+            destinationVC.coinId = currentCoinId
+            destinationVC.currencyKey = currentCurrencyKey
+        }
+        else if segue.identifier == "toCurrencySelectorFromDetails"
+        {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = currencyTypes
+        }
+        else if segue.identifier == "toOperationCoinDetails"
+        {
+            let destinationVC = segue.destination as! OperationController
+            destinationVC.currencyType = self.currentCurrencyKey
+            destinationVC.currencyTypes = self.currencyTypes
         }
     }
     

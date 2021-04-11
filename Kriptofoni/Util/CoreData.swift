@@ -25,7 +25,6 @@ class CoreData
             let results = try context.fetch(fetchRequest)
             if results.count > 0
             {
-                let newCurrency = SearchCoin()
                 for result in results as! [NSManagedObject]
                 {
                     if let string = result.value(forKey: "string") as? String

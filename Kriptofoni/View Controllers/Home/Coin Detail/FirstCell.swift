@@ -68,18 +68,11 @@ class ThirdCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    @IBAction func firstButtonClicked(_ sender: Any)
-    {
-        if firstButton.backgroundColor == UIColor.yellow {firstButton.backgroundColor = UIColor.white}
-        else {firstButton.backgroundColor = UIColor.yellow}
-        
-        
-    }
     
-    @IBAction func secondButtonClicked(_ sender: Any)
-    {
-        if secondButton.backgroundColor == UIColor.yellow {secondButton.backgroundColor = UIColor.white}
-        else {secondButton.backgroundColor = UIColor.white}
+    @IBAction func firstButtonClicked(_ sender: Any){}
+    
+    @IBAction func secondButtonClicked(_ sender: Any){
+        
     }
     @IBAction func button24HClicked(_ sender: Any)
     {

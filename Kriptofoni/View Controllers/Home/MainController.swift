@@ -11,7 +11,7 @@ import SDWebImage
 import CoreData
 
 
-class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
+class MainController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
     @IBOutlet weak var searchButton: UIBarButtonItem!
     @IBOutlet weak var currencyButton: UIBarButtonItem!
@@ -32,6 +32,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     var isAfterCurrencyChanging = false
    
 
+
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -45,7 +47,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
         segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
-        segmentedView.addTarget(self, action: #selector(MainViewController.segmentSelected(sender:)), for: .valueChanged)
+        segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
     }
     
     func appStartingControls()
@@ -163,8 +165,7 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 let result = try? managedObjectContext.fetch(fetchRequest)
                 let resultData = result?[0] as! NSManagedObject
                 let jsonCompatibleArray = self.searchCoinArray.map { model in
-                    return
-                    [
+                    return [
                             "id":model.getId(),
                             "symbol":model.getSymbol(),
                             "name":model.getName(),
@@ -203,6 +204,8 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         onFailure: {print("Could not download from api")}
     }
+    
+
     
     /// Get coins according to 24H changes, type is for selecting INC or DEC
     func getCoinsFor24(page: Int, type : String)
@@ -528,15 +531,18 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
+        currencyTypes.remove(at: 0)
         if segue.identifier == "toCoinDetails"//We give our selected restaurant to next page
         {
-            let destinationVC = segue.destination as! SelectedCoinViewController
+            let destinationVC = segue.destination as! CoinDetailsController
+            
             if searchActive
             {
                 destinationVC.selectedSearchCoin = self.selectedSearchCoin
                 destinationVC.type = 0 //it means we will come this page from a search operation
                 destinationVC.currentCurrencyKey = self.currentCurrencyKey
                 destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
+                destinationVC.currencyTypes = self.currencyTypes
             }
             else
             {
@@ -544,12 +550,13 @@ class MainViewController: UIViewController,UITableViewDelegate, UITableViewDataS
                 destinationVC.type = 1 // it means we will come this page from a normal selection operation
                 destinationVC.currentCurrencyKey = self.currentCurrencyKey
                 destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
+                destinationVC.currencyTypes = self.currencyTypes
             }
            
         }
         else if segue.identifier == "toCurrencySelector"
         {
-            let destinationVC = segue.destination as! CurrencySelectorViewController
+            let destinationVC = segue.destination as! CurrencySelectorController
             destinationVC.currencyArray = self.currencyTypes
         }
     }

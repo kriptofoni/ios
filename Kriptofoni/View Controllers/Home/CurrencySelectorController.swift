@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CurrencySelectorController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -19,7 +19,6 @@ class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UIT
     {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
-        currencyArray.remove(at: 0)
         
     }
 
@@ -51,17 +50,22 @@ class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UIT
         self.selectedCurrency = currencyArray[indexPath.row]
         if getCountryCode(currencyCode: self.selectedCurrency)[0] != ""{self.selectedCurrencySymbol = getCountryCode(currencyCode: self.selectedCurrency)[1]}
         else{self.selectedCurrencySymbol = self.selectedCurrency.uppercased()}
-        performSegue(withIdentifier: "toBackFromSelector", sender: self)
+        //performSegue(withIdentifier: "toBackFromSelector", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        let barControllers = segue.destination as! UITabBarController
+        /*let barControllers = segue.destination as! UITabBarController
         let nav = barControllers.viewControllers![0] as! UINavigationController
         let destinationViewController = nav.topViewController as? MainViewController
         destinationViewController?.currentCurrencyKey = self.selectedCurrency
         destinationViewController?.currentCurrencySymbol = self.selectedCurrencySymbol
-        destinationViewController?.isAfterCurrencyChanging = true
+        destinationViewController?.isAfterCurrencyChanging = tru*/
+    }
+    
+    @IBAction func backButtonAction(_ sender: Any)
+    {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func getCountryCode(currencyCode : String) -> [String]
@@ -70,90 +74,27 @@ class CurrencySelectorViewController: UIViewController, UITableViewDelegate, UIT
             var countryCode = ""
             var currencySymbol = ""
             switch (currencyCode) {
-                case "usd":
-                    countryCode = "us";
-                    currencySymbol = "$";
-                    break;
-                case "aed":
-                    countryCode = "ae";
-                    currencySymbol = "د.إ";
-                    break;
-                case "ars":
-                    countryCode = "ar";
-                    currencySymbol = "$";
-                    break;
-                case "aud":
-                    countryCode = "au";
-                    currencySymbol = "$";
-                    break;
-                case "bdt":
-                    countryCode = "bd";
-                    currencySymbol = "$";
-                    break;
-                case "bhd":
-                    countryCode = "bh";
-                    currencySymbol = "ó";
-                    break;
-                case "bmd":
-                    countryCode = "bm";
-                    currencySymbol = "$";
-                    break;
-                case "brl":
-                    countryCode = "br";
-                    currencySymbol = "R";
-                    break;
-                case "cad":
-                    countryCode = "ca";
-                    currencySymbol = "$";
-                    break;
-                case "chf":
-                    countryCode = "li";
-                    currencySymbol = "Fr";
-                    break;
-                case "clp":
-                    countryCode = "cl";
-                    currencySymbol = "$";
-                    break;
-                case "cny":
-                    countryCode = "cn";
-                    currencySymbol = "¥";
-                    break;
-                case "czk":
-                    countryCode = "cz";
-                    currencySymbol = "Kč";
-                    break;
-                case "dkk":
-                    countryCode = "dk";
-                    currencySymbol = "kr";
-                    break;
-                case "eur":
-                    countryCode = "eu";
-                    currencySymbol = "€";
-                    break;
-                case "gbp":
-                    countryCode = "gb";
-                    currencySymbol = "£";
-                    break;
-                case "hkd":
-                    countryCode = "hk";
-                    currencySymbol = "$";
-                    break;
-                case "huf":
-                    countryCode = "hu";
-                    currencySymbol = "Ft";
-                    break;
-                case "idr":
-                    countryCode = "id";
-                    currencySymbol = "Rp";
-                    break;
-                case "ils":
-                    countryCode = "il";
-                    currencySymbol = "₪";
-                    break;
-                case "inr":
-                    countryCode = "in";
-                    currencySymbol = "₹";
-                    break;
+                case "usd": countryCode = "us";currencySymbol = "$"; break;
+                case "aed": countryCode = "ae";currencySymbol = "د.إ";break;
+                case "ars": countryCode = "ar";currencySymbol = "$"; break;
+                case "aud": countryCode = "au";currencySymbol = "$"; break;
+                case "bdt": countryCode = "bd";currencySymbol = "$"; break;
+                case "bhd": countryCode = "bh";currencySymbol = "ó"; break;
+                case "bmd": countryCode = "bm";currencySymbol = "$"; break;
+                case "brl": countryCode = "br";currencySymbol = "R"; break;
+                case "cad": countryCode = "ca";currencySymbol = "$"; break;
+                case "chf": countryCode = "li";currencySymbol = "Fr";break;
+                case "clp": countryCode = "cl";currencySymbol = "$"; break;
+                case "cny": countryCode = "cn";currencySymbol = "¥"; break;
+                case "czk": countryCode = "cz";currencySymbol = "Kč";break;
+                case "dkk": countryCode = "dk";currencySymbol = "kr";break;
+                case "eur": countryCode = "eu";currencySymbol = "€"; break;
+                case "gbp": countryCode = "gb";currencySymbol = "£"; break;
+                case "hkd": countryCode = "hk";currencySymbol = "$"; break;
+                case "huf": countryCode = "hu";currencySymbol = "Ft";break;
+                case "idr": countryCode = "id";currencySymbol = "Rp";break;
+                case "ils": countryCode = "il";currencySymbol = "₪"; break;
+                case "inr": countryCode = "in";currencySymbol = "₹"; break;
                 case "jpy":
                     countryCode = "jp";
                     currencySymbol = "¥";
