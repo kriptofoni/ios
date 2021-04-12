@@ -310,7 +310,8 @@ class CoinGecko
                         {
                             if let totalVolumeForCurrency = totalVolumeDict[currency] as? NSNumber
                             {
-                                navigationTitle = totalVolumeForCurrency.stringValue + " " + symbol
+                                print(totalVolumeForCurrency)
+                                navigationTitle = Util.toPrice(totalVolumeForCurrency.doubleValue, isCoinDetailPrice: false) + " " + symbol
                                 completionBlock(navigationTitle);
                             }
                         }

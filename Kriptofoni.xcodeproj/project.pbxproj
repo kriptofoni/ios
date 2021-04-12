@@ -30,6 +30,8 @@
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
 		B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */; };
+		B2D54611262344B8004DD5BB /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D54610262344B8004DD5BB /* AppUtility.swift */; };
+		B2D5461E262352E9004DD5BB /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5461D262352E8004DD5BB /* Util.swift */; };
 		B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D75CB02614FBCB000C0259 /* CoreData.swift */; };
 		B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EB6B26261338690056AAB0 /* SearchCell.swift */; };
 /* End PBXBuildFile section */
@@ -86,6 +88,8 @@
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
 		B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorController.swift; sourceTree = "<group>"; };
+		B2D54610262344B8004DD5BB /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
+		B2D5461D262352E8004DD5BB /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		B2D75CB02614FBCB000C0259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		B2EB6B26261338690056AAB0 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		C4BBB19FB931770C412FE51F /* Pods_KriptofoniTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KriptofoniTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -270,6 +274,8 @@
 			children = (
 				B2D75CB02614FBCB000C0259 /* CoreData.swift */,
 				B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */,
+				B2D54610262344B8004DD5BB /* AppUtility.swift */,
+				B2D5461D262352E8004DD5BB /* Util.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 			files = (
 				B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */,
 				B20792D22611004400216530 /* CurrencyCell.swift in Sources */,
+				B2D54611262344B8004DD5BB /* AppUtility.swift in Sources */,
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
@@ -523,6 +530,7 @@
 				B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */,
 				B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */,
 				B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */,
+				B2D5461E262352E9004DD5BB /* Util.swift in Sources */,
 				B2734EDB261EFC6F004F4296 /* OperationController.swift in Sources */,
 				B23965212620360700D6CD5F /* FullScreenChartController.swift in Sources */,
 				B271A8AD261241700088C94D /* Coin.swift in Sources */,

@@ -19,7 +19,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var activityView: UIActivityIndicatorView?
     var dict : [String:NSNumber] = [:]
     var currencyTypes = [String]()
-    
     var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
     var type = 0 // 0 means that we are coming this page from a search operation, 1 means that we are coming this page from normal currency selecting. I check that becuase we have two models as Coin and Search Coin and we need to know which one is usable or not to escape bugs.
     
@@ -55,12 +54,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                         self.hideActivityIndicator()
                         self.tableView.reloadData()
                     }
-                } onFailure: {
-                    print("Error")
-                }
-            } onFailure: {
-                print("Error: When getting coin detais.")
-            }
+                } onFailure: {print("Error")}
+            } onFailure: {print("Error: When getting coin detais.")}
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedCoin.getName() + " " + selectedCoin.getShortening().uppercased(), imageUrl: selectedCoin.getIconViewUrl())
         }
         
@@ -95,7 +90,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "firstCell", for: indexPath) as! FirstCell
-            cell.leftLabel.text = currentCurrencySymbol + self.dict["current_price_for_currency"]!.stringValue
+            cell.leftLabel.text = currentCurrencySymbol + Util.toPrice(self.dict["current_price_for_currency"]!.doubleValue, isCoinDetailPrice: true)
             if self.dict["price_change_percentage_24h"]!.intValue > 0{cell.rigthLabel.textColor = UIColor.green}
             else{cell.rigthLabel.textColor = UIColor.red}
             cell.rigthLabel.text = "%" + String(format: "%.3f", self.dict["price_change_percentage_24h"]!.doubleValue)
@@ -143,7 +138,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "thirdCell", for: indexPath) as! ThirdCell
             cell.firstButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.firstButton.tag = 0
-            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1;
+            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1
             cell.button24H.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button24H.tag = 2
             cell.button1W.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside);  cell.button1W.tag = 3
             cell.button1M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1M.tag = 4
@@ -160,7 +155,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             if self.dict["price_change_percentage_24h"]!.intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
             else{cell.rightLabelUp.textColor = UIColor.red}
             cell.rightLabelUp.text = "%" + String(format: "%.3f", self.dict["price_change_percentage_24h"]!.doubleValue)
-            cell.rightLabelDown.text = currentCurrencySymbol + " " + self.dict["current_price_for_currency"]!.stringValue
+            cell.rightLabelDown.text = currentCurrencySymbol + " " + Util.toPrice(self.dict["current_price_for_currency"]!.doubleValue, isCoinDetailPrice: true)
             return cell
         }
         else if indexPath.row == 4
@@ -183,25 +178,21 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                     if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text = "%" +  String(format: "%.3f", self.dict["price_change_percentage_1h_in_currency"]!.doubleValue)
-                    
                 case 6:
                     let element = self.dict["price_change_percentage_24h"];
                     if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text =  "%" +  String(format: "%.3f", self.dict["price_change_percentage_24h"]!.doubleValue)
-                    
                 case 7:
                     let element = self.dict["price_change_percentage_7d_in_currency"];
                     if element!.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text = "%" + String(format: "%.3f", self.dict[ "price_change_percentage_7d_in_currency"]!.doubleValue)
-                    
-                case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  String(format: "%.1f", self.dict["market_cap"]!.doubleValue)
-                case 9:  cell.rightLabel.text = self.currentCurrencySymbol + " "  + String(format: "%.1f", self.dict["volumeFor24H"]!.doubleValue)
-                case 10: cell.rightLabel.text = self.currentCurrencySymbol + " "  + String(format: "%.1f", self.dict["circulating_supply"]!.doubleValue)
-                case 11: cell.rightLabel.text = self.currentCurrencySymbol + " " + String(format: "%.1f", self.dict["total_supply"]!.doubleValue)
-                default:
-                    print("Error: table view error. ")
+                case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice(self.dict["market_cap"]!.doubleValue, isCoinDetailPrice: false)
+                case 9:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice(self.dict["volumeFor24H"]!.doubleValue, isCoinDetailPrice: false)
+                case 10: cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice(self.dict["circulating_supply"]!.doubleValue, isCoinDetailPrice: false)
+                case 11: cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice(self.dict["total_supply"]!.doubleValue, isCoinDetailPrice: false)
+               default: print("Error: table view error. ")
                         
             }
             return cell
@@ -227,10 +218,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    @objc func operationButtonClicked(sender: UIButton)
-    {
-        self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)
-    }
+    @objc func operationButtonClicked(sender: UIButton){self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)}
     
     @objc func tappedButton(sender : UIButton)
     {
@@ -271,8 +259,32 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    func navTitleWithImageAndText(titleText: String, imageUrl: String) -> UIView {
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toFullScreen"
+        {
+            let destinationVC = segue.destination as! FullScreenChartController
+            destinationVC.values = values
+            destinationVC.charType = isLineCharts
+            destinationVC.coinId = currentCoinId
+            destinationVC.currencyKey = currentCurrencyKey
+        }
+        else if segue.identifier == "toCurrencySelectorFromDetails"
+        {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = currencyTypes
+        }
+        else if segue.identifier == "toOperationCoinDetails"
+        {
+            let destinationVC = segue.destination as! OperationController
+            destinationVC.currencyType = self.currentCurrencyKey
+            destinationVC.currencyTypes = self.currencyTypes
+        }
+    }
+    
+    /// Navigation Bar Settings
+    func navTitleWithImageAndText(titleText: String, imageUrl: String) -> UIView
+    {
         // Creates a new UIView
         let titleView = UIView()
         // Creates a new text label
@@ -315,41 +327,12 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
-    
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {print(entry)}
+    @IBAction func currencyTypeButtonClicked(_ sender: Any){self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)}
     
-    
-    
-    @IBAction func currencyTypeButtonClicked(_ sender: Any)
-    {
-        self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        if segue.identifier == "toFullScreen"
-        {
-            let destinationVC = segue.destination as! FullScreenChartController
-            destinationVC.values = values
-            destinationVC.charType = isLineCharts
-            destinationVC.coinId = currentCoinId
-            destinationVC.currencyKey = currentCurrencyKey
-        }
-        else if segue.identifier == "toCurrencySelectorFromDetails"
-        {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = currencyTypes
-        }
-        else if segue.identifier == "toOperationCoinDetails"
-        {
-            let destinationVC = segue.destination as! OperationController
-            destinationVC.currencyType = self.currentCurrencyKey
-            destinationVC.currencyTypes = self.currencyTypes
-        }
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.portrait //return the value as per the required orientation
-        }
+    //Locks the screen before view is appeared and realease this locking before view is disappeared
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)}
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)}
 }
 
 extension UIView {

@@ -13,6 +13,8 @@ import CoreData
 
 class MainController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
+   
+    @IBOutlet weak var parentViewOfSegmented: UIView!
     @IBOutlet weak var searchButton: UIBarButtonItem!
     @IBOutlet weak var currencyButton: UIBarButtonItem!
     @IBOutlet var arrowButton: UIBarButtonItem!
@@ -30,13 +32,16 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var searchActive = false
     var timer: Timer?
     var isAfterCurrencyChanging = false
+    var sSize: CGRect = UIScreen.main.bounds
+    
    
-
-
+    
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        let sWidth = sSize.width
+        segmentedView.frame.size.width = sWidth
         self.currencyButton.title = currentCurrencyKey.uppercased()
         showActivityIndicator()
         appStartingControls()
@@ -402,7 +407,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
             cell.change.text = String(format: "%.2f", change.doubleValue)
-            cell.price.text = currentCurrencySymbol + " " + String(format: "%.2f", cellArrayGetIndex.getPrice().doubleValue)
+            cell.price.text = currentCurrencySymbol + " " + Util.toPrice(cellArrayGetIndex.getPrice().doubleValue, isCoinDetailPrice: false)
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
         }
@@ -583,7 +588,22 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
     }
     
-    
+    //Locks the screen
+    override func viewWillAppear(_ animated: Bool) {
+       super.viewWillAppear(animated)
+       
+       AppUtility.lockOrientation(.portrait)
+       // Or to rotate and lock
+       // AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+       
+   }
+
+   override func viewWillDisappear(_ animated: Bool) {
+       super.viewWillDisappear(animated)
+       
+       // Don't forget to reset when view is being removed
+       AppUtility.lockOrientation(.all)
+   }
 }
 
 

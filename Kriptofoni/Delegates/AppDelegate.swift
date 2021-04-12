@@ -13,6 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     var window: UIWindow?
+    var orientationLock = UIInterfaceOrientationMask.all
     lazy var persistentContainer: NSPersistentContainer = { //Implemantation of core data
         print("trueCoreData")
         let container = NSPersistentContainer(name: "Core")
@@ -46,7 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
    
-
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+            return self.orientationLock
+    }
 
 }
 
