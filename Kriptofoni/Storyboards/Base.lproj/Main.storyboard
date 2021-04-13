@@ -85,7 +85,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1370" y="2034"/>
+            <point key="canvasLocation" x="1710" y="2062"/>
         </scene>
         <!--Main Controller-->
         <scene sceneID="Cpm-7h-oHV">
@@ -366,53 +366,49 @@
                                             <outlet property="rigthLabel" destination="tWL-8A-c44" id="PYr-ev-UlE"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="secondCell" rowHeight="218" id="giu-Dk-gyA" customClass="SecondCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="87" width="375" height="218"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="secondCell" rowHeight="211" id="giu-Dk-gyA" customClass="SecondCell" customModule="Kriptofoni" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="87" width="375" height="211"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="giu-Dk-gyA" id="NgH-m1-cct">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FPp-9B-VEQ" customClass="LineChartView" customModule="Charts">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r34-jM-LAM" customClass="CandleStickChartView" customModule="Charts">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="212"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="r34-jM-LAM" firstAttribute="bottom" secondItem="FPp-9B-VEQ" secondAttribute="bottom" id="7jQ-VE-hTu"/>
+                                                <constraint firstItem="r34-jM-LAM" firstAttribute="bottom" secondItem="FPp-9B-VEQ" secondAttribute="bottom" constant="1" id="7jQ-VE-hTu"/>
                                                 <constraint firstItem="FPp-9B-VEQ" firstAttribute="top" secondItem="NgH-m1-cct" secondAttribute="topMargin" constant="-11" id="9Gj-nk-rch"/>
                                                 <constraint firstItem="r34-jM-LAM" firstAttribute="leading" secondItem="FPp-9B-VEQ" secondAttribute="leading" id="Dri-7C-6OH"/>
                                                 <constraint firstItem="FPp-9B-VEQ" firstAttribute="centerY" secondItem="NgH-m1-cct" secondAttribute="centerY" id="HMl-Js-Q5I"/>
+                                                <constraint firstItem="r34-jM-LAM" firstAttribute="leading" secondItem="NgH-m1-cct" secondAttribute="leadingMargin" constant="-16" id="NXa-vg-DH3"/>
                                                 <constraint firstItem="FPp-9B-VEQ" firstAttribute="centerX" secondItem="NgH-m1-cct" secondAttribute="centerX" id="UTU-w2-1KN"/>
                                                 <constraint firstItem="r34-jM-LAM" firstAttribute="trailing" secondItem="FPp-9B-VEQ" secondAttribute="trailing" id="bGy-Aq-fkl"/>
                                                 <constraint firstItem="r34-jM-LAM" firstAttribute="top" secondItem="FPp-9B-VEQ" secondAttribute="top" id="qn9-vv-EGw"/>
-                                                <constraint firstItem="FPp-9B-VEQ" firstAttribute="leading" secondItem="NgH-m1-cct" secondAttribute="leadingMargin" constant="-16" id="rih-XI-fwf"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" systemColor="systemGreenColor"/>
                                         <connections>
                                             <outlet property="candleStickChartView" destination="r34-jM-LAM" id="3Zv-Ac-lF7"/>
                                             <outlet property="chartView" destination="FPp-9B-VEQ" id="SFL-IG-XDH"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="thirdCell" rowHeight="42.5" id="vmf-3R-bqs" customClass="ThirdCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="305" width="375" height="42.5"/>
+                                        <rect key="frame" x="0.0" y="298" width="375" height="42.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vmf-3R-bqs" id="00Y-JN-KgB">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="42.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="UVv-JL-S8i">
-                                                    <rect key="frame" x="17" y="11" width="342" height="27"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="UVv-JL-S8i">
+                                                    <rect key="frame" x="17" y="8" width="342" height="27"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3a-qC-1PR">
                                                             <rect key="frame" x="0.0" y="0.0" width="30" height="27"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" secondItem="O3a-qC-1PR" secondAttribute="height" multiplier="10:9" id="gXv-Vi-bdN"/>
-                                                            </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" backgroundImage="fullchart">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -427,10 +423,7 @@
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Guy-om-esg">
-                                                            <rect key="frame" x="39" y="0.0" width="30" height="27"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" secondItem="Guy-om-esg" secondAttribute="height" multiplier="10:9" id="iPq-Fi-ZqM"/>
-                                                            </constraints>
+                                                            <rect key="frame" x="40" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" backgroundImage="candlestick">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -444,8 +437,8 @@
                                                                 <action selector="secondButtonClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="oyu-sI-4G7"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kmn-Id-jqa">
-                                                            <rect key="frame" x="78" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kmn-Id-jqa">
+                                                            <rect key="frame" x="80" y="0.0" width="30" height="27"/>
                                                             <color key="backgroundColor" systemColor="systemYellowColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="24H">
@@ -460,8 +453,8 @@
                                                                 <action selector="button24HClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="4ui-aP-xfJ"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQQ-4s-ygS">
-                                                            <rect key="frame" x="117" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQQ-4s-ygS">
+                                                            <rect key="frame" x="120" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="1W">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -475,8 +468,8 @@
                                                                 <action selector="button1WClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="l2Q-PA-Kfw"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ds-uZ-h5q">
-                                                            <rect key="frame" x="156" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ds-uZ-h5q">
+                                                            <rect key="frame" x="160" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="1M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -490,8 +483,8 @@
                                                                 <action selector="button1MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="apL-SS-yUp"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0No-fH-JuL">
-                                                            <rect key="frame" x="195" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0No-fH-JuL">
+                                                            <rect key="frame" x="200" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="3M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -505,8 +498,8 @@
                                                                 <action selector="button3MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="4Xa-ns-idF"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2MA-pM-NQ4">
-                                                            <rect key="frame" x="234" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2MA-pM-NQ4">
+                                                            <rect key="frame" x="240" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="6M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -520,8 +513,8 @@
                                                                 <action selector="button6MClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="Aw8-yo-3yl"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a5o-4A-1nh">
-                                                            <rect key="frame" x="273" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a5o-4A-1nh">
+                                                            <rect key="frame" x="280" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="1Y">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -535,8 +528,11 @@
                                                                 <action selector="button1YClicked:" destination="vmf-3R-bqs" eventType="touchUpInside" id="nJV-id-kaO"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5P9-f5-pg8">
-                                                            <rect key="frame" x="312" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5P9-f5-pg8">
+                                                            <rect key="frame" x="320" y="0.0" width="22" height="27"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="22" id="cea-hK-DRm"/>
+                                                            </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="All">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -555,8 +551,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="UVv-JL-S8i" secondAttribute="trailing" constant="16" id="339-C5-boh"/>
-                                                <constraint firstAttribute="bottom" secondItem="UVv-JL-S8i" secondAttribute="bottom" constant="4.5" id="FgM-pR-uoH"/>
-                                                <constraint firstItem="UVv-JL-S8i" firstAttribute="top" secondItem="00Y-JN-KgB" secondAttribute="top" constant="11" id="TpR-lt-wz9"/>
+                                                <constraint firstAttribute="bottom" secondItem="UVv-JL-S8i" secondAttribute="bottom" constant="7.5" id="FgM-pR-uoH"/>
+                                                <constraint firstItem="UVv-JL-S8i" firstAttribute="top" secondItem="00Y-JN-KgB" secondAttribute="top" constant="8" id="TpR-lt-wz9"/>
                                                 <constraint firstItem="UVv-JL-S8i" firstAttribute="leading" secondItem="00Y-JN-KgB" secondAttribute="leading" constant="17" id="XmT-j9-ajM"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -573,7 +569,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToOneCell" rowHeight="43" id="2P4-3g-hlS" customClass="OneToOneCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="347.5" width="375" height="43"/>
+                                        <rect key="frame" x="0.0" y="340.5" width="375" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2P4-3g-hlS" id="APY-JK-d6o">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -614,17 +610,17 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="twoButtonCell" rowHeight="50" id="Ejc-Zv-iXs" customClass="TwoButtonCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="390.5" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="383.5" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ejc-Zv-iXs" id="u2G-Q1-xOE">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vD4-cl-w49">
-                                                    <rect key="frame" x="16" y="6" width="165" height="38"/>
+                                                    <rect key="frame" x="16" y="6" width="158" height="38"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="165" id="Vir-dc-Gnl"/>
+                                                        <constraint firstAttribute="width" constant="158" id="Vir-dc-Gnl"/>
                                                     </constraints>
                                                     <state key="normal" title="ADD WATCHING LIST">
                                                         <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -664,8 +660,9 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="aHv-21-ysR" firstAttribute="leading" secondItem="vD4-cl-w49" secondAttribute="trailing" constant="20" id="5zh-WF-4fp"/>
+                                                <constraint firstItem="aHv-21-ysR" firstAttribute="leading" secondItem="vD4-cl-w49" secondAttribute="trailing" constant="27" id="5zh-WF-4fp"/>
                                                 <constraint firstAttribute="trailing" secondItem="aHv-21-ysR" secondAttribute="trailing" constant="16" id="GfW-Og-H0Q"/>
+                                                <constraint firstItem="aHv-21-ysR" firstAttribute="width" secondItem="vD4-cl-w49" secondAttribute="width" id="JvK-bP-wHx"/>
                                                 <constraint firstItem="vD4-cl-w49" firstAttribute="leading" secondItem="u2G-Q1-xOE" secondAttribute="leadingMargin" id="ROK-7L-cBu"/>
                                                 <constraint firstItem="vD4-cl-w49" firstAttribute="centerY" secondItem="u2G-Q1-xOE" secondAttribute="centerY" id="VAD-ha-8PI"/>
                                                 <constraint firstItem="vD4-cl-w49" firstAttribute="baseline" secondItem="aHv-21-ysR" secondAttribute="firstBaseline" id="WDx-H8-O2p"/>
@@ -679,7 +676,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneButtonCell" rowHeight="50" id="UaY-p6-6RO" customClass="OneButtonCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="440.5" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="433.5" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UaY-p6-6RO" id="gjn-EF-ife">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -722,7 +719,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="socialMediaCell" rowHeight="45" id="wd4-pS-iTZ" customClass="SocialMediaCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="490.5" width="375" height="45"/>
+                                        <rect key="frame" x="0.0" y="483.5" width="375" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wd4-pS-iTZ" id="iB8-Ky-owT">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
@@ -756,7 +753,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="oneToTwoCell" rowHeight="85" id="cch-4r-69V" customClass="OneToTwoCell" customModule="Kriptofoni" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="535.5" width="375" height="85"/>
+                                        <rect key="frame" x="0.0" y="528.5" width="375" height="85"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cch-4r-69V" id="EUt-YI-PB9">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="85"/>
@@ -1299,9 +1296,6 @@
         <image name="search" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

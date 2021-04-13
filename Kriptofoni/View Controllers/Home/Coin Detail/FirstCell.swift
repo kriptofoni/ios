@@ -14,11 +14,7 @@ class FirstCell: UITableViewCell
 {
     @IBOutlet weak var leftLabel: UILabel!
     @IBOutlet weak var rigthLabel: UILabel!
-    override func awakeFromNib()
-    {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    override func awakeFromNib() {super.awakeFromNib();self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
 }
 
@@ -26,11 +22,7 @@ class SecondCell: UITableViewCell
 {
     @IBOutlet weak var chartView: LineChartView!
     @IBOutlet weak var candleStickChartView: CandleStickChartView!
-    override func awakeFromNib()
-    {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
 }
 
@@ -77,59 +69,44 @@ class TwoButtonCell: UITableViewCell {
 
     @IBOutlet weak var favoritesButton: UIButton!
     @IBOutlet weak var addOperation: UIButton!
-    override func awakeFromNib() {
-        
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func favoritesButtonClicked(_ sender: Any) {}
     @IBAction func addOperationButtonClicked(_ sender: Any) {}
 }
 
 
-class OneButtonCell: UITableViewCell {
-
+class OneButtonCell: UITableViewCell
+{
     @IBOutlet weak var buyButton: UIButton!
-    override func awakeFromNib()
-    {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func buyButtonClicked(_ sender: Any) {}
 }
 
-class OneToOneCell: UITableViewCell {
-
+class OneToOneCell: UITableViewCell
+{
     @IBOutlet weak var leftLabel: UILabel!
     @IBOutlet weak var rightLabel: UILabel!
     override func awakeFromNib() {super.awakeFromNib();self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
 }
 
-class SocialMediaCell: UITableViewCell {
-
+class SocialMediaCell: UITableViewCell
+{
     @IBOutlet weak var socialMediaIcon: UIImageView!
     @IBOutlet weak var label: UILabel!
-    override func awakeFromNib()
-    {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    var link : String = String()
+    override func awakeFromNib() {super.awakeFromNib()}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
 }
 
-class OneToTwoCell: UITableViewCell {
-
+class OneToTwoCell: UITableViewCell
+{
     @IBOutlet weak var leftLabel: UILabel!
     @IBOutlet weak var rightLabelUp: UILabel!
     @IBOutlet weak var rightLabelDown: UILabel!
-    override func awakeFromNib()
-    {
-        super.awakeFromNib()
-        self.selectionStyle = .none
-    }
+    override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
 }
 

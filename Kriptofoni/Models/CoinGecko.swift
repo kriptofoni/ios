@@ -110,10 +110,12 @@ class CoinGecko
         
     }
     
-    func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : NSNumber]) -> Void, onFailure: () -> Void) -> Void
+    
+    ///Gets coin details from api and writes these datas into a dict.
+    func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : Any]) -> Void, onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/coins" + "/" + id
-        var coinDict = [String : NSNumber]()
+        var coinDict = [String : Any]()
         let url = NSURL(string: baseUrl)
         var request = URLRequest(url: url! as URL)
         request.httpMethod = "GET"
@@ -155,12 +157,16 @@ class CoinGecko
                     coinDict["market_cap"] = (market_cap[currencyType] as? NSNumber) ?? 0 as NSNumber
                     coinDict["total_supply"] = (marketData["total_supply"] as? NSNumber) ?? 0 as NSNumber
                     coinDict["circulating_supply"] = (marketData["circulating_supply"] as? NSNumber) ?? 0 as NSNumber
+                    if let links = jSONResult["links"] as? [String: Any]
+                    {
+                        if let website = links["homepage"] as? [Any] { coinDict["website"] = (website[0] as? String) ?? "https://www.google.com/\(id)" as String }
+                        if let twitter = links["twitter_screen_name"] {coinDict["twitter"] = (twitter as? String) ??  "https://www.twitter.com/\(id)" as String  }
+                        if let reddit = links["subreddit_url"] {coinDict["reddit"] = (reddit as? String) ?? "https://www.reddit.com/\(id)" as String   }
+                    }
                     self.getCoinVolume(id: id, currency: currencyType) { (result) in
                         coinDict["volumeFor24H"] = result
                         completionBlock(coinDict)
-                    } onFailure: {
-                        print("Error: when fetching volume")
-                    }
+                    } onFailure: {print("Error: when fetching volume")}
                 }
                 catch
                 {
@@ -198,15 +204,11 @@ class CoinGecko
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
-                        
                         concatedString = concatedString + "," + jsonElement
                     }
                     completionBlock(concatedString)
                 }
-                catch
-                {
-                    print("Error when fetching currency types")
-                }
+                catch{print("Error when fetching currency types")}
             }
         }
         task.resume()
