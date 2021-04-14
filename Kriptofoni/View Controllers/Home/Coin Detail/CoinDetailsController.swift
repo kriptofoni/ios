@@ -28,6 +28,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        print("cemcemcem")
         self.currencyTypeButton.title = currentCurrencyKey.uppercased()
         showActivityIndicator()
         self.tableView.delegate = self; self.tableView.dataSource = self;
@@ -68,7 +69,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        if dict.count > 0{return stringArray.count + 8}
+        if dict.count > 0{return stringArray.count + 7}
         else{return 0}
     }
     
@@ -76,13 +77,11 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     {
         var height = 0
         if indexPath.row == 0 {height =  59}
-        else if indexPath.row == 1 {height =  211}
-        else if indexPath.row == 2 {height = 42}
-        else if indexPath.row == 3 || indexPath.row == 4 {height = 85}
-        else if indexPath.row > 4 && indexPath.row < 13 {height = 43}
-        else if indexPath.row == stringArray.count + 3 {height = 50}
-        else if indexPath.row == stringArray.count + 4 {height = 50}
-        else if indexPath.row > stringArray.count + 4 {height = 45}
+        else if indexPath.row == 1 {height =  235}
+        else if indexPath.row == 2 || indexPath.row == 3 {height = 85}
+        else if indexPath.row > 3 && indexPath.row < 11 {height = 43}
+        else if indexPath.row == 11 || indexPath.row == 12 || indexPath.row == 13 {height = 50}
+        else if indexPath.row > 13  {height = 45}
         return CGFloat(height)
     }
     
@@ -114,6 +113,15 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             cell.chartView.pinchZoomEnabled = true
             cell.chartView.rightAxis.enabled = false
             cell.chartView.xAxis.labelPosition = .bottom
+            cell.firstButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.firstButton.tag = 0
+            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1
+            cell.button24H.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button24H.tag = 2
+            cell.button1W.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside);  cell.button1W.tag = 3
+            cell.button1M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1M.tag = 4
+            cell.button3M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button3M.tag = 5
+            cell.button6M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button6M.tag = 6
+            cell.button1Y.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1Y.tag = 7
+            cell.buttonAll.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.buttonAll.tag = 8
             if isLineCharts
             {
                 cell.candleStickChartView.isHidden = true
@@ -136,64 +144,52 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             }
             return cell
         }
+       
         else if indexPath.row == 2
         {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "thirdCell", for: indexPath) as! ThirdCell
-            cell.firstButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.firstButton.tag = 0
-            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1
-            cell.button24H.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button24H.tag = 2
-            cell.button1W.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside);  cell.button1W.tag = 3
-            cell.button1M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1M.tag = 4
-            cell.button3M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button3M.tag = 5
-            cell.button6M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button6M.tag = 6
-            cell.button1Y.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1Y.tag = 7
-            cell.buttonAll.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.buttonAll.tag = 8
-            return cell
-        }
-        else if indexPath.row == 3
-        {
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
-            cell.leftLabel.text = stringArray[indexPath.row-3]
+            cell.leftLabel.text = stringArray[indexPath.row-2]
             if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
             else{cell.rightLabelUp.textColor = UIColor.red}
             cell.rightLabelUp.text = "%" + String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
             cell.rightLabelDown.text = currentCurrencySymbol + " " + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
             return cell
         }
-        else if indexPath.row == 4
+        else if indexPath.row == 3
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
-            cell.leftLabel.text = stringArray[indexPath.row-3]
+            cell.leftLabel.text = stringArray[indexPath.row-2]
             if (self.dict["price_change_percentage_24h_bitcoin"]! as! NSNumber).intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
             else{cell.rightLabelUp.textColor = UIColor.red}
             cell.rightLabelUp.text = "%" + String(format: "%.5f", (self.dict["price_change_percentage_24h_bitcoin"]! as! NSNumber).doubleValue)
             cell.rightLabelDown.text = "BTC " + String(format: "%.3f", (self.dict["current_price_for_bitcoin"]! as! NSNumber).doubleValue)
         }
-        else if indexPath.row > 4 && indexPath.row < 12
+        else if indexPath.row > 3 && indexPath.row < 11
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToOneCell", for: indexPath) as! OneToOneCell
-            cell.leftLabel.text = stringArray[indexPath.row-3]
+            cell.leftLabel.text = stringArray[indexPath.row-2]
             switch indexPath.row
             {
-                case 5:
+                case 4:
                     let element = (self.dict["price_change_percentage_1h_in_currency"]! as! NSNumber);
                     if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text = "%" +  String(format: "%.3f", (self.dict["price_change_percentage_1h_in_currency"]! as! NSNumber).doubleValue)
-                case 6:
+                case 5:
                     let element = (self.dict["price_change_percentage_24h"]! as! NSNumber);
                     if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text =  "%" +  String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
-                case 7:
+                case 6:
                     let element = (self.dict["price_change_percentage_7d_in_currency"]! as! NSNumber);
                     if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
                     else {cell.rightLabel.textColor = UIColor.red}
                     cell.rightLabel.text = "%" + String(format: "%.3f", (self.dict[ "price_change_percentage_7d_in_currency"]! as! NSNumber).doubleValue)
-                case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["market_cap"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
-                case 9:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["volumeFor24H"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
-                case 10: cell.rightLabel.text = Util.toPrice((self.dict["circulating_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
-                case 11:
+                case 7:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["market_cap"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["volumeFor24H"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                case 9: cell.rightLabel.text = Util.toPrice((self.dict["circulating_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                case 10:
                     if (self.dict["total_supply"]! as! NSNumber).doubleValue == 0 { cell.rightLabel.text = "-"}
                     else {cell.rightLabel.text = Util.toPrice((self.dict["total_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)}
                     
@@ -202,23 +198,23 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             }
             return cell
         }
-        else if indexPath.row >= 12 && indexPath.row < 15
+        else if indexPath.row >= 11 && indexPath.row < 14
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "socialMediaCell", for: indexPath) as! SocialMediaCell
-            cell.label.text = socialMediaTexture[indexPath.row - (stringArray.count + 3)]
-            cell.socialMediaIcon.image = UIImage(named: iconNames[indexPath.row - stringArray.count - 3])
+            cell.label.text = socialMediaTexture[indexPath.row - 11]
+            cell.socialMediaIcon.image = UIImage(named: iconNames[indexPath.row - 11])
             if indexPath.row == 12 {webSiteLink = self.dict["website"] as! String}
             else if indexPath.row == 13 {twitterLink = self.dict["twitter"] as! String}
             else if indexPath.row == 14 {redditLink = self.dict["reddit"] as! String}
             return cell
         }
-        else if indexPath.row == 15
+        else if indexPath.row == 14
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonCell", for: indexPath) as! TwoButtonCell
             cell.addOperation.addTarget(self, action: #selector(self.operationButtonClicked(sender:)), for: .touchUpInside)
             return cell
         }
-        else if indexPath.row ==  16
+        else if indexPath.row ==  15
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneButtonCell", for: indexPath) as! OneButtonCell
             return cell
@@ -227,19 +223,19 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row > 11 && indexPath.row < 15
+        if indexPath.row >= 11 && indexPath.row < 14
         {
-            if indexPath.row == 12
+            if indexPath.row == 11
             {
                 guard let url = URL(string: webSiteLink) else { return }
                 UIApplication.shared.open(url)
             }
-            else if indexPath.row == 13
+            else if indexPath.row == 12
             {
                 guard let url = URL(string: redditLink) else  { return }
                 UIApplication.shared.open(url)
             }
-            else if indexPath.row == 14
+            else if indexPath.row == 13
             {
                 let newLink = "https://twitter.com/\(twitterLink)"
                 guard let url = URL(string: newLink) else  { return }
@@ -278,7 +274,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         }
         else
         {
-            if sender.tag == 0{self.performSegue(withIdentifier: "toFullScreen", sender: self)}
+            if sender.tag == 0 {self.performSegue(withIdentifier: "toFullScreen", sender: self)}
             else if sender.tag == 1
             {
                 if !isLineCharts {isLineCharts = true; sender.setBackgroundImage(UIImage(named: "candlestick"), for: .normal)}
@@ -361,7 +357,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func currencyTypeButtonClicked(_ sender: Any){self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)}
     
     //Locks the screen before view is appeared and realease this locking before view is disappeared
-    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)}
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)}
     override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)}
 }
 

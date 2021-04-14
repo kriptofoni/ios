@@ -65,7 +65,14 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         }
     }
     
-    @IBAction func backButtonClicked(_ sender: Any) { self.dismiss(animated: true, completion: nil)}
+    @IBAction func backButtonClicked(_ sender: Any)
+    {
+        DispatchQueue.main.async
+        {
+            self.dismiss(animated: false, completion: nil)
+        }
+        
+    }
     
     @IBAction func changeChartTypeButtonClicked(_ sender: Any)
     {
@@ -135,7 +142,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
    override func viewWillDisappear(_ animated: Bool) {
        super.viewWillDisappear(animated)
        print("Disappear")
-       AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+       //AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
    }
 
 }

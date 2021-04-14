@@ -22,12 +22,7 @@ class SecondCell: UITableViewCell
 {
     @IBOutlet weak var chartView: LineChartView!
     @IBOutlet weak var candleStickChartView: CandleStickChartView!
-    override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
-    override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
-}
-
-class ThirdCell: UITableViewCell {
-
+    
     @IBOutlet weak var firstButton: UIButton!
     @IBOutlet weak var secondButton: UIButton!
     @IBOutlet weak var button24H: UIButton!
@@ -39,7 +34,8 @@ class ThirdCell: UITableViewCell {
     @IBOutlet weak var buttonAll: UIButton!
     var buttons = [UIButton]()
     var backgroundColorOfButton : UIColor  = UIColor()
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
         self.selectionStyle = .none
         buttons = [button24H, button1W, button1M, button3M, button6M, button1Y, buttonAll]
@@ -49,9 +45,7 @@ class ThirdCell: UITableViewCell {
             case .dark: backgroundColorOfButton = .black;
             @unknown default: backgroundColorOfButton = .white;
         }
-        
     }
-
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func firstButtonClicked(_ sender: Any){}
     @IBAction func secondButtonClicked(_ sender: Any){}
@@ -64,6 +58,8 @@ class ThirdCell: UITableViewCell {
     @IBAction func buttonAllClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: buttonAll, buttons: buttons, normalBackground: backgroundColorOfButton)}
     
 }
+
+
 
 class TwoButtonCell: UITableViewCell {
 

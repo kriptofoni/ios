@@ -11,6 +11,7 @@ import Charts
 
 class CoinGecko
 {
+   
     init()
     {
     
@@ -52,6 +53,7 @@ class CoinGecko
             {
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let prices = jSONResult["prices"] as! [[NSNumber]]
                     var x: Double = 1.0
@@ -94,6 +96,7 @@ class CoinGecko
             {
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let dict = jSONResult[id] as! [String:Any]
                     let newStr = currency + "_24h_vol"
@@ -132,6 +135,7 @@ class CoinGecko
             {
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
                     guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
@@ -201,6 +205,7 @@ class CoinGecko
             {
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
@@ -247,6 +252,7 @@ class CoinGecko
                // print("Response data string:\n \(dataString)")
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -305,6 +311,7 @@ class CoinGecko
             {
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: Any]
                     if let data = jSONResult["data"] as? [String : Any]
                     {
@@ -362,6 +369,7 @@ class CoinGecko
                // print("Response data string:\n \(dataString)")
                 do
                 {
+                    print("API CALL")
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
