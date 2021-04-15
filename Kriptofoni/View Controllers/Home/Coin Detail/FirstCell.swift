@@ -22,7 +22,6 @@ class SecondCell: UITableViewCell
 {
     @IBOutlet weak var chartView: LineChartView!
     @IBOutlet weak var candleStickChartView: CandleStickChartView!
-    
     @IBOutlet weak var firstButton: UIButton!
     @IBOutlet weak var secondButton: UIButton!
     @IBOutlet weak var button24H: UIButton!
@@ -32,6 +31,7 @@ class SecondCell: UITableViewCell
     @IBOutlet weak var button6M: UIButton!
     @IBOutlet weak var button1Y: UIButton!
     @IBOutlet weak var buttonAll: UIButton!
+    var xAxisLabelCount = 12 // indicated the label count of x axis
     var buttons = [UIButton]()
     var backgroundColorOfButton : UIColor  = UIColor()
     override func awakeFromNib()
@@ -41,27 +41,26 @@ class SecondCell: UITableViewCell
         buttons = [button24H, button1W, button1M, button3M, button6M, button1Y, buttonAll]
         switch traitCollection.userInterfaceStyle
         {
-            case .light, .unspecified: backgroundColorOfButton = .white;
-            case .dark: backgroundColorOfButton = .black;
-            @unknown default: backgroundColorOfButton = .white;
+            case .light, .unspecified: backgroundColorOfButton = .white; chartView.backgroundColor = .white; candleStickChartView.backgroundColor = .white
+            case .dark: backgroundColorOfButton = .black; chartView.backgroundColor = .black; candleStickChartView.backgroundColor = .black
+            @unknown default: backgroundColorOfButton = .white; chartView.backgroundColor = .white; candleStickChartView.backgroundColor = .white
         }
     }
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func firstButtonClicked(_ sender: Any){}
     @IBAction func secondButtonClicked(_ sender: Any){}
-    @IBAction func button24HClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: button24H, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func button1WClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1W, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func button1MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1M, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func button3MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button3M, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func button6MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button6M, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func button1YClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1Y, buttons: buttons, normalBackground: backgroundColorOfButton)}
-    @IBAction func buttonAllClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: buttonAll, buttons: buttons, normalBackground: backgroundColorOfButton)}
+    @IBAction func button24HClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: button24H, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
+    @IBAction func button1WClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1W, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 7 }
+    @IBAction func button1MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 4}
+    @IBAction func button3MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button3M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 3}
+    @IBAction func button6MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button6M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 6}
+    @IBAction func button1YClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1Y, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
+    @IBAction func buttonAllClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: buttonAll, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount  = 12}
     
 }
 
-
-
-class TwoButtonCell: UITableViewCell {
+class TwoButtonCell: UITableViewCell
+{
 
     @IBOutlet weak var favoritesButton: UIButton!
     @IBOutlet weak var addOperation: UIButton!
@@ -70,7 +69,6 @@ class TwoButtonCell: UITableViewCell {
     @IBAction func favoritesButtonClicked(_ sender: Any) {}
     @IBAction func addOperationButtonClicked(_ sender: Any) {}
 }
-
 
 class OneButtonCell: UITableViewCell
 {

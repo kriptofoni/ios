@@ -4,7 +4,6 @@
 //
 //  Created by Cem Sertkaya on 27.03.2021.
 //
-
 import UIKit
 import ScrollableSegmentedControl
 import SDWebImage
@@ -28,18 +27,19 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;var tableViewPage = 1
-    var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd";var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
+    var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey;var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
     var searchActive = false
     var timer: Timer?
-    var isAfterCurrencyChanging = false
+    var isFirstTime = true
     var sSize: CGRect = UIScreen.main.bounds
     
    
-    
-    
-    override func viewDidLoad()
+    //Locks the screen before view is appeared and realease this locking before view is disappeared
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)}
+    override func viewWillAppear(_ animated: Bool)
     {
-        super.viewDidLoad()
+        super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
+        currentCurrencySymbol = Currency.currencySymbol; currentCurrencyKey = Currency.currencyKey
         let sWidth = sSize.width
         segmentedView.frame.size.width = sWidth
         self.currencyButton.title = currentCurrencyKey.uppercased()
@@ -54,15 +54,15 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
     }
+    override func viewDidLoad(){super.viewDidLoad()}
     
     func appStartingControls()
     {
         getCoins(page: tableViewPage)
-       
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
-            coinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+            CoinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
                 DispatchQueue.main.async{
                     self.navigationItem.title = navigationTitle
                     self.hideActivityIndicator()
@@ -85,7 +85,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 }
                 self.searchCoinArray = result
                 self.update()
-                if !self.isAfterCurrencyChanging // if it is coming from currency type selector page, do not update any data in core data
+                if self.isFirstTime // if it is the first time after app is launched
                 {
                     self.getSearchArray()
                     self.updateCurrencies()
@@ -99,7 +99,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     @objc func update()
     {
         print("UPDATED")
-        coinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+        CoinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         } onFailure: {print("Error: While trying to fetch total market cap")}
         getCoins(page: tableViewPage)
@@ -114,7 +114,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         for n in 1...27
         {
             myGroup.enter()
-            coinGecko.getCoinMarkets(vs_currency: "usd", order: "id_asc", per_page: 250, page: n, sparkline: false, priceChangePercentage: "24h,7d", index: n) {(result) in
+            CoinGecko.getCoinMarkets(vs_currency: "usd", order: "id_asc", per_page: 250, page: n, sparkline: false, priceChangePercentage: "24h,7d", index: n) {(result) in
                 self.searchCoinArray.append(contentsOf: result)
                 DispatchQueue.main.async{self.tableView.reloadData()}
                 myGroup.leave()
@@ -202,15 +202,13 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func getCoins(page : Int)
     {
         let emptyHashMap = [String : Int]()
-        coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
+        CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
             self.coinArray.removeAll(keepingCapacity: false)
             self.coinArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
         }
         onFailure: {print("Could not download from api")}
     }
-    
-
     
     /// Get coins according to 24H changes, type is for selecting INC or DEC
     func getCoinsFor24(page: Int, type : String)
@@ -227,7 +225,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn24H.removeAll(keepingCapacity: false)
@@ -263,7 +261,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            coinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn7D.removeAll(keepingCapacity: false)
@@ -286,7 +284,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func saveCurrencies()
     {
-        coinGecko.getSupportedCurrencies() { (resultString) in
+        CoinGecko.getSupportedCurrencies() { (resultString) in
             DispatchQueue.main.async
             {
                 let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
@@ -308,7 +306,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func updateCurrencies()
     {
-        coinGecko.getSupportedCurrencies() { (resultString) in
+        CoinGecko.getSupportedCurrencies() { (resultString) in
             DispatchQueue.main.async
             {
                 
@@ -334,8 +332,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     
-    
-    
+    // MARK: - Table View Functions
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         var count = 0
@@ -362,13 +359,14 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             var cellArrayGetIndex =  Coin()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
             //print(String(indexPath.row) + "INDEX")
+            
             switch tableViewPosition
             {
                 case 0:
                     if !coinArray.isEmpty {cellArrayGetIndex = self.coinArray[indexPath.row]}
-                    if indexPath.row > 60
+                    if indexPath.row  == (tableViewPage * 100) / 2
                     {
-                        
+                        //tableViewPage += 1; getCoins(page: self.tableViewPage);  print("cem")
                     }
                 case 1:
                     if !mostIncIn24H.isEmpty{cellArrayGetIndex = self.mostIncIn24H[indexPath.row]}
@@ -442,20 +440,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         performSegue(withIdentifier: "toCoinDetails", sender: self)
     }
     
-    /*
-    func scrollViewDidScroll(_ scrollView: UIScrollView)
-    {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if offsetY > contentHeight - scrollView.frame.height
-        {
-            tableViewPage += 1
-            getCoins(page: tableViewPage)
-            print("scrolling" + String(self.currencyArray.count))
-        }
-    }
-    */
- 
+    // MARK: - Button, segmented view, search bar triggering functions
+    
     /// Pushs the necessary array to table view according to segmented control
     @objc func segmentSelected(sender:ScrollableSegmentedControl)
     {
@@ -545,16 +531,12 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             {
                 destinationVC.selectedSearchCoin = self.selectedSearchCoin
                 destinationVC.type = 0 //it means we will come this page from a search operation
-                destinationVC.currentCurrencyKey = self.currentCurrencyKey
-                destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
                 destinationVC.currencyTypes = self.currencyTypes
             }
             else
             {
                 destinationVC.selectedCoin = self.selectedCoin
                 destinationVC.type = 1 // it means we will come this page from a normal selection operation
-                destinationVC.currentCurrencyKey = self.currentCurrencyKey
-                destinationVC.currentCurrencySymbol = self.currentCurrencySymbol
                 destinationVC.currencyTypes = self.currencyTypes
             }
            
@@ -569,43 +551,16 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     //shows spinner
     func showActivityIndicator()
     {
-        if #available(iOS 13.0, *) {
-            activityView = UIActivityIndicatorView(style: .medium)
-        } else {
-            activityView = UIActivityIndicatorView(style: .gray)
-        }
+        if #available(iOS 13.0, *) {activityView = UIActivityIndicatorView(style: .medium)}
+        else {activityView = UIActivityIndicatorView(style: .gray)}
         activityView?.center = self.view.center
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }
     
     //hides spinner
-    func hideActivityIndicator()
-    {
-        if (activityView != nil)
-        {
-            activityView?.stopAnimating()
-        }
-    }
-    
-    //Locks the screen
-    override func viewWillAppear(_ animated: Bool) {
-       super.viewWillAppear(animated)
-       
-       AppUtility.lockOrientation(.portrait)
-       // Or to rotate and lock
-       // AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-       
-   }
+    func hideActivityIndicator() {if (activityView != nil){activityView?.stopAnimating()}}
 
-   override func viewWillDisappear(_ animated: Bool) {
-       super.viewWillDisappear(animated)
-       
-       // Don't forget to reset when view is being removed
-       AppUtility.lockOrientation(.all)
-   }
 }
-
-
 
 

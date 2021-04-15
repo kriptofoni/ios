@@ -17,7 +17,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     @IBOutlet weak var oneYear: UIButton!;@IBOutlet weak var all: UIButton!
     var activityView: UIActivityIndicatorView?
     var values = [ChartDataEntry]()
-    var coinId : String = "";var currencyKey : String = ""
+    var coinId : String = "";
     var charType = true; //true for line chart, false for candle
     let coingecko = CoinGecko.init()
     var buttons = [UIButton]()
@@ -65,15 +65,6 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         }
     }
     
-    @IBAction func backButtonClicked(_ sender: Any)
-    {
-        DispatchQueue.main.async
-        {
-            self.dismiss(animated: false, completion: nil)
-        }
-        
-    }
-    
     @IBAction func changeChartTypeButtonClicked(_ sender: Any)
     {
         if charType // if lineChart is opened
@@ -103,6 +94,20 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     
     @IBAction func allButtonClicked(_ sender: Any) {Util.setButtonColors(except: all, buttons: buttons,background: false) ;getChartData(type: "all")}
     
+    
+    /// Gets chart data according to given timescale
+    func getChartData(type : String)
+    {
+        DispatchQueue.main.async{self.showActivityIndicator()}
+        CoinGecko.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
+                self.values = chartdata
+                DispatchQueue.main.async{
+                    self.hideActivityIndicator()
+                    self.updateChart()
+                }
+            }onFailure: {print("Error")}
+    }
+    
     ///Shows spinner
     func showActivityIndicator()
     {
@@ -116,33 +121,8 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     ///Hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
     
-   
-    
-    
-    
-    /// Gets chart data according to given timescale
-    func getChartData(type : String)
-    {
-        DispatchQueue.main.async{self.showActivityIndicator()}
-        self.coingecko.getDataForCharts(id: self.coinId, currency: self.currencyKey, type: type) { (chartdata) in
-                self.values = chartdata
-                DispatchQueue.main.async{
-                    self.hideActivityIndicator()
-                    self.updateChart()
-                }
-            }onFailure: {print("Error")}
-    }
-    
     //Locks the screen
-    override func viewWillAppear(_ animated: Bool) {
-       super.viewWillAppear(animated)
-        AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeLeft)
-   }
-
-   override func viewWillDisappear(_ animated: Bool) {
-       super.viewWillDisappear(animated)
-       print("Disappear")
-       //AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-   }
+    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeLeft)}
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);print("Disappear")}
 
 }

@@ -13,10 +13,10 @@ class OperationController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
-    var currencyType  = "usd"
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        currencyTypeButton.title = Currency.currencyKey.uppercased()
         tableView.delegate = self; tableView.dataSource = self
         // Do any additional setup after loading the view.
     }
@@ -46,7 +46,7 @@ class OperationController: UIViewController, UITableViewDelegate, UITableViewDat
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Total " + currencyType.uppercased()
+            cell.label.text = "Total " + Currency.currencySymbol
             cell.textField.placeholder = "Amount of currency"
             return cell
         case 2:

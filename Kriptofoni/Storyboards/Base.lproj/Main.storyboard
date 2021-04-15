@@ -71,21 +71,14 @@
                             <constraint firstItem="fgQ-wy-nQY" firstAttribute="leading" secondItem="FaL-E9-3YM" secondAttribute="leading" id="xpE-ji-60F"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="akk-Yu-cIU">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="uov-5M-A4F">
-                            <connections>
-                                <action selector="backButtonAction:" destination="db0-3R-3L1" id="xTo-KS-8wr"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <navigationItem key="navigationItem" id="akk-Yu-cIU"/>
                     <connections>
                         <outlet property="tableView" destination="fgQ-wy-nQY" id="mzc-wu-Z2z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LPl-Wz-OFE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1710" y="2062"/>
+            <point key="canvasLocation" x="2337" y="2372"/>
         </scene>
         <!--Main Controller-->
         <scene sceneID="Cpm-7h-oHV">
@@ -380,7 +373,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="195"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 </view>
-                                                <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="UVv-JL-S8i">
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="UVv-JL-S8i">
                                                     <rect key="frame" x="8" y="200" width="359" height="27"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O3a-qC-1PR">

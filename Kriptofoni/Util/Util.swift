@@ -21,7 +21,6 @@ class Util
             numberFormatter.numberStyle = .decimal
             numberFormatter.maximumFractionDigits = 2
             if isCoinDetailPrice {numberFormatter.maximumFractionDigits = 10}
-            print("Formated Price is" + String(price))
             return numberFormatter.string(from: price as NSNumber)!
     }
     

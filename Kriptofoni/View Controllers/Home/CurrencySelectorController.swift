@@ -8,9 +8,8 @@
 import UIKit
 import SDWebImage
 
-class CurrencySelectorController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    
+class CurrencySelectorController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
     @IBOutlet weak var tableView: UITableView!
     var selectedCurrency = String()
     var selectedCurrencySymbol = String()
@@ -19,7 +18,6 @@ class CurrencySelectorController: UIViewController, UITableViewDelegate, UITable
     {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
-        
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{return currencyArray.count}
@@ -50,18 +48,11 @@ class CurrencySelectorController: UIViewController, UITableViewDelegate, UITable
         self.selectedCurrency = currencyArray[indexPath.row]
         if getCountryCode(currencyCode: self.selectedCurrency)[0] != ""{self.selectedCurrencySymbol = getCountryCode(currencyCode: self.selectedCurrency)[1]}
         else{self.selectedCurrencySymbol = self.selectedCurrency.uppercased()}
-        //performSegue(withIdentifier: "toBackFromSelector", sender: self)
+        Currency.currencyKey = currencyArray[indexPath.row]
+        Currency.currencySymbol = self.selectedCurrencySymbol
+        self.navigationController?.popViewController(animated: true)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        /*let barControllers = segue.destination as! UITabBarController
-        let nav = barControllers.viewControllers![0] as! UINavigationController
-        let destinationViewController = nav.topViewController as? MainViewController
-        destinationViewController?.currentCurrencyKey = self.selectedCurrency
-        destinationViewController?.currentCurrencySymbol = self.selectedCurrencySymbol
-        destinationViewController?.isAfterCurrencyChanging = tru*/
-    }
     
     @IBAction func backButtonAction(_ sender: Any)
     {
@@ -211,11 +202,20 @@ class CurrencySelectorController: UIViewController, UITableViewDelegate, UITable
        
    }
 
-   override func viewWillDisappear(_ animated: Bool) {
+   override func viewWillDisappear(_ animated: Bool)
+   {
        super.viewWillDisappear(animated)
-       
-       // Don't forget to reset when view is being removed
        AppUtility.lockOrientation(.all)
+       //for not to fetch data over and over again every time user press back button
+       if let parentVC = self.parent
+        {
+            if let parentVC = parentVC.children[0] as? MainController {
+                parentVC.isFirstTime = false
+            }
+            
+        }
    }
+
+  
     
 }

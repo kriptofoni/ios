@@ -11,14 +11,10 @@ import Charts
 
 class CoinGecko
 {
-   
-    init()
-    {
     
-    }
-    //completionBlock: @escaping ([String: [ChartDataEntry]]) -> Void, onFailure: () -> Void)  -> Void
+    static var apiCallCount = 0
     
-    func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void, onFailure: () -> Void)  -> Void
+    static func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void, onFailure: () -> Void)  -> Void
     {
         var array = [ChartDataEntry]()
         let now = NSDate().timeIntervalSince1970
@@ -36,7 +32,6 @@ class CoinGecko
             default:print("HATA")
         }
         let urlFor24H = "https://api.coingecko.com/api/v3/coins/\(id)/market_chart/range?vs_currency=\(currency)&from=\(secondTime)&to=\(nowString)"
-        print(urlFor24H + "URL" + id)
         let url = NSURL(string: urlFor24H)
         var request = URLRequest(url: url! as URL)
         request.httpMethod = "GET"
@@ -53,30 +48,29 @@ class CoinGecko
             {
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let prices = jSONResult["prices"] as! [[NSNumber]]
                     var x: Double = 1.0
                     for price in prices
                     {
-                        let charData = ChartDataEntry(x: x, y: price[1].doubleValue)
+                        let epochTime = TimeInterval(price[0].doubleValue / 1000)
+                        let charData = ChartDataEntry(x: epochTime , y: price[1].doubleValue)
                         array.append(charData)
                         x = x + 1
                     }
                     completionBlock(array)
                     
                 }
-                catch
-                {
-                    print("Error when fetching chart datas.")
-                }
+                catch{print("API FETCH FAILED: getDataForCharts")}
             }
         }
         task.resume()
         
     }
     
-    func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void, onFailure: () -> Void) -> Void
+    static func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void, onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/simple/price?ids=\(id)&vs_currencies=\(currency)&include_24hr_vol=true"
         let url = NSURL(string: baseUrl)
@@ -96,17 +90,15 @@ class CoinGecko
             {
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let dict = jSONResult[id] as! [String:Any]
                     let newStr = currency + "_24h_vol"
                     volumefor24H = (dict[newStr] as? NSNumber) ?? 0
                     completionBlock(volumefor24H)
                 }
-                catch
-                {
-                    print("Error when fetching currency types")
-                }
+                catch{print("API FETCH FAILED: getCoinVolume")}
             }
         }
         task.resume()
@@ -115,7 +107,7 @@ class CoinGecko
     
     
     ///Gets coin details from api and writes these datas into a dict.
-    func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : Any]) -> Void, onFailure: () -> Void) -> Void
+    static func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : Any]) -> Void, onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/coins" + "/" + id
         var coinDict = [String : Any]()
@@ -135,7 +127,8 @@ class CoinGecko
             {
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
                     guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
@@ -172,10 +165,7 @@ class CoinGecko
                         completionBlock(coinDict)
                     } onFailure: {print("Error: when fetching volume")}
                 }
-                catch
-                {
-                    print("Error when fetching currency types")
-                }
+                catch{print("API FETCH FAILED: getCoinDetails")}
             }
         }
         task.resume()
@@ -184,7 +174,7 @@ class CoinGecko
     }
   
     
-    func getSupportedCurrencies (completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
+    static func getSupportedCurrencies (completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
     {
         var concatedString = String()
         let baseUrl = "https://api.coingecko.com/api/v3/"
@@ -205,7 +195,8 @@ class CoinGecko
             {
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
@@ -213,13 +204,13 @@ class CoinGecko
                     }
                     completionBlock(concatedString)
                 }
-                catch{print("Error when fetching currency types")}
+                catch{print("API FETCH FAILED: getSupportedCurrencies")}
             }
         }
         task.resume()
     }
 
-    func getCoinMarkets(vs_currency :String,  order : String, per_page : Int,  page : Int, sparkline : Bool, priceChangePercentage : String , index : Int, completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
+    static func getCoinMarkets(vs_currency :String,  order : String, per_page : Int,  page : Int, sparkline : Bool, priceChangePercentage : String , index : Int, completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
@@ -252,7 +243,8 @@ class CoinGecko
                // print("Response data string:\n \(dataString)")
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -282,16 +274,13 @@ class CoinGecko
                     }
                     completionBlock(array);
                 }
-                catch
-                {
-                
-                }
+                catch{print("API FETCH FAILED: getCoinMarkets")}
             }
         }
         task.resume()
     }
     
-    func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void, onFailure: () -> Void) -> Void
+    static func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void, onFailure: () -> Void) -> Void
     {
         var navigationTitle = String()
         let baseUrl = "https://api.coingecko.com/api/v3/global"
@@ -311,7 +300,8 @@ class CoinGecko
             {
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: Any]
                     if let data = jSONResult["data"] as? [String : Any]
                     {
@@ -326,17 +316,14 @@ class CoinGecko
                         }
                     }
                 }
-                catch
-                {
-                    print("Error when fetching total market value.")
-                }
+                catch{print("API FETCH FAILED: getTotalMarketValue")}
             }
         }
         task.resume()
         
     }
     
-    func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Coin]) -> Void,onFailure: () -> Void) -> Void
+    static func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Coin]) -> Void,onFailure: () -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
@@ -369,7 +356,8 @@ class CoinGecko
                // print("Response data string:\n \(dataString)")
                 do
                 {
-                    print("API CALL")
+                    apiCallCount += 1
+                    print("API CALL COUNT" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -407,10 +395,7 @@ class CoinGecko
                     }
                     completionBlock(array);
                 }
-                catch
-                {
-                
-                }
+                catch{print("API FETCH FAILED: getCoins")}
             }
         }
         task.resume()

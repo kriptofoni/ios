@@ -5,6 +5,8 @@
 //  Created by Cem Sertkaya on 3.04.2021.
 //
 
+
+
 import UIKit;import SDWebImage;import TinyConstraints; import Charts
 class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate
 {
@@ -14,9 +16,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
-    var currentCurrencySymbol = "$"; var currentCurrencyKey = "usd"; var currentCoinId = ""
+    var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey; var currentCoinId = "";var chartType = "twentyFour_hours"
     var values = [ChartDataEntry]();var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
-    let coingecko = CoinGecko.init()
     var activityView: UIActivityIndicatorView?
     var dict : [String:Any] = [:]; var linkArray = [String](); var webSiteLink = String(); var twitterLink = String(); var redditLink = String()
     var currencyTypes = [String]()
@@ -25,48 +26,55 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var sSize: CGRect = UIScreen.main.bounds
 
     
-    override func viewDidLoad()
+    //Locks the screen before view is appeared and realease this locking before view is disappeared
+    override func viewWillDisappear(_ animated: Bool)
     {
-        super.viewDidLoad()
-        print("cemcemcem")
+        super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)
+        if let parentVC = self.parent{ if let parentVC = parentVC.children[0] as? MainController {parentVC.isFirstTime = false}}//for not to fetch data over and over again every time user press back button
+    }
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+        currentCurrencySymbol = Currency.currencySymbol
+        currentCurrencyKey = Currency.currencyKey
         self.currencyTypeButton.title = currentCurrencyKey.uppercased()
         showActivityIndicator()
         self.tableView.delegate = self; self.tableView.dataSource = self;
-        if type == 0
+        controllerStarter()
+    }
+    
+    override func viewDidLoad(){super.viewDidLoad()}
+    
+    /// Starter function for view controller
+    func controllerStarter()
+    {
+        if type == 0  //0 means that we are coming this page from a search operation
         {
             self.currentCoinId = self.selectedSearchCoin.getId()
-            coingecko.getCoinDetails(id: selectedSearchCoin.getId(),currencyType: currentCurrencyKey) { (result) in
+            CoinGecko.getCoinDetails(id: selectedSearchCoin.getId(),currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                self.coingecko.getDataForCharts(id: self.selectedSearchCoin.getId(), currency: self.currentCurrencyKey, type: "twentyFour_hours") { (chartdata) in
+                CoinGecko.getDataForCharts(id: self.selectedSearchCoin.getId(), currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
                     self.values = chartdata
-                    DispatchQueue.main.async{
-                        self.hideActivityIndicator()
-                        self.tableView.reloadData()
-                    }
+                    DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 } onFailure: {print("Error")}
             } onFailure: {print("Error: When getting coin detais.")}
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedSearchCoin.getName() + " " + selectedSearchCoin.getSymbol().uppercased(), imageUrl: selectedSearchCoin.getImageUrl())
         }
-        else
+        else //1 means that we are coming this page from normal currency selecting
         {
             self.currentCoinId = self.selectedCoin.getId()
-            coingecko.getCoinDetails(id: selectedCoin.getId(), currencyType: currentCurrencyKey) { (result) in
+            CoinGecko.getCoinDetails(id: selectedCoin.getId(), currencyType: currentCurrencyKey) { (result) in
                 self.dict = result
-                self.coingecko.getDataForCharts(id: self.selectedCoin.getId(), currency: self.currentCurrencyKey, type: "twentyFour_hours") { (chartdata) in
+                CoinGecko.getDataForCharts(id: self.selectedCoin.getId(), currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
                     self.values = chartdata
-                    DispatchQueue.main.async{
-                        self.hideActivityIndicator()
-                        self.tableView.reloadData()
-                    }
+                    DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 } onFailure: {print("Error")}
             } onFailure: {print("Error: When getting coin detais.")}
             self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedCoin.getName() + " " + selectedCoin.getShortening().uppercased(), imageUrl: selectedCoin.getIconViewUrl())
         }
     }
     
-    
-    
-    
+    // MARK: - Table View Functions
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if dict.count > 0{return stringArray.count + 7}
@@ -91,44 +99,31 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "firstCell", for: indexPath) as! FirstCell
-            cell.leftLabel.text = currentCurrencySymbol + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
+            cell.leftLabel.text = currentCurrencySymbol + " " + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
             if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{cell.rigthLabel.textColor = UIColor.green}
             else{cell.rigthLabel.textColor = UIColor.red}
             cell.rigthLabel.text = "%" + String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
             return cell
         }
-        else if indexPath.row == 1
+        else if indexPath.row == 1 // Chart Cell also contains chart settings
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! SecondCell
-            cell.chartView.delegate = self;cell.candleStickChartView.delegate = self
-            switch traitCollection.userInterfaceStyle
-            {
-                case .light, .unspecified: cell.chartView.backgroundColor = .white; cell.candleStickChartView.backgroundColor = .white
-                case .dark: cell.chartView.backgroundColor = .black; cell.candleStickChartView.backgroundColor = .white
-                @unknown default: cell.chartView.backgroundColor = .white; cell.candleStickChartView.backgroundColor = .white
-            }
-            cell.chartView.chartDescription!.enabled = false;
-            cell.chartView.dragEnabled = true;
-            cell.chartView.setScaleEnabled(true)
-            cell.chartView.pinchZoomEnabled = true
-            cell.chartView.rightAxis.enabled = false
-            cell.chartView.xAxis.labelPosition = .bottom
-            cell.firstButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.firstButton.tag = 0
-            cell.secondButton.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.secondButton.tag = 1
-            cell.button24H.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button24H.tag = 2
-            cell.button1W.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside);  cell.button1W.tag = 3
-            cell.button1M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1M.tag = 4
-            cell.button3M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button3M.tag = 5
-            cell.button6M.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button6M.tag = 6
-            cell.button1Y.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.button1Y.tag = 7
-            cell.buttonAll.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); cell.buttonAll.tag = 8
+            cell.chartView.delegate = self; cell.candleStickChartView.delegate = self
+            cell.chartView.chartDescription!.enabled = false; cell.chartView.dragEnabled = true;
+            cell.chartView.setScaleEnabled(true); cell.chartView.pinchZoomEnabled = true
+            cell.chartView.rightAxis.enabled = false; cell.chartView.xAxis.labelPosition = .bottom
+            let buttons = [cell.firstButton, cell.secondButton, cell.button24H, cell.button1W, cell.button1M, cell.button3M, cell.button6M, cell.button1Y, cell.buttonAll]
+            for (index,item) in buttons.enumerated() {item!.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); item!.tag = index}
             if isLineCharts
             {
                 cell.candleStickChartView.isHidden = true
                 cell.chartView.isHidden = false
                 let set1 = LineChartDataSet(entries: values ,label: "Prices")
-                set1.drawCirclesEnabled = false
-                set1.lineWidth = 1.5
+                set1.drawCirclesEnabled = false;set1.lineWidth = 1.5
+                if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)}
+                else{set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(UIColor.red)}
+                set1.drawFilledEnabled = true
+                cell.chartView.xAxis.setLabelCount(cell.xAxisLabelCount, force: false)
                 let data = LineChartData(dataSet: set1)
                 data.setDrawValues(false)
                 cell.chartView.data = data
@@ -140,12 +135,11 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                 let set1Candle = CandleChartDataSet(entries: values, label: "Prices")
                 let dataCandle = CandleChartData(dataSet: set1Candle)
                 dataCandle.setDrawValues(false)
-                //cell.candleStickChartView.data = dataCandle
             }
             return cell
         }
        
-        else if indexPath.row == 2
+        else if indexPath.row == 2 //OneToTwoCell --> 1 label at left side and 2 label at right side of cell
         {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
@@ -156,7 +150,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             cell.rightLabelDown.text = currentCurrencySymbol + " " + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
             return cell
         }
-        else if indexPath.row == 3
+        else if indexPath.row == 3 //OneToTwoCell --> 1 label at left side and 2 label at right side of cell
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
             cell.leftLabel.text = stringArray[indexPath.row-2]
@@ -222,13 +216,15 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    //Table view cell clicked function, user can only tap to social media cells. when user taps we direct them to the websites.
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
         if indexPath.row >= 11 && indexPath.row < 14
         {
             if indexPath.row == 11
             {
                 guard let url = URL(string: webSiteLink) else { return }
-                UIApplication.shared.open(url)
+                UIApplication.shared.open(url) //sending user to the url
             }
             else if indexPath.row == 12
             {
@@ -244,27 +240,28 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    @objc func operationButtonClicked(sender: UIButton){self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)}
     
+    // MARK: - Button Clicked Funcs
+    @IBAction func currencyTypeButtonClicked(_ sender: Any){self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)}
+    @objc func operationButtonClicked(sender: UIButton){self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)}
     @objc func tappedButton(sender : UIButton)
     {
         if sender.tag != 0 && sender.tag != 1
         {
             DispatchQueue.main.async{self.showActivityIndicator()}
-            var type = ""
             switch sender.tag
             {
-                case 2:type = "twentyFour_hours"
-                case 3:type = "one_week_before"
-                case 4:type = "one_month_before"
-                case 5:type = "three_months_before"
-                case 6:type = "six_months_before"
-                case 7:type = "one_year_before"
-                case 8:type = "all"
+                case 2:chartType = "twentyFour_hours"
+                case 3:chartType = "one_week_before"
+                case 4:chartType = "one_month_before"
+                case 5:chartType = "three_months_before"
+                case 6:chartType = "six_months_before"
+                case 7:chartType = "one_year_before"
+                case 8:chartType = "all"
                 default:
                     print("cem")
             }
-            self.coingecko.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: type) { (chartdata) in
+            CoinGecko.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
                     self.values = chartdata
                     DispatchQueue.main.async{
                         self.hideActivityIndicator()
@@ -293,7 +290,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             destinationVC.values = values
             destinationVC.charType = isLineCharts
             destinationVC.coinId = currentCoinId
-            destinationVC.currencyKey = currentCurrencyKey
         }
         else if segue.identifier == "toCurrencySelectorFromDetails"
         {
@@ -303,10 +299,11 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         else if segue.identifier == "toOperationCoinDetails"
         {
             let destinationVC = segue.destination as! OperationController
-            destinationVC.currencyType = self.currentCurrencyKey
             destinationVC.currencyTypes = self.currencyTypes
         }
     }
+    
+    // MARK: - Design Settings
     
     /// Navigation Bar Settings
     func navTitleWithImageAndText(titleText: String, imageUrl: String) -> UIView
@@ -327,10 +324,10 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         let imageAspect = image.image!.size.width / image.image!.size.height
         //BUGGG
         // Sets the image frame so that it's immediately before the text:
-        let imageX = label.frame.origin.x - label.frame.size.height * imageAspect
-        let imageY = label.frame.origin.y
-        let imageWidth = label.frame.size.height * imageAspect
-        let imageHeight = label.frame.size.height
+        let imageX = label.frame.origin.x - (label.frame.size.height * imageAspect * 2 )
+        let imageY = label.frame.origin.y + (label.frame.origin.y * 0.4)
+        let imageWidth = label.frame.size.height * imageAspect * 1.5
+        let imageHeight = label.frame.size.height * 1.5
         image.frame = CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight)
         image.contentMode = UIView.ContentMode.scaleAspectFit
         // Adds both the label and image view to the titleView
@@ -354,30 +351,22 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {print(entry)}
-    @IBAction func currencyTypeButtonClicked(_ sender: Any){self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)}
-    
-    //Locks the screen before view is appeared and realease this locking before view is disappeared
-    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)}
-    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)}
 }
 
-extension UIView {
+
+//Storyboard settings for adding border to views
+extension UIView
+{
     // MARK: - Properties
-    @IBInspectable var borderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        set {
-            layer.borderWidth = newValue
-        }
+    @IBInspectable var borderWidth: CGFloat
+    {
+        get {return layer.borderWidth}
+        set {layer.borderWidth = newValue}
     }
     
-    @IBInspectable var borderColor: UIColor? {
-        get {
-            return UIColor(cgColor: layer.borderColor!)
-        }
-        set {
-            layer.borderColor = newValue?.cgColor
-        }
+    @IBInspectable var borderColor: UIColor?
+    {
+        get {return UIColor(cgColor: layer.borderColor!)}
+        set {layer.borderColor = newValue?.cgColor}
     }
 }
