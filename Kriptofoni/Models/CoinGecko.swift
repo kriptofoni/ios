@@ -49,7 +49,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getDataForCharts" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let prices = jSONResult["prices"] as! [[NSNumber]]
                     var x: Double = 1.0
@@ -91,7 +91,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getCoinVolume" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let dict = jSONResult[id] as! [String:Any]
                     let newStr = currency + "_24h_vol"
@@ -128,7 +128,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getCoinDetails" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
                     guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
@@ -196,7 +196,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getSupportedCurrencies" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
@@ -244,7 +244,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getCoinMarkets" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -301,7 +301,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getTotalMarketValue" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: Any]
                     if let data = jSONResult["data"] as? [String : Any]
                     {
@@ -357,7 +357,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT" + String(apiCallCount))
+                    print("API CALL COUNT getCoins" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {

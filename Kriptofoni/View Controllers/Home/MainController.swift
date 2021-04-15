@@ -27,7 +27,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;var tableViewPage = 1
-    var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey;var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
+    var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
     var searchActive = false
     var timer: Timer?
     var isFirstTime = true
@@ -35,34 +35,40 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
    
     //Locks the screen before view is appeared and realease this locking before view is disappeared
-    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all)}
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all);timer?.invalidate();timer = nil}
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
-        currentCurrencySymbol = Currency.currencySymbol; currentCurrencyKey = Currency.currencyKey
         let sWidth = sSize.width
         segmentedView.frame.size.width = sWidth
-        self.currencyButton.title = currentCurrencyKey.uppercased()
+        self.currencyButton.title = Currency.currencyKey.uppercased()
         showActivityIndicator()
         appStartingControls()
         addSwipeGesture()
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
+        
+    }
+    //Did this over there becuase i do not want to add segments to segmented view every time i open this controller
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
         segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "COINS",  at: 0)
         segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
         segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
+        print(String(segmentedView.numberOfSegments) + "NumberofSegments")
         segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
+        
     }
-    override func viewDidLoad(){super.viewDidLoad()}
     
     func appStartingControls()
     {
-        getCoins(page: tableViewPage)
+        update()
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
-            CoinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+            CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
                 DispatchQueue.main.async{
                     self.navigationItem.title = navigationTitle
                     self.hideActivityIndicator()
@@ -99,7 +105,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     @objc func update()
     {
         print("UPDATED")
-        CoinGecko.getTotalMarketValue(currency: currentCurrencyKey, symbol: currentCurrencySymbol) { (navigationTitle) in
+        CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         } onFailure: {print("Error: While trying to fetch total market cap")}
         getCoins(page: tableViewPage)
@@ -202,7 +208,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func getCoins(page : Int)
     {
         let emptyHashMap = [String : Int]()
-        CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
+        CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
             self.coinArray.removeAll(keepingCapacity: false)
             self.coinArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
@@ -225,7 +231,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn24H.removeAll(keepingCapacity: false)
@@ -261,7 +267,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 newString += copyArray[m].getId() + ","
                 coinNumber[copyArray[m].getId()] = m + 1
             }
-            CoinGecko.getCoins(vs_currency: currentCurrencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
                     self.mostIncIn7D.removeAll(keepingCapacity: false)
@@ -405,7 +411,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             if change.intValue > 0{cell.change.textColor = UIColor.green}
             else{cell.change.textColor = UIColor.red}
             cell.change.text = String(format: "%.2f", change.doubleValue)
-            cell.price.text = currentCurrencySymbol + " " + Util.toPrice(cellArrayGetIndex.getPrice().doubleValue, isCoinDetailPrice: false)
+            cell.price.text = Currency.currencySymbol + " " + Util.toPrice(cellArrayGetIndex.getPrice().doubleValue, isCoinDetailPrice: false)
             cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
             return cell
         }
