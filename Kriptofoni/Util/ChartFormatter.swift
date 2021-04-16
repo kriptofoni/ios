@@ -33,11 +33,19 @@ class LineChartFormatter: NSObject, IAxisValueFormatter
         }
         else if type == "one_week_before"
         {
-            return "2"
+            dateFormatter.setLocalizedDateFormatFromTemplate("MMM")
+            let localDateMonth = dateFormatter.string(from: date)
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd")
+            let localDateDay = dateFormatter.string(from: date)
+            returnString = localDateDay + "" + localDateMonth
         }
         else if type == "one_month_before"
         {
-            return "3"
+            dateFormatter.setLocalizedDateFormatFromTemplate("MMM")
+            let localDateMonth = dateFormatter.string(from: date)
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd")
+            let localDateDay = dateFormatter.string(from: date)
+            returnString = localDateDay + "" + localDateMonth
         }
         else if type ==  "three_months_before"
         {
@@ -77,7 +85,7 @@ class ChartUtil
         chartView.pinchZoomEnabled = true
         chartView.rightAxis.enabled = false
         chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.setLabelCount(xAxisLabelCount, force: false) // Sets the x axis label count according to time scale
+        chartView.xAxis.setLabelCount(xAxisLabelCount, force: true) // Sets the x axis label count according to time scale
         let set1 = LineChartDataSet(entries: values ,label: "Prices")
         set1.drawCirclesEnabled = false
         set1.lineWidth = 1.5

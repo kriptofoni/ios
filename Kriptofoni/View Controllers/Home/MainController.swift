@@ -72,7 +72,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     self.navigationItem.title = navigationTitle
                     self.hideActivityIndicator()
                 }
-            } onFailure: {print("Error: While trying to fetch total market cap")}
+            }
             saveCurrencies()
             getSearchArray()
             timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
@@ -85,15 +85,16 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 print(String(self.currencyTypes.count) + "COUNT")
             } onFailure: {print("Error: Failed to load currencies.")}
             CoreData.getCoins { (result) in
-                DispatchQueue.main.async{
-                    self.hideActivityIndicator()
-                }
+                DispatchQueue.main.async{self.hideActivityIndicator()}
                 self.searchCoinArray = result
                 self.update()
                 if self.isFirstTime // if it is the first time after app is launched
                 {
-                    self.getSearchArray()
-                    self.updateCurrencies()
+                    DispatchQueue.global(qos: .background).async {
+                        self.getSearchArray()
+                        self.updateCurrencies()
+                      print("This is run on the background queue")
+                    }
                 }
                 self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
             } onFailure: {print("HATAAA")}
@@ -106,7 +107,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         print("UPDATED")
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
-        } onFailure: {print("Error: While trying to fetch total market cap")}
+        }
         getCoins(page: tableViewPage)
         getCoinsFor24(page: 1, type: "INC");getCoinsFor24(page: 1, type: "DEC")
         getCoinsFor7(page: 1, type: "INC");getCoinsFor7(page: 1, type: "DEC")
@@ -124,7 +125,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 DispatchQueue.main.async{self.tableView.reloadData()}
                 myGroup.leave()
             }
-            onFailure: {print("Could not download from api")}
+           
         }
         myGroup.notify(queue: .main)
         {
@@ -212,7 +213,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.coinArray.append(contentsOf: result)
             DispatchQueue.main.async{self.tableView.reloadData()}
         }
-        onFailure: {print("Could not download from api")}
     }
     
     /// Get coins according to 24H changes, type is for selecting INC or DEC
@@ -247,7 +247,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 }
                 DispatchQueue.main.async{self.tableView.reloadData()}
             }
-            onFailure: {print("Could not download from api")}
+          
         }
     }
     
@@ -283,7 +283,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 }
                 DispatchQueue.main.async{self.tableView.reloadData()}
             }
-            onFailure: {print("Could not download from api")}
+            
         }
     }
     
@@ -306,7 +306,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     catch{print("error")}
                 }
             }
-        } onFailure: {print("HATA")}
+        }
     }
     
     func updateCurrencies()
@@ -331,9 +331,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     catch{print("Error")}
                 }
             }
-        } onFailure: {
-            print("HATA")
-        }
+        } 
     }
     
     
@@ -450,7 +448,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     /// Pushs the necessary array to table view according to segmented control
     @objc func segmentSelected(sender:ScrollableSegmentedControl)
     {
-        print("Segment at index \(sender.selectedSegmentIndex)  selected")
         switch sender.selectedSegmentIndex
         {
             case 0:tableViewPosition = 0
@@ -537,6 +534,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 destinationVC.selectedSearchCoin = self.selectedSearchCoin
                 destinationVC.type = 0 //it means we will come this page from a search operation
                 destinationVC.currencyTypes = self.currencyTypes
+                self.navigationItem.title = ""
             }
             else
             {

@@ -14,7 +14,7 @@ class CoinGecko
     
     static var apiCallCount = 0
     
-    static func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void, onFailure: () -> Void)  -> Void
+    static func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
     {
         var array = [ChartDataEntry]()
         let now = NSDate().timeIntervalSince1970
@@ -42,8 +42,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                 do
@@ -69,7 +73,7 @@ class CoinGecko
         
     }
     
-    static func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void, onFailure: () -> Void) -> Void
+    static func getCoinVolume(id: String, currency: String, completionBlock: @escaping (NSNumber) -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/simple/price?ids=\(id)&vs_currencies=\(currency)&include_24hr_vol=true"
         let url = NSURL(string: baseUrl)
@@ -83,8 +87,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                 do
@@ -105,7 +113,7 @@ class CoinGecko
     
     
     ///Gets coin details from api and writes these datas into a dict.
-    static func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : Any]) -> Void, onFailure: () -> Void) -> Void
+    static func getCoinDetails(id: String, currencyType: String ,completionBlock: @escaping ([String : Any]) -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/coins" + "/" + id
         var coinDict = [String : Any]()
@@ -119,8 +127,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                 do
@@ -160,7 +172,7 @@ class CoinGecko
                     self.getCoinVolume(id: id, currency: currencyType) { (result) in
                         coinDict["volumeFor24H"] = result
                         completionBlock(coinDict)
-                    } onFailure: {print("Error: when fetching volume")}
+                    }
                 }
                 catch{print("API FETCH FAILED CALL COUNT getCoinDetails" + String(apiCallCount))}
             }
@@ -171,7 +183,7 @@ class CoinGecko
     }
   
     
-    static func getSupportedCurrencies (completionBlock: @escaping (String) -> Void,onFailure: () -> Void) -> Void
+    static func getSupportedCurrencies (completionBlock: @escaping (String) -> Void) -> Void
     {
         var concatedString = String()
         let baseUrl = "https://api.coingecko.com/api/v3/"
@@ -186,8 +198,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                 do
@@ -206,7 +222,7 @@ class CoinGecko
         task.resume()
     }
 
-    static func getCoinMarkets(vs_currency :String,  order : String, per_page : Int,  page : Int, sparkline : Bool, priceChangePercentage : String , index : Int, completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
+    static func getCoinMarkets(vs_currency :String,  order : String, per_page : Int,  page : Int, sparkline : Bool, priceChangePercentage : String , index : Int, completionBlock: @escaping ([SearchCoin]) -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
@@ -231,12 +247,14 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
-            // Convert HTTP Response Data to a simple String
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
-               // print("Response data string:\n \(dataString)")
                 do
                 {
                     apiCallCount += 1
@@ -276,7 +294,7 @@ class CoinGecko
         task.resume()
     }
     
-    static func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void, onFailure: () -> Void) -> Void
+    static func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void) -> Void
     {
         var navigationTitle = String()
         let baseUrl = "https://api.coingecko.com/api/v3/global"
@@ -290,8 +308,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                 do
@@ -318,7 +340,7 @@ class CoinGecko
         
     }
     
-    static func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Coin]) -> Void,onFailure: () -> Void) -> Void
+    static func getCoins(vs_currency :String, ids: String,  order : String, per_page : Int,  page : Int, sparkline : Bool, hashMap : [String : Int], priceChangePercentage : String, completionBlock: @escaping ([Coin]) -> Void) -> Void
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
@@ -343,9 +365,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            // Read HTTP Res3ponse Status code
-            //if let response = response as? HTTPURLResponse{print("Response HTTP Status code: \(response.statusCode)")}
-            // Convert HTTP Response Data to a simple String
+            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
+            else
+            {
+                  print("Error with the response, unexpected status code: \(response)")
+                  return
+            }
             if let data = data
             {
                // print("Response data string:\n \(dataString)")

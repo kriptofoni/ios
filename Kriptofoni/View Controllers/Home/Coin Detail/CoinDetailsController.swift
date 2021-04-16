@@ -68,8 +68,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             CoinGecko.getDataForCharts(id: id, currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
                 self.values = chartdata
                 DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
-            } onFailure: {print("Error")}
-        } onFailure: {print("Error: When getting coin detais.")}
+            }
+        } 
         self.navigationItem.titleView = navTitleWithImageAndText(titleText: name + " " + shortening.uppercased(), imageUrl: url)
     }
     
@@ -234,7 +234,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     {
         if sender.tag != 0 && sender.tag != 1
         {
-            DispatchQueue.main.async{self.showActivityIndicator()}
             switch sender.tag
             {
                 case 2:chartType = "twentyFour_hours"
@@ -247,13 +246,14 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                 default:
                     print("cem")
             }
+            DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
             CoinGecko.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
                     self.values = chartdata
                     DispatchQueue.main.async{
                         self.hideActivityIndicator()
                         self.tableView.reloadData()
                     }
-                } onFailure: {print("Error")}
+                }
         }
         else
         {
@@ -277,7 +277,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             destinationVC.charType = isLineCharts // line chart or candle chart
             destinationVC.coinId = currentCoinId
             destinationVC.dict = dict
-            destinationVC.chartType = chartType // sets the time scale
         }
         else if segue.identifier == "toCurrencySelectorFromDetails"
         {

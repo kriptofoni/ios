@@ -23,7 +23,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     var buttons = [UIButton]()
     var dict = [String:Any]()
     var xAxisLabelCount = 12
-    var chartType = "" // sets the time line
+    var chartType = "twentyFour_hours" // sets the time line
         
     
     override func viewDidLoad()
@@ -91,12 +91,11 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     /// Gets chart data according to given timescale
     func getChartData(type : String)
     {
-        DispatchQueue.main.async{self.showActivityIndicator()}
+        DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
         CoinGecko.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
                 self.values = chartdata
                 DispatchQueue.main.async{self.hideActivityIndicator();self.updateChart()}
             }
-        onFailure: {print("Error")}
     }
     
     ///Shows spinner
