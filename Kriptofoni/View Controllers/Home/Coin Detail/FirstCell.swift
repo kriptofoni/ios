@@ -52,9 +52,9 @@ class SecondCell: UITableViewCell
     @IBAction func button24HClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: button24H, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
     @IBAction func button1WClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1W, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 7 }
     @IBAction func button1MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 4}
-    @IBAction func button3MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button3M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 3}
-    @IBAction func button6MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button6M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 6}
-    @IBAction func button1YClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1Y, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
+    @IBAction func button3MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button3M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 4}
+    @IBAction func button6MClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button6M, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 7}
+    @IBAction func button1YClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: button1Y, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 13}
     @IBAction func buttonAllClicked(_ sender: Any)  {Util.setButtonColorsBackGround(except: buttonAll, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount  = 12}
     
 }

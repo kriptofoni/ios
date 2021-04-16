@@ -21,6 +21,9 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     var charType = true; //true for line chart, false for candle
     let coingecko = CoinGecko.init()
     var buttons = [UIButton]()
+    var dict = [String:Any]()
+    var xAxisLabelCount = 12
+    var chartType = "" // sets the time line
         
     
     override func viewDidLoad()
@@ -46,18 +49,8 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         if charType
         {
             candleView.isHidden = true; chartView.isHidden = false
-            chartView.chartDescription!.enabled = false;
-            chartView.dragEnabled = true;
-            chartView.setScaleEnabled(true)
-            chartView.pinchZoomEnabled = true
-            chartView.rightAxis.enabled = false
-            chartView.xAxis.labelPosition = .bottom
-            let set1 = LineChartDataSet(entries: values ,label: "Prices")
-            set1.drawCirclesEnabled = false
-            set1.lineWidth = 1.5
-            let data = LineChartData(dataSet: set1)
-            data.setDrawValues(false)
-            chartView.data = data
+            ChartUtil.setLineChartSettings(chartView: chartView, xAxisLabelCount: xAxisLabelCount, values: values, dict: dict, chartType: chartType)
+
         }
         else
         {
@@ -80,19 +73,19 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         print("pressed")
     }
     
-    @IBAction func twentyFourButtonClicked(_ sender: Any) {Util.setButtonColors(except: twentyFour, buttons: buttons, background: false); getChartData(type: "twentyFour_hours")}
+    @IBAction func twentyFourButtonClicked(_ sender: Any) {chartType = "twentyFour_hours"; Util.setButtonColors(except: twentyFour, buttons: buttons, background: false); getChartData(type: chartType); xAxisLabelCount = 12}
     
-    @IBAction func oneWeekButtonClicked(_ sender: Any) {Util.setButtonColors(except: oneweek, buttons: buttons,background: false);getChartData(type: "one_week_before")}
+    @IBAction func oneWeekButtonClicked(_ sender: Any) {chartType = "one_week_before"; Util.setButtonColors(except: oneweek, buttons: buttons,background: false);getChartData(type: chartType); xAxisLabelCount =  7}
     
-    @IBAction func oneMonthButtonClicked(_ sender: Any) {Util.setButtonColors(except: oneMonth, buttons: buttons,background: false); getChartData(type: "one_month_before")}
+    @IBAction func oneMonthButtonClicked(_ sender: Any) {chartType = "one_month_before"; Util.setButtonColors(except: oneMonth, buttons: buttons,background: false); getChartData(type: chartType); xAxisLabelCount = 4}
     
-    @IBAction func threeMonthButtonClicked(_ sender: Any) {Util.setButtonColors(except: threeMonth, buttons: buttons,background: false); getChartData(type: "three_months_before")}
+    @IBAction func threeMonthButtonClicked(_ sender: Any) {chartType = "three_months_before";Util.setButtonColors(except: threeMonth, buttons: buttons,background: false); getChartData(type: chartType); xAxisLabelCount = 4}
     
-    @IBAction func sixMonthButtonClicked(_ sender: Any) {Util.setButtonColors(except: sixMonth, buttons: buttons,background: false); getChartData(type: "six_months_before")}
+    @IBAction func sixMonthButtonClicked(_ sender: Any) {chartType = "six_months_before"; Util.setButtonColors(except: sixMonth, buttons: buttons,background: false); getChartData(type: chartType); xAxisLabelCount = 7}
     
-    @IBAction func oneYearButtonClicked(_ sender: Any) {Util.setButtonColors(except: oneYear, buttons: buttons,background: false) ;getChartData(type: "one_year_before")}
+    @IBAction func oneYearButtonClicked(_ sender: Any) {chartType = "one_year_before"; Util.setButtonColors(except: oneYear, buttons: buttons,background: false) ;getChartData(type: chartType); xAxisLabelCount = 13}
     
-    @IBAction func allButtonClicked(_ sender: Any) {Util.setButtonColors(except: all, buttons: buttons,background: false) ;getChartData(type: "all")}
+    @IBAction func allButtonClicked(_ sender: Any) { chartType = "all"; Util.setButtonColors(except: all, buttons: buttons,background: false) ;getChartData(type: chartType); xAxisLabelCount = 12}
     
     
     /// Gets chart data according to given timescale
@@ -101,11 +94,9 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         DispatchQueue.main.async{self.showActivityIndicator()}
         CoinGecko.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
                 self.values = chartdata
-                DispatchQueue.main.async{
-                    self.hideActivityIndicator()
-                    self.updateChart()
-                }
-            }onFailure: {print("Error")}
+                DispatchQueue.main.async{self.hideActivityIndicator();self.updateChart()}
+            }
+        onFailure: {print("Error")}
     }
     
     ///Shows spinner

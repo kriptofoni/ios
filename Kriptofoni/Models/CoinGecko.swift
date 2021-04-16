@@ -49,7 +49,6 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getDataForCharts" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let prices = jSONResult["prices"] as! [[NSNumber]]
                     var x: Double = 1.0
@@ -63,7 +62,7 @@ class CoinGecko
                     completionBlock(array)
                     
                 }
-                catch{print("API FETCH FAILED: getDataForCharts")}
+                catch{print("API FETCH FAILED CALL COUNT getDataForCharts" + String(apiCallCount))}
             }
         }
         task.resume()
@@ -91,14 +90,13 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getCoinVolume" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     let dict = jSONResult[id] as! [String:Any]
                     let newStr = currency + "_24h_vol"
                     volumefor24H = (dict[newStr] as? NSNumber) ?? 0
                     completionBlock(volumefor24H)
                 }
-                catch{print("API FETCH FAILED: getCoinVolume")}
+                catch{print("API FETCH FAILED CALL COUNT getCoinVolume" + String(apiCallCount))}
             }
         }
         task.resume()
@@ -128,7 +126,6 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getCoinDetails" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
                     guard let marketData = jSONResult["market_data"] as? [String:Any] else {return}
                     guard let market_cap = marketData["market_cap"] as? [String:Any] else {return}
@@ -165,7 +162,7 @@ class CoinGecko
                         completionBlock(coinDict)
                     } onFailure: {print("Error: when fetching volume")}
                 }
-                catch{print("API FETCH FAILED: getCoinDetails")}
+                catch{print("API FETCH FAILED CALL COUNT getCoinDetails" + String(apiCallCount))}
             }
         }
         task.resume()
@@ -196,7 +193,6 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getSupportedCurrencies" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [String]
                     {
@@ -204,7 +200,7 @@ class CoinGecko
                     }
                     completionBlock(concatedString)
                 }
-                catch{print("API FETCH FAILED: getSupportedCurrencies")}
+                catch{print("API FETCH FAILED CALL COUNT getSupportedCurrencies")}
             }
         }
         task.resume()
@@ -244,7 +240,7 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getCoinMarkets" + String(apiCallCount))
+                    
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -274,7 +270,7 @@ class CoinGecko
                     }
                     completionBlock(array);
                 }
-                catch{print("API FETCH FAILED: getCoinMarkets")}
+                catch{print("API FETCH FAILED CALL COUNT getCoinMarkets" + String(apiCallCount))}
             }
         }
         task.resume()
@@ -301,7 +297,6 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getTotalMarketValue" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String: Any]
                     if let data = jSONResult["data"] as? [String : Any]
                     {
@@ -316,7 +311,7 @@ class CoinGecko
                         }
                     }
                 }
-                catch{print("API FETCH FAILED: getTotalMarketValue")}
+                catch{print("API FETCH FAILED COUNT getTotalMarketValue" + String(apiCallCount))}
             }
         }
         task.resume()
@@ -357,7 +352,6 @@ class CoinGecko
                 do
                 {
                     apiCallCount += 1
-                    print("API CALL COUNT getCoins" + String(apiCallCount))
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -395,7 +389,7 @@ class CoinGecko
                     }
                     completionBlock(array);
                 }
-                catch{print("API FETCH FAILED: getCoins")}
+                catch{print("API FETCH FAILED COUNT getCoins" + String(apiCallCount))}
             }
         }
         task.resume()

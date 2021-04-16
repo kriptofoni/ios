@@ -57,7 +57,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
         segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
-        print(String(segmentedView.numberOfSegments) + "NumberofSegments")
         segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
         
     }

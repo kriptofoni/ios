@@ -51,27 +51,26 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if type == 0  //0 means that we are coming this page from a search operation
         {
             self.currentCoinId = self.selectedSearchCoin.getId()
-            CoinGecko.getCoinDetails(id: selectedSearchCoin.getId(),currencyType: currentCurrencyKey) { (result) in
-                self.dict = result
-                CoinGecko.getDataForCharts(id: self.selectedSearchCoin.getId(), currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
-                    self.values = chartdata
-                    DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
-                } onFailure: {print("Error")}
-            } onFailure: {print("Error: When getting coin detais.")}
-            self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedSearchCoin.getName() + " " + selectedSearchCoin.getSymbol().uppercased(), imageUrl: selectedSearchCoin.getImageUrl())
+            getData(id: self.currentCoinId, name: self.selectedSearchCoin.getName(), shortening: self.selectedSearchCoin.getSymbol(), url: self.selectedSearchCoin.getImageUrl())
         }
         else //1 means that we are coming this page from normal currency selecting
         {
             self.currentCoinId = self.selectedCoin.getId()
-            CoinGecko.getCoinDetails(id: selectedCoin.getId(), currencyType: currentCurrencyKey) { (result) in
-                self.dict = result
-                CoinGecko.getDataForCharts(id: self.selectedCoin.getId(), currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
-                    self.values = chartdata
-                    DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
-                } onFailure: {print("Error")}
-            } onFailure: {print("Error: When getting coin detais.")}
-            self.navigationItem.titleView = navTitleWithImageAndText(titleText: selectedCoin.getName() + " " + selectedCoin.getShortening().uppercased(), imageUrl: selectedCoin.getIconViewUrl())
+            getData(id: self.currentCoinId, name: self.selectedCoin.getName(), shortening: self.selectedCoin.getShortening(), url: self.selectedCoin.getIconViewUrl())
         }
+    }
+    
+    //Gets data from coin gecko api
+    func getData(id: String, name: String, shortening : String, url: String)
+    {
+        CoinGecko.getCoinDetails(id: id, currencyType: currentCurrencyKey) { (result) in
+            self.dict = result
+            CoinGecko.getDataForCharts(id: id, currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
+                self.values = chartdata
+                DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
+            } onFailure: {print("Error")}
+        } onFailure: {print("Error: When getting coin detais.")}
+        self.navigationItem.titleView = navTitleWithImageAndText(titleText: name + " " + shortening.uppercased(), imageUrl: url)
     }
     
     // MARK: - Table View Functions
@@ -108,33 +107,20 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         else if indexPath.row == 1 // Chart Cell also contains chart settings
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! SecondCell
-            cell.chartView.delegate = self; cell.candleStickChartView.delegate = self
-            cell.chartView.chartDescription!.enabled = false; cell.chartView.dragEnabled = true;
-            cell.chartView.setScaleEnabled(true); cell.chartView.pinchZoomEnabled = true
-            cell.chartView.rightAxis.enabled = false; cell.chartView.xAxis.labelPosition = .bottom
             let buttons = [cell.firstButton, cell.secondButton, cell.button24H, cell.button1W, cell.button1M, cell.button3M, cell.button6M, cell.button1Y, cell.buttonAll]
             for (index,item) in buttons.enumerated() {item!.addTarget(self, action: #selector(self.tappedButton(sender:)), for: .touchUpInside); item!.tag = index}
-            if isLineCharts
+            if isLineCharts // sets line chart
             {
-                cell.candleStickChartView.isHidden = true
-                cell.chartView.isHidden = false
-                let set1 = LineChartDataSet(entries: values ,label: "Prices")
-                set1.drawCirclesEnabled = false;set1.lineWidth = 1.5
-                if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)}
-                else{set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(UIColor.red)}
-                set1.drawFilledEnabled = true
-                cell.chartView.xAxis.setLabelCount(cell.xAxisLabelCount, force: false)
-                let data = LineChartData(dataSet: set1)
-                data.setDrawValues(false)
-                cell.chartView.data = data
+                cell.candleStickChartView.isHidden = true;cell.chartView.isHidden = false; cell.chartView.delegate = self;
+                ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: values, dict: dict, chartType: chartType)
+
             }
-            else
+            else // sets candle chart
             {
-                cell.candleStickChartView.isHidden = false
-                cell.chartView.isHidden = true
-                let set1Candle = CandleChartDataSet(entries: values, label: "Prices")
-                let dataCandle = CandleChartData(dataSet: set1Candle)
-                dataCandle.setDrawValues(false)
+                cell.candleStickChartView.isHidden = false; cell.chartView.isHidden = true; cell.candleStickChartView.delegate = self
+                //let set1Candle = CandleChartDataSet(entries: values, label: "Prices")
+                //let dataCandle = CandleChartData(dataSet: set1Candle)
+                //dataCandle.setDrawValues(false)
             }
             return cell
         }
@@ -288,8 +274,10 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         {
             let destinationVC = segue.destination as! FullScreenChartController
             destinationVC.values = values
-            destinationVC.charType = isLineCharts
+            destinationVC.charType = isLineCharts // line chart or candle chart
             destinationVC.coinId = currentCoinId
+            destinationVC.dict = dict
+            destinationVC.chartType = chartType // sets the time scale
         }
         else if segue.identifier == "toCurrencySelectorFromDetails"
         {
@@ -304,6 +292,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK: - Design Settings
+    
     
     /// Navigation Bar Settings
     func navTitleWithImageAndText(titleText: String, imageUrl: String) -> UIView
@@ -350,7 +339,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
-    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {print(entry)}
+    
 }
 
 

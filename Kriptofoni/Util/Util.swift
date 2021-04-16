@@ -7,9 +7,34 @@
 
 import Foundation
 import UIKit
+import Charts
 
 class Util
 {
+    //Converts months counts to months strings
+    static func toMonth(monthCount: Int) -> String
+    {
+        var month = ""
+        switch monthCount
+        {
+                case 1: month = "Jan"
+                case 2: month = "Feb"
+                case 3: month = "Mar"
+                case 4: month =  "Apr"
+                case 5: month =  "May"
+                case 6: month = "Jun"
+                case 7: month = "Jul"
+                case 8: month = "Aug"
+                case 9: month = "Sep"
+                case 10: month = "Oct"
+                case 11: month = "Now"
+                case 12: month = "Dec"
+                default: month = "MM"
+        }
+        return month
+    }
+    
+    
     ///Changes double to string as price 100000.90 -->  100,000.90
     static func toPrice(_ price: Double, isCoinDetailPrice : Bool) -> String
     {
@@ -70,4 +95,6 @@ class Util
             alpha: CGFloat(1.0)
         )
     }
+    
+   
 }

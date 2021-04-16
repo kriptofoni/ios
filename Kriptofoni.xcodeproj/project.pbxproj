@@ -254,6 +254,15 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
+		B23374322629C5DF0056FB3D /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				B2D75CB02614FBCB000C0259 /* CoreData.swift */,
+				B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */,
+			);
+			path = "Core Data";
+			sourceTree = "<group>";
+		};
 		B24B13A026202B5700123E78 /* Operation Page */ = {
 			isa = PBXGroup;
 			children = (
@@ -277,8 +286,7 @@
 		B2D75CAF2614FBBD000C0259 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				B2D75CB02614FBCB000C0259 /* CoreData.swift */,
-				B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */,
+				B23374322629C5DF0056FB3D /* Core Data */,
 				B2D54610262344B8004DD5BB /* AppUtility.swift */,
 				B2D5461D262352E8004DD5BB /* Util.swift */,
 				B28D59912627684300B3E7EF /* ChartFormatter.swift */,
