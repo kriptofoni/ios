@@ -12,10 +12,7 @@ import Charts
 class LineChartFormatter: NSObject, IAxisValueFormatter
 {
     var type : String
-    
-    init(type: String) {
-        self.type = type
-    }
+    init(type: String) {self.type = type}
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String
     {

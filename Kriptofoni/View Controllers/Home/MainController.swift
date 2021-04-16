@@ -49,6 +49,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         buttons.append(searchButton); buttons.append(currencyButton)
         
     }
+    
     //Did this over there becuase i do not want to add segments to segmented view every time i open this controller
     override func viewDidLoad()
     {
@@ -58,7 +59,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
         segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
-        
     }
     
     func appStartingControls()
@@ -93,7 +93,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     DispatchQueue.global(qos: .background).async {
                         self.getSearchArray()
                         self.updateCurrencies()
-                      print("This is run on the background queue")
+                       print("This is run on the background queue")
                     }
                 }
                 self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
@@ -534,13 +534,14 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 destinationVC.selectedSearchCoin = self.selectedSearchCoin
                 destinationVC.type = 0 //it means we will come this page from a search operation
                 destinationVC.currencyTypes = self.currencyTypes
-                self.navigationItem.title = ""
+                
             }
             else
             {
                 destinationVC.selectedCoin = self.selectedCoin
                 destinationVC.type = 1 // it means we will come this page from a normal selection operation
                 destinationVC.currencyTypes = self.currencyTypes
+                self.navigationItem.title = ""
             }
            
         }

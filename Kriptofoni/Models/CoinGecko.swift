@@ -42,12 +42,14 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
+            /*
             guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
             else
             {
                   print("Error with the response, unexpected status code: \(response)")
                   return
             }
+            */
             if let data = data
             {
                 do
@@ -87,12 +89,7 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+           
             if let data = data
             {
                 do
@@ -127,12 +124,7 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+            
             if let data = data
             {
                 do
@@ -198,12 +190,7 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+            
             if let data = data
             {
                 do
@@ -247,18 +234,12 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+           
             if let data = data
             {
                 do
                 {
                     apiCallCount += 1
-                    
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
                     for jsonElement in jSONResult as! [[String: Any]]
                     {
@@ -266,7 +247,6 @@ class CoinGecko
                         {
                             if let symbol = jsonElement["symbol"] as? String
                             {
-                                
                                 if let name = jsonElement["name"] as? String
                                 {
                                     if let image = jsonElement["image"] as? String
@@ -277,14 +257,10 @@ class CoinGecko
                                          let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
                                          let newCurrency = SearchCoin(id: id, imageUrl: image, name: name, symbol: symbol, marketCapRank: marketCapRank, priceChange24H: priceChange24H,priceChangePercentage24H: priceChangePercentage24H, priceChangePercentage7D: priceChangePercentage7D)
                                          array.append(newCurrency)
-                                    }
-                                    else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                                }
-                                else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                            }
-                            else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                        }
-                        else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                    }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                                }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                            }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
+                        }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
                     }
                     completionBlock(array);
                 }
@@ -308,12 +284,7 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+           
             if let data = data
             {
                 do
@@ -365,12 +336,7 @@ class CoinGecko
                 print("Error took place \(error)")
                 return
             }
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
+            
             if let data = data
             {
                // print("Response data string:\n \(dataString)")

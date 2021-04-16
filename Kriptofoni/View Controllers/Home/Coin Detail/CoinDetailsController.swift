@@ -113,7 +113,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             {
                 cell.candleStickChartView.isHidden = true;cell.chartView.isHidden = false; cell.chartView.delegate = self;
                 ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: values, dict: dict, chartType: chartType)
-
             }
             else // sets candle chart
             {
@@ -183,9 +182,9 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             let cell = tableView.dequeueReusableCell(withIdentifier: "socialMediaCell", for: indexPath) as! SocialMediaCell
             cell.label.text = socialMediaTexture[indexPath.row - 11]
             cell.socialMediaIcon.image = UIImage(named: iconNames[indexPath.row - 11])
-            if indexPath.row == 12 {webSiteLink = self.dict["website"] as! String}
-            else if indexPath.row == 13 {twitterLink = self.dict["twitter"] as! String}
-            else if indexPath.row == 14 {redditLink = self.dict["reddit"] as! String}
+            if indexPath.row == 11 {webSiteLink = self.dict["website"] as! String}
+            else if indexPath.row == 12 {twitterLink = self.dict["twitter"] as! String}
+            else if indexPath.row == 13 {redditLink = self.dict["reddit"] as! String}
             return cell
         }
         else if indexPath.row == 14
@@ -214,6 +213,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             }
             else if indexPath.row == 12
             {
+                print(redditLink + "Reddit link")
                 guard let url = URL(string: redditLink) else  { return }
                 UIApplication.shared.open(url)
             }
@@ -249,10 +249,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
             CoinGecko.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
                     self.values = chartdata
-                    DispatchQueue.main.async{
-                        self.hideActivityIndicator()
-                        self.tableView.reloadData()
-                    }
+                    DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 }
         }
         else

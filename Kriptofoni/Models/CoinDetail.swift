@@ -32,8 +32,8 @@ class CoinDetail
     }
     
     
-    init() {
-        
+    init()
+    {
         self.percentFor24H = 0
         self.change = 0
         self.priceForCurrency = 0
@@ -42,7 +42,6 @@ class CoinDetail
         self.priceForBitcoin = 0
         self.marketCap = 0
         self.volumeFor24H = 0
-        
     }
     
     func getPercent() -> NSNumber{return percentFor24H}
