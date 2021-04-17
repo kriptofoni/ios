@@ -138,6 +138,80 @@ class CoreData
     }
     
     
+    // Returns true if it adds item to watching list.
+    static func addWatchingList(id: String) -> Bool
+    {
+        let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+        var isAdded = Bool()
+        getWatchingList { (array,concatedString) in
+            if array.isEmpty // Core data is not created before
+            {
+                let watchingList =   NSEntityDescription.insertNewObject(forEntityName: "WatchingList", into: managedObjectContext)
+                let newData = "," + id
+                watchingList.setValue(newData, forKey: "list")
+                do
+                {
+                    try managedObjectContext.save()
+                    print("WATCHINGLIST IS CREATED." + newData)
+                }
+                catch{print("error")}
+                
+            }
+            else
+            {
+                if array.contains(id) // This coin is already inside of watcing list.
+                {
+                    isAdded = false
+                }
+                else
+                {
+                    let watchingList = NSFetchRequest<NSFetchRequestResult>(entityName: "WatchingList")
+                    let result = try? managedObjectContext.fetch(watchingList)
+                    let resultData = result?[0] as! NSManagedObject
+                    var newConcatString = concatedString
+                    newConcatString = newConcatString + "," + id
+                    resultData.setValue(newConcatString, forKey: "list")
+                    do
+                    {
+                        try managedObjectContext.save()
+                        print("CURRENCY IS SAVED TO WATCHINGLIST." + newConcatString)
+                        isAdded = true
+                    }
+                    catch{print("error")}
+                }
+            }}
+           return isAdded
+    }
+    
+    static func getWatchingList(completionBlock: @escaping ([String],String) -> Void) -> Void
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "WatchingList")
+        fetchRequest.returnsObjectsAsFaults = false
+        do
+        {
+            let results = try context.fetch(fetchRequest)
+            if results.count > 0
+            {
+                for result in results as! [NSManagedObject]
+                {
+                    if let concatedString = result.value(forKey: "list") as? String
+                    {
+                        let watchList = concatedString.components(separatedBy: ",") //converts string to array
+                        completionBlock(watchList,concatedString)
+                    }
+                }
+            }
+            else
+            {
+                print("Empty Watching List...")
+                let stringArray = [String]()
+                completionBlock(stringArray,"")
+            }
+        }
+        catch {print("Error: Core Data Watching List")}
+    }
   
  
 }

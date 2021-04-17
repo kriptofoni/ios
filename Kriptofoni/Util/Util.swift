@@ -11,6 +11,33 @@ import Charts
 
 class Util
 {
+    
+    //Set cell attributes's value in CurrencyCell
+    static func setCurrencyCell(cell: CurrencyCell, coin: Coin, index : Int, mainPage : Bool)
+    {
+        let url = URL(string: coin.getIconViewUrl())
+        cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
+        cell.name.text = coin.getName()
+        let percent = coin.getPercent()
+        if percent.intValue > 0{cell.percent.textColor = UIColor.green}
+        else{cell.percent.textColor = UIColor.red}
+        cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
+        let change = coin.getChange()
+        if change.intValue > 0{cell.change.textColor = UIColor.green}
+        else{cell.change.textColor = UIColor.red}
+        cell.change.text = String(format: "%.2f", change.doubleValue)
+        cell.price.text = Currency.currencySymbol + " " + Util.toPrice(coin.getPrice().doubleValue, isCoinDetailPrice: false)
+        if mainPage
+        {
+            cell.shortening.text = "#" + String(index + 1) +  " - " + coin.getShortening().uppercased()
+        }
+        else
+        {
+            cell.shortening.text = coin.getShortening().uppercased()
+        }
+        
+    }
+    
     //Converts months counts to months strings
     static func toMonth(monthCount: Int) -> String
     {

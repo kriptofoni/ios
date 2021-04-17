@@ -6,8 +6,12 @@
     <entity name="StringCurrency" representedClassName="StringCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="string" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="WatchingList" representedClassName="WatchingList" syncable="YES" codeGenerationType="class">
+        <attribute name="list" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
         <element name="CurrencyTypes" positionX="-54" positionY="63" width="128" height="44"/>
         <element name="StringCurrency" positionX="-54" positionY="54" width="128" height="44"/>
+        <element name="WatchingList" positionX="-54" positionY="63" width="128" height="44"/>
     </elements>
 </model>

@@ -7,7 +7,7 @@
 
 
 
-import UIKit;import SDWebImage;import TinyConstraints; import Charts
+import UIKit;import SDWebImage;import TinyConstraints; import Charts; import Toast_Swift
 class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate
 {
     
@@ -191,6 +191,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonCell", for: indexPath) as! TwoButtonCell
             cell.addOperation.addTarget(self, action: #selector(self.operationButtonClicked(sender:)), for: .touchUpInside)
+            cell.favoritesButton.addTarget(self, action: #selector(self.addWatchingListButtonClicked(sender:)), for: .touchUpInside)
             return cell
         }
         else if indexPath.row ==  15
@@ -228,8 +229,23 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     // MARK: - Button Clicked Funcs
+    
     @IBAction func currencyTypeButtonClicked(_ sender: Any){self.performSegue(withIdentifier: "toCurrencySelectorFromDetails", sender: self)}
     @objc func operationButtonClicked(sender: UIButton){self.performSegue(withIdentifier: "toOperationCoinDetails", sender: self)}
+    
+    /// Adds coin to watcing list in core data.
+    @objc func addWatchingListButtonClicked(sender: UIButton)
+    {
+        if CoreData.addWatchingList(id:self.currentCoinId)
+        {
+            self.view.makeToast("Coin has been added successfully.", duration: 2.0, position: .center)
+        }
+        else
+        {
+            self.view.makeToast("Coin is already in your watching list.", duration: 2.0, position: .center)
+        }
+    }
+    
     @objc func tappedButton(sender : UIButton)
     {
         if sender.tag != 0 && sender.tag != 1
@@ -355,3 +371,4 @@ extension UIView
         set {layer.borderColor = newValue?.cgColor}
     }
 }
+

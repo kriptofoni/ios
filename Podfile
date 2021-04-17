@@ -9,6 +9,7 @@ target 'Kriptofoni' do
   pod 'SDWebImage', '~> 5.0'
   pod 'Charts'
   pod 'TinyConstraints'
+  pod 'Toast-Swift', '~> 5.0.1'
   target 'KriptofoniTests' do
     inherit! :search_paths
     # Pods for testing

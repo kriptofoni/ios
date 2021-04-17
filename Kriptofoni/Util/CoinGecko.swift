@@ -14,6 +14,8 @@ class CoinGecko
     
     static var apiCallCount = 0
     
+    
+    
     static func getDataForCharts(id: String, currency: String, type : String, completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
     {
         var array = [ChartDataEntry]()

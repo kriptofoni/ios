@@ -64,6 +64,7 @@ class TwoButtonCell: UITableViewCell
 
     @IBOutlet weak var favoritesButton: UIButton!
     @IBOutlet weak var addOperation: UIButton!
+    var coinId = ""
     override func awakeFromNib() {super.awakeFromNib(); self.selectionStyle = .none}
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func favoritesButtonClicked(_ sender: Any) {}

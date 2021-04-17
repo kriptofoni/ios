@@ -397,19 +397,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     }
                 default:print("HATA")
             }
-            let url = URL(string: cellArrayGetIndex.getIconViewUrl())
-            cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
-            cell.name.text = cellArrayGetIndex.getName()
-            let percent = cellArrayGetIndex.getPercent()
-            if percent.intValue > 0{cell.percent.textColor = UIColor.green}
-            else{cell.percent.textColor = UIColor.red}
-            cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
-            let change = cellArrayGetIndex.getChange()
-            if change.intValue > 0{cell.change.textColor = UIColor.green}
-            else{cell.change.textColor = UIColor.red}
-            cell.change.text = String(format: "%.2f", change.doubleValue)
-            cell.price.text = Currency.currencySymbol + " " + Util.toPrice(cellArrayGetIndex.getPrice().doubleValue, isCoinDetailPrice: false)
-            cell.shortening.text = "#" + String(indexPath.row + 1) +  " - " + cellArrayGetIndex.getShortening().uppercased()
+            Util.setCurrencyCell(cell: cell, coin: cellArrayGetIndex, index: indexPath.row, mainPage: true)
             return cell
         }
         else
