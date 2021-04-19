@@ -42,11 +42,10 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let sWidth = sSize.width
         segmentedView.frame.size.width = sWidth
         self.currencyButton.title = Currency.currencyKey.uppercased()
-        showActivityIndicator()
-        appStartingControls()
         addSwipeGesture()
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         
     }
     
@@ -54,6 +53,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        appStartingControls()
         segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "COINS",  at: 0)
         segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
@@ -67,6 +67,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
+            showActivityIndicator()
             CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
                 DispatchQueue.main.async{
                     self.navigationItem.title = navigationTitle
@@ -75,7 +76,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             }
             saveCurrencies()
             getSearchArray()
-            timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+            
         }
         else//Core must not be empty, it should update itself
         {
@@ -96,7 +97,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                        print("This is run on the background queue")
                     }
                 }
-                self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
+                //self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
             } onFailure: {print("HATAAA")}
 
         }
@@ -104,7 +105,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
    
     @objc func update()
     {
-        print("UPDATED")
+        print("UPDATED MAIN")
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }

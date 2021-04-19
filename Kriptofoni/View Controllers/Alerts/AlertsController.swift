@@ -11,17 +11,33 @@ import ScrollableSegmentedControl
 class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSource
 {
    
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var currencyChangeButton: UIBarButtonItem!
     @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var addAndDeleteButton: UIBarButtonItem!
+    var activityView: UIActivityIndicatorView?
     var alarmsArray = [Alarm]()
     var watchingList = [Coin]()
     var watchingListId = [String]()
     var sSize: CGRect = UIScreen.main.bounds
     var selectedCoin = Coin()
+    var timer: Timer?
+    var currencyTypes = [String]()
+    var deleteMode = false
+    let plusButton = UIButton()
+    var coinsForDeleting = [String]()
+    
+    //Locks the screen before view is appeared and realease this locking before view is disappeared
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all);timer?.invalidate();timer = nil}
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        CoreData.getSupportedCurrencies { (currencies) in
+            self.currencyTypes = currencies
+            self.currencyTypes.remove(at: 0)
+        } onFailure: {print("Error: Failed to load currencies.")}
         tableView.delegate = self; tableView.dataSource = self
         let sWidth = sSize.width
         segmentedView.frame.size.width = sWidth
@@ -36,15 +52,163 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
+        self.currencyChangeButton.title = Currency.currencyKey.uppercased()
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        if segmentedView.selectedSegmentIndex == 1
+        {
+            refreshWatchingList()
+        }
+    }
+    
+    
+    func refreshWatchingList()
+    {
         CoreData.getWatchingList { (result, string) in
-            var newResult = result
-            newResult.remove(at: 0)
-            self.watchingListId = newResult
-            self.getCoinsForWatchingList()
+            
+            if string != ""
+            {
+                self.watchingListId = result
+                self.watchingListId.remove(at: 0)
+                self.getCoinsForWatchingList()
+            }
+            else
+            {
+                self.watchingList = [Coin]()
+                self.tableView.reloadData()
+            }
+           
+        }
+    }
+    
+    func getCoinsForWatchingList()
+    {
+        var apiString = ""
+        var watchingListTemp = [Coin]()
+        for id in watchingListId
+        {
+            if apiString == ""
+            {
+                apiString = id
+            }
+            else
+            {
+                apiString = apiString + "," + id
+            }
+        }
+        if apiString != ""
+        {
+            DispatchQueue.main.async{self.showActivityIndicator()}
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in
+                    watchingListTemp.append(contentsOf: result)
+                    watchingListTemp = watchingListTemp.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.watchingList = watchingListTemp
+                    DispatchQueue.main.async
+                    {
+                        self.tableView.reloadData()
+                        self.hideActivityIndicator()
+                    }
+            }
+        }
+        
+    }
+    
+    @objc func update()
+    {
+        if !deleteMode
+        {
+            if segmentedView.selectedSegmentIndex == 0
+            {
+               
+            }
+            else
+            {
+                refreshWatchingList()
+            }
         }
     }
     
     // MARK: - Table View Functions
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        if segmentedView.selectedSegmentIndex == 0 // alarms
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "watchingListCell", for: indexPath) as! WatchingListCell
+            return cell
+        }
+        else // watching list
+        {
+            print(watchingList.count)
+            if watchingList.count > 0
+            {
+                tableView.separatorStyle = .singleLine
+                let cell = tableView.dequeueReusableCell(withIdentifier: "watchingListCell", for: indexPath) as! WatchingListCell
+                let cellArrayIndex = watchingList[indexPath.row]
+                let url = URL(string: cellArrayIndex.getIconViewUrl())
+                cell.symbolView.sd_setImage(with: url) { (_, _, _, _) in}
+                cell.name.text = cellArrayIndex.getName()
+                if cellArrayIndex.getPercent().doubleValue > 0 { cell.percent.textColor = UIColor.green; cell.price.textColor = UIColor.green}
+                else {cell.percent.textColor = UIColor.red; cell.price.textColor = UIColor.red}
+                cell.percent.text = "%" + String(format: "%.2f", cellArrayIndex.getPercent().doubleValue)
+                cell.price.text = Currency.currencySymbol + " " + Util.toPrice(cellArrayIndex.getPrice().doubleValue, isCoinDetailPrice: false)
+                cell.count.text = String(indexPath.row + 1)
+                cell.count.isHidden = deleteMode
+                cell.checkButton.isHidden = !deleteMode
+                return cell
+            }
+            else
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "emptyCell", for: indexPath) as! EmptyWatchlistCell
+                cell.label.text = "Watching list is empty."
+                tableView.separatorStyle = .none
+                return cell
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        if segmentedView.selectedSegmentIndex == 0 //alarms
+        {
+            
+        }
+        else //watching list
+        {
+            if !self.watchingList.isEmpty
+            {
+                let cell = tableView.cellForRow(at: indexPath) as! WatchingListCell
+                if !deleteMode //if delete mode is closed
+                {
+                    if watchingList.count > 0
+                    {
+                        self.selectedCoin = self.watchingList[indexPath.row]
+                        self.performSegue(withIdentifier: "toDetailsFromAlerts", sender: self)
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                else // else delete mode is open
+                {
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    cell.isChecked = !cell.isChecked
+                    if cell.isChecked
+                    {
+                        self.coinsForDeleting.append(self.watchingList[indexPath.row].getId())
+                        dump(self.coinsForDeleting)
+                        cell.checkButton.setImage(UIImage(named: "arrow"), for: .normal)
+                    }
+                    else
+                    {
+                        self.coinsForDeleting.removeAll{$0 == self.watchingList[indexPath.row].getId()}
+                        dump(self.coinsForDeleting)
+                        cell.checkButton.setImage(nil, for: .normal)
+                    }
+                }
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -61,39 +225,12 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        if segmentedView.selectedSegmentIndex == 0 // alarms
-        {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
-            return cell
-        }
-        else // watching list
-        {
-            if watchingList.count > 0
-            {
-                tableView.separatorStyle = .singleLine
-                let cellArrayIndex = watchingList[indexPath.row]
-                let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
-                Util.setCurrencyCell(cell: cell, coin: cellArrayIndex, index: indexPath.row, mainPage: false)
-                return cell
-            }
-            else
-            {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "emptyCell", for: indexPath) as! EmptyWatchlistCell
-                cell.label.text = "Kripto Para Eklenmedi"
-                tableView.separatorStyle = .none
-                return cell
-            }
-        }
-    }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
         var height = 0
-        if segmentedView.selectedSegmentIndex == 0 //alarms
+        if segmentedView.selectedSegmentIndex == 0
         {
-           height = 56
+           height = 56 //alarms
         }
         else // watching list
         {
@@ -103,24 +240,6 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         return CGFloat(height)
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if segmentedView.selectedSegmentIndex == 0 // alarms
-        {
-            
-        }
-        else // watching list
-        {
-            if watchingList.count > 0
-            {
-                self.selectedCoin = self.watchingList[indexPath.row]
-                self.performSegue(withIdentifier: "toDetailsFromAlerts", sender: self)
-            }
-            else
-            {
-                
-            }
-        }
-    }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -130,29 +249,91 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
             let destinationVC = segue.destination as! CoinDetailsController
             destinationVC.selectedCoin = self.selectedCoin
             destinationVC.type = 1 // Use coin model in coin details
-            //destinationVC.currencyTypes = self.currencyTypes
+            destinationVC.currencyTypes = self.currencyTypes
+        }
+        else if segue.identifier == "toCurrencySelector"
+        {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = self.currencyTypes
+        }
+    }
+    
+    // MARK: - Button Clicks
+    
+    /// Pushs the necessary array to table view according to segmented control
+    @objc func segmentSelected(sender:ScrollableSegmentedControl) {
+        if segmentedView.selectedSegmentIndex == 1
+        {
+            refreshWatchingList()
+            
         }
         
     }
     
-    /// Pushs the necessary array to table view according to segmented control
-    @objc func segmentSelected(sender:ScrollableSegmentedControl) {self.tableView.reloadData()}
+    @IBAction func currencySelectorButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelector", sender: self)}
     
-    
-    func getCoinsForWatchingList()
+    @IBAction func editButtonAction(_ sender: Any)
     {
-            var apiString = ""
-            var watchingListTemp = [Coin]()
-            for id in watchingListId {apiString = apiString + "," + id}
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in
-                    watchingListTemp.append(contentsOf: result)
-                    watchingListTemp = watchingListTemp.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.watchingList = watchingListTemp
-                    DispatchQueue.main.async{self.tableView.reloadData()}
+        if segmentedView.selectedSegmentIndex == 1
+        {
+            if !deleteMode
+            {
+                deleteMode = true
+                self.tableView.allowsMultipleSelection = true
+                self.tableView.allowsMultipleSelectionDuringEditing = true
+                self.editButton.tintColor = UIColor.systemBlue
+                self.addAndDeleteButton.title = "Delete"
+                self.tableView.reloadData()
             }
-          
-   }
+            else
+            {
+                deleteMode = false
+                self.tableView.allowsMultipleSelection = false
+                self.tableView.allowsMultipleSelectionDuringEditing = false
+                self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
+                self.addAndDeleteButton.title = "Add"
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    @IBAction func addAndDeleteButtonAction(_ sender: Any)
+    {
+        if deleteMode // deleting mode
+        {
+            CoreData.deleteCoinFromWatchingList(ids: self.coinsForDeleting) { (bool) in
+                self.deleteMode = false
+                self.update()
+                self.tableView.allowsMultipleSelection = false
+                self.tableView.allowsMultipleSelectionDuringEditing = false
+                self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
+                self.addAndDeleteButton.title = "Add"
+            }
+        }
+        else // adding mode
+        {
+            
+        }
+        
+    }
+ 
+   
+    //shows spinner
+    func showActivityIndicator()
+    {
+        if #available(iOS 13.0, *) {activityView = UIActivityIndicatorView(style: .medium)}
+        else {activityView = UIActivityIndicatorView(style: .gray)}
+        activityView?.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView?.startAnimating()
+    }
+    
+    //hides spinner
+    func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
+    
+
 }
+
     
 
 

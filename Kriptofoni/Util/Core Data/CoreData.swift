@@ -137,6 +137,36 @@ class CoreData
         }
     }
     
+    static func deleteCoinFromWatchingList(ids: [String],completionBlock: @escaping (Bool) -> Void) -> Void
+    {
+        let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+        getWatchingList { (array,concatedString) in
+            if !array.isEmpty
+            {
+                var newStringToSave = "" //Our core data strings starts with
+                var coreArray = array
+                coreArray.remove(at: 0)
+                for item in coreArray
+                {
+                    if !ids.contains(item) // If does not contains we don't delete so we will save it to core data again
+                    {
+                        newStringToSave =  "," + item
+                    }
+                }
+                let watchingList = NSFetchRequest<NSFetchRequestResult>(entityName: "WatchingList")
+                let result = try? managedObjectContext.fetch(watchingList)
+                let resultData = result?[0] as! NSManagedObject
+                resultData.setValue(newStringToSave, forKey: "list")
+                do
+                {
+                    try managedObjectContext.save()
+                    print("CURRENCIES ARE UPDATED TO WATCHINGLIST." + newStringToSave)
+                    completionBlock(true)
+                }
+                catch{print("error")}
+                
+            }}
+    }
     
     // Returns true if it adds item to watching list.
     static func addWatchingList(id: String) -> Bool

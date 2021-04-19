@@ -11,6 +11,7 @@
 		3B3ABFF26AA4266A8A72DD3D /* Pods_Kriptofoni_KriptofoniUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EF7C8D854592748B3BCF95F /* Pods_Kriptofoni_KriptofoniUITests.framework */; };
 		4860CE711A0A3CA28888696B /* Pods_KriptofoniTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4BBB19FB931770C412FE51F /* Pods_KriptofoniTests.framework */; };
 		B20792D22611004400216530 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20792D12611004400216530 /* CurrencyCell.swift */; };
+		B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B215E2F8262C49CB00FB3225 /* WatchingListCell.swift */; };
 		B218BAEF2618B26500E45732 /* CoinDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B218BAEE2618B26500E45732 /* CoinDetailsController.swift */; };
 		B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA76260CD7DE0071AEB9 /* AppDelegate.swift */; };
 		B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA78260CD7DE0071AEB9 /* SceneDelegate.swift */; };
@@ -68,6 +69,7 @@
 		9AE039DAF2DBCCD956CBBB44 /* Pods-KriptofoniTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KriptofoniTests.debug.xcconfig"; path = "Target Support Files/Pods-KriptofoniTests/Pods-KriptofoniTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A67DD3D9C39EB604B6760645 /* Pods-KriptofoniTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KriptofoniTests.release.xcconfig"; path = "Target Support Files/Pods-KriptofoniTests/Pods-KriptofoniTests.release.xcconfig"; sourceTree = "<group>"; };
 		B20792D12611004400216530 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		B215E2F8262C49CB00FB3225 /* WatchingListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingListCell.swift; sourceTree = "<group>"; };
 		B218BAEE2618B26500E45732 /* CoinDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailsController.swift; sourceTree = "<group>"; };
 		B223BA73260CD7DE0071AEB9 /* Kriptofoni.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kriptofoni.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B223BA76260CD7DE0071AEB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 			children = (
 				B232A6B7262ABE1300FECF9B /* AlertsController.swift */,
 				B232A6CE262AC36600FECF9B /* EmptyWatchlistCell.swift */,
+				B215E2F8262C49CB00FB3225 /* WatchingListCell.swift */,
 			);
 			path = Alerts;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
+				B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */,
 				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* CoinDetailsController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
