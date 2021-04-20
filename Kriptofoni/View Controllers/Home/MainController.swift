@@ -45,6 +45,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         addSwipeGesture()
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
+        update()
         timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         
     }
@@ -63,7 +64,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func appStartingControls()
     {
-        update()
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")

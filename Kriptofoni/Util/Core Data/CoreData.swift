@@ -13,6 +13,7 @@ import UIKit
 class CoreData
 
 {
+    //
     static func getCoins(completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
     {
         var newCurrencies = [SearchCoin]()

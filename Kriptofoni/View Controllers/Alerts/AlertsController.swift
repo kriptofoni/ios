@@ -19,6 +19,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     var activityView: UIActivityIndicatorView?
     var alarmsArray = [Alarm]()
     var watchingList = [Coin]()
+    var searchCoinArray = [SearchCoin]()
     var watchingListId = [String]()
     var sSize: CGRect = UIScreen.main.bounds
     var selectedCoin = Coin()
@@ -28,8 +29,30 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     let plusButton = UIButton()
     var coinsForDeleting = [String]()
     
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
+        self.currencyChangeButton.title = Currency.currencyKey.uppercased()
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        if segmentedView.selectedSegmentIndex == 1
+        {
+            refreshWatchingList()
+            self.navigationItem.title = "Watching List"
+        }
+        else
+        {
+            self.navigationItem.title = "Alarms"
+        }
+    }
+    
     //Locks the screen before view is appeared and realease this locking before view is disappeared
-    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all);timer?.invalidate();timer = nil}
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        AppUtility.lockOrientation(.all)
+        timer?.invalidate();timer = nil
+        
+    }
     
     override func viewDidLoad()
     {
@@ -49,16 +72,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
     }
     
-    override func viewWillAppear(_ animated: Bool)
-    {
-        super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
-        self.currencyChangeButton.title = Currency.currencyKey.uppercased()
-        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
-        if segmentedView.selectedSegmentIndex == 1
-        {
-            refreshWatchingList()
-        }
-    }
+    
     
     
     func refreshWatchingList()
@@ -86,14 +100,8 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         var watchingListTemp = [Coin]()
         for id in watchingListId
         {
-            if apiString == ""
-            {
-                apiString = id
-            }
-            else
-            {
-                apiString = apiString + "," + id
-            }
+            if apiString == "" {apiString = id}
+            else { apiString = apiString + "," + id}
         }
         if apiString != ""
         {
@@ -133,7 +141,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     {
         if segmentedView.selectedSegmentIndex == 0 // alarms
         {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "watchingListCell", for: indexPath) as! WatchingListCell
+            let cell = UITableViewCell()
             return cell
         }
         else // watching list
@@ -147,19 +155,24 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
                 let url = URL(string: cellArrayIndex.getIconViewUrl())
                 cell.symbolView.sd_setImage(with: url) { (_, _, _, _) in}
                 cell.name.text = cellArrayIndex.getName()
-                if cellArrayIndex.getPercent().doubleValue > 0 { cell.percent.textColor = UIColor.green; cell.price.textColor = UIColor.green}
+                if cellArrayIndex.getPercent().doubleValue > 0 { cell.percent.textColor = UIColor.green; cell.price.textColor = UIColor.green} // green-red color control according to 24h percent
                 else {cell.percent.textColor = UIColor.red; cell.price.textColor = UIColor.red}
                 cell.percent.text = "%" + String(format: "%.2f", cellArrayIndex.getPercent().doubleValue)
                 cell.price.text = Currency.currencySymbol + " " + Util.toPrice(cellArrayIndex.getPrice().doubleValue, isCoinDetailPrice: false)
                 cell.count.text = String(indexPath.row + 1)
                 cell.count.isHidden = deleteMode
                 cell.checkButton.isHidden = !deleteMode
+                if !deleteMode //when delete mode is turned off, erase the thick
+                {
+                    cell.checkButton.setImage(nil, for: .normal)
+                }
                 return cell
             }
             else
             {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "emptyCell", for: indexPath) as! EmptyWatchlistCell
                 cell.label.text = "Watching list is empty."
+                cell.button.addTarget(self, action: #selector(self.addCoin(sender:)), for: .touchUpInside)
                 tableView.separatorStyle = .none
                 return cell
             }
@@ -215,7 +228,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         if segmentedView.selectedSegmentIndex == 0 // alarms
         {
             if alarmsArray.count > 0 {return alarmsArray.count}
-            else {return 1}
+            else {return 0}
         }
         else // watching list
         {
@@ -235,27 +248,9 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         else // watching list
         {
             if watchingList.count > 0  {height = 56}
-            else {height = 101}
+            else {height = 288}
         }
         return CGFloat(height)
-    }
-    
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        if segue.identifier == "toDetailsFromAlerts"//We give our selected restaurant to next page
-        {
-            let destinationVC = segue.destination as! CoinDetailsController
-            destinationVC.selectedCoin = self.selectedCoin
-            destinationVC.type = 1 // Use coin model in coin details
-            destinationVC.currencyTypes = self.currencyTypes
-        }
-        else if segue.identifier == "toCurrencySelector"
-        {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = self.currencyTypes
-        }
     }
     
     // MARK: - Button Clicks
@@ -265,9 +260,25 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         if segmentedView.selectedSegmentIndex == 1
         {
             refreshWatchingList()
-            
+            self.navigationItem.title = "Watching List"
+        }
+        else
+        {
+            self.tableView.reloadData()
+            self.navigationItem.title = "Alarms"
         }
         
+    }
+    
+    @objc func addCoin(sender: Any)
+    {
+        CoreData.getCoins { [self] (result) in
+            searchCoinArray = result
+            print("Count" + String(searchCoinArray.count))
+            performSegue(withIdentifier: "toAddWatchingList", sender: self)
+        } onFailure: {
+            print("CORE DATA GETTING COINS ERROR")
+        }
     }
     
     @IBAction func currencySelectorButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelector", sender: self)}
@@ -312,11 +323,39 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         }
         else // adding mode
         {
-            
+            CoreData.getCoins { [self] (result) in
+                searchCoinArray = result
+                print("Count" + String(searchCoinArray.count))
+                performSegue(withIdentifier: "toAddWatchingList", sender: self)
+            } onFailure: {
+                print("CORE DATA GETTING COINS ERROR")
+            }
         }
         
     }
  
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toDetailsFromAlerts"//We give our selected restaurant to next page
+        {
+            let destinationVC = segue.destination as! CoinDetailsController
+            destinationVC.selectedCoin = self.selectedCoin
+            destinationVC.type = 1 // Use coin model in coin details
+            destinationVC.currencyTypes = self.currencyTypes
+        }
+        else if segue.identifier == "toCurrencySelector"
+        {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = self.currencyTypes
+        }
+        else if segue.identifier == "toAddWatchingList"
+        {
+            let destinationVC = segue.destination as! AddToWatchingListController
+            destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
+                $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
+            })        }
+    }
    
     //shows spinner
     func showActivityIndicator()

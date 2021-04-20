@@ -33,6 +33,7 @@
 		B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */; };
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28D59912627684300B3E7EF /* ChartFormatter.swift */; };
+		B2BBFEE5262EB6930006E1FF /* AddToWatchingListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBFEE4262EB6930006E1FF /* AddToWatchingListController.swift */; };
 		B2C4BF8C26284CCD00F87340 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4BF8B26284CCD00F87340 /* Currency.swift */; };
 		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
 		B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */; };
@@ -97,6 +98,7 @@
 		B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonOperationCell.swift; sourceTree = "<group>"; };
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B28D59912627684300B3E7EF /* ChartFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFormatter.swift; sourceTree = "<group>"; };
+		B2BBFEE4262EB6930006E1FF /* AddToWatchingListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToWatchingListController.swift; sourceTree = "<group>"; };
 		B2C4BF8B26284CCD00F87340 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
 		B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorController.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				B232A6B7262ABE1300FECF9B /* AlertsController.swift */,
 				B232A6CE262AC36600FECF9B /* EmptyWatchlistCell.swift */,
 				B215E2F8262C49CB00FB3225 /* WatchingListCell.swift */,
+				B2BBFEE4262EB6930006E1FF /* AddToWatchingListController.swift */,
 			);
 			path = Alerts;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */,
 				B23965212620360700D6CD5F /* FullScreenChartController.swift in Sources */,
 				B271A8AD261241700088C94D /* Coin.swift in Sources */,
+				B2BBFEE5262EB6930006E1FF /* AddToWatchingListController.swift in Sources */,
 				B2C4BF8C26284CCD00F87340 /* Currency.swift in Sources */,
 				B25D0D8A260FD317004DA9F9 /* MainController.swift in Sources */,
 				B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */,
