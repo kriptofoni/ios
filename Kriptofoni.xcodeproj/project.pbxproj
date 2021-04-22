@@ -33,6 +33,17 @@
 		B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */; };
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28D59912627684300B3E7EF /* ChartFormatter.swift */; };
+		B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC430263160C700F2562D /* FiatConverter.swift */; };
+		B2ADC435263160C800F2562D /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC431263160C700F2562D /* Tools.swift */; };
+		B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC432263160C800F2562D /* ContractAndAbout.swift */; };
+		B2ADC437263160C800F2562D /* CooperationAndHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC433263160C800F2562D /* CooperationAndHelp.swift */; };
+		B2ADC4482631611300F2562D /* CoopAndHelpTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC4432631611200F2562D /* CoopAndHelpTextFieldCell.swift */; };
+		B2ADC4492631611300F2562D /* SettingsCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC4442631611200F2562D /* SettingsCellTableViewCell.swift */; };
+		B2ADC44A2631611300F2562D /* CoopAndHelpButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC4452631611200F2562D /* CoopAndHelpButtonCell.swift */; };
+		B2ADC44B2631611300F2562D /* CoopAndHelpTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC4462631611300F2562D /* CoopAndHelpTextViewCell.swift */; };
+		B2ADC44C2631611300F2562D /* ToolsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC4472631611300F2562D /* ToolsCell.swift */; };
+		B2ADC452263161AB00F2562D /* MoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC451263161AB00F2562D /* MoreController.swift */; };
+		B2ADC45A2631625700F2562D /* pdf.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B2ADC4592631625700F2562D /* pdf.pdf */; };
 		B2BBFEE5262EB6930006E1FF /* AddToWatchingListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBFEE4262EB6930006E1FF /* AddToWatchingListController.swift */; };
 		B2C4BF8C26284CCD00F87340 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C4BF8B26284CCD00F87340 /* Currency.swift */; };
 		B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */; };
@@ -98,6 +109,17 @@
 		B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonOperationCell.swift; sourceTree = "<group>"; };
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B28D59912627684300B3E7EF /* ChartFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFormatter.swift; sourceTree = "<group>"; };
+		B2ADC430263160C700F2562D /* FiatConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
+		B2ADC431263160C700F2562D /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		B2ADC432263160C800F2562D /* ContractAndAbout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractAndAbout.swift; sourceTree = "<group>"; };
+		B2ADC433263160C800F2562D /* CooperationAndHelp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CooperationAndHelp.swift; sourceTree = "<group>"; };
+		B2ADC4432631611200F2562D /* CoopAndHelpTextFieldCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoopAndHelpTextFieldCell.swift; sourceTree = "<group>"; };
+		B2ADC4442631611200F2562D /* SettingsCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCellTableViewCell.swift; sourceTree = "<group>"; };
+		B2ADC4452631611200F2562D /* CoopAndHelpButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoopAndHelpButtonCell.swift; sourceTree = "<group>"; };
+		B2ADC4462631611300F2562D /* CoopAndHelpTextViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoopAndHelpTextViewCell.swift; sourceTree = "<group>"; };
+		B2ADC4472631611300F2562D /* ToolsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolsCell.swift; sourceTree = "<group>"; };
+		B2ADC451263161AB00F2562D /* MoreController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreController.swift; sourceTree = "<group>"; };
+		B2ADC4592631625700F2562D /* pdf.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = pdf.pdf; sourceTree = "<group>"; };
 		B2BBFEE4262EB6930006E1FF /* AddToWatchingListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToWatchingListController.swift; sourceTree = "<group>"; };
 		B2C4BF8B26284CCD00F87340 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstCell.swift; sourceTree = "<group>"; };
@@ -195,6 +217,7 @@
 			children = (
 				B223BAB6260CEBF30071AEB9 /* Home */,
 				B232A6B6262ABDCD00FECF9B /* Alerts */,
+				B2ADC42C26315FD500F2562D /* More */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -292,6 +315,40 @@
 				B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */,
 			);
 			path = "Operation Page";
+			sourceTree = "<group>";
+		};
+		B2ADC42C26315FD500F2562D /* More */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADC451263161AB00F2562D /* MoreController.swift */,
+				B2ADC432263160C800F2562D /* ContractAndAbout.swift */,
+				B2ADC433263160C800F2562D /* CooperationAndHelp.swift */,
+				B2ADC430263160C700F2562D /* FiatConverter.swift */,
+				B2ADC431263160C700F2562D /* Tools.swift */,
+				B2ADC4602631631700F2562D /* Pdf Files */,
+				B2ADC4502631612C00F2562D /* Cells */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
+		B2ADC4502631612C00F2562D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADC4472631611300F2562D /* ToolsCell.swift */,
+				B2ADC4442631611200F2562D /* SettingsCellTableViewCell.swift */,
+				B2ADC4462631611300F2562D /* CoopAndHelpTextViewCell.swift */,
+				B2ADC4432631611200F2562D /* CoopAndHelpTextFieldCell.swift */,
+				B2ADC4452631611200F2562D /* CoopAndHelpButtonCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		B2ADC4602631631700F2562D /* Pdf Files */ = {
+			isa = PBXGroup;
+			children = (
+				B2ADC4592631625700F2562D /* pdf.pdf */,
+			);
+			path = "Pdf Files";
 			sourceTree = "<group>";
 		};
 		B2CB6EAA261B212400F8FF30 /* Coin Detail */ = {
@@ -426,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B223BA83260CD7E10071AEB9 /* LaunchScreen.storyboard in Resources */,
+				B2ADC45A2631625700F2562D /* pdf.pdf in Resources */,
 				B223BA80260CD7E10071AEB9 /* Assets.xcassets in Resources */,
 				B223BA7E260CD7DE0071AEB9 /* Main.storyboard in Resources */,
 			);
@@ -558,18 +616,26 @@
 				B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */,
 				B20792D22611004400216530 /* CurrencyCell.swift in Sources */,
 				B2D54611262344B8004DD5BB /* AppUtility.swift in Sources */,
+				B2ADC4482631611300F2562D /* CoopAndHelpTextFieldCell.swift in Sources */,
+				B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */,
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
+				B2ADC44C2631611300F2562D /* ToolsCell.swift in Sources */,
+				B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
 				B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */,
 				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* CoinDetailsController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
+				B2ADC435263160C800F2562D /* Tools.swift in Sources */,
+				B2ADC4492631611300F2562D /* SettingsCellTableViewCell.swift in Sources */,
 				B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */,
+				B2ADC44A2631611300F2562D /* CoopAndHelpButtonCell.swift in Sources */,
 				B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */,
 				B232A6BD262AC0B600FECF9B /* Alarm.swift in Sources */,
 				B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */,
 				B2D5461E262352E9004DD5BB /* Util.swift in Sources */,
+				B2ADC437263160C800F2562D /* CooperationAndHelp.swift in Sources */,
 				B2734EDB261EFC6F004F4296 /* OperationController.swift in Sources */,
 				B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */,
 				B23965212620360700D6CD5F /* FullScreenChartController.swift in Sources */,
@@ -577,8 +643,10 @@
 				B2BBFEE5262EB6930006E1FF /* AddToWatchingListController.swift in Sources */,
 				B2C4BF8C26284CCD00F87340 /* Currency.swift in Sources */,
 				B25D0D8A260FD317004DA9F9 /* MainController.swift in Sources */,
+				B2ADC452263161AB00F2562D /* MoreController.swift in Sources */,
 				B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */,
 				B232A6CF262AC36600FECF9B /* EmptyWatchlistCell.swift in Sources */,
+				B2ADC44B2631611300F2562D /* CoopAndHelpTextViewCell.swift in Sources */,
 				B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */,
 				B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */,
 			);

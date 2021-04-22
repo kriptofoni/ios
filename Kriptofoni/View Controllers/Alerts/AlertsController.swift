@@ -265,7 +265,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         else
         {
             self.tableView.reloadData()
-            self.navigationItem.title = "Alarms"
+            self.navigationItem.title = "Alarms "
         }
         
     }
