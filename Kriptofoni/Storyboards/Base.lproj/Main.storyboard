@@ -1806,7 +1806,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qQo-Fs-YhV">
-                                <rect key="frame" x="0.0" y="94" width="375" height="573"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="574"/>
                                 <color key="backgroundColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CoopAndHelpTextFieldCell" rowHeight="82" id="0cu-JI-ght" customClass="CoopAndHelpTextFieldCell" customModule="Kriptofoni" customModuleProvider="target">
@@ -1900,13 +1900,13 @@
                         <color key="backgroundColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="qQo-Fs-YhV" secondAttribute="trailing" id="1tg-xW-hbK"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="qQo-Fs-YhV" secondAttribute="bottom" constant="-3" id="DyH-6c-zTn"/>
-                            <constraint firstAttribute="bottom" secondItem="qQo-Fs-YhV" secondAttribute="bottom" id="LFH-g3-w1C"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="qQo-Fs-YhV" secondAttribute="bottom" id="DyH-6c-zTn"/>
+                            <constraint firstAttribute="bottom" secondItem="qQo-Fs-YhV" secondAttribute="bottom" constant="49" id="LFH-g3-w1C"/>
                             <constraint firstItem="qQo-Fs-YhV" firstAttribute="leading" secondItem="Jkx-wT-uTN" secondAttribute="leading" id="Oyw-xh-EjE"/>
-                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" constant="50" id="VlQ-Se-kBS"/>
+                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" id="VlQ-Se-kBS"/>
                             <constraint firstItem="qQo-Fs-YhV" firstAttribute="trailing" secondItem="Jkx-wT-uTN" secondAttribute="trailing" id="afw-yz-6jg"/>
-                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" constant="3" id="ci4-le-g5k"/>
-                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" constant="50" id="ejL-aj-uGs"/>
+                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" id="ci4-le-g5k"/>
+                            <constraint firstItem="qQo-Fs-YhV" firstAttribute="top" secondItem="Jkx-wT-uTN" secondAttribute="top" id="ejL-aj-uGs"/>
                             <constraint firstItem="qQo-Fs-YhV" firstAttribute="leading" secondItem="8Rq-vG-tH1" secondAttribute="leading" id="kKW-jA-1wS"/>
                         </constraints>
                     </view>
@@ -1917,7 +1917,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mTx-ZH-aez" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6385" y="2800"/>
+            <point key="canvasLocation" x="6384.8000000000002" y="2799.8500749625191"/>
         </scene>
         <!--Item-->
         <scene sceneID="Nmy-h1-An1">
