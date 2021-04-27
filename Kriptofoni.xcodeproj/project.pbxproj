@@ -33,6 +33,9 @@
 		B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */; };
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
 		B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28D59912627684300B3E7EF /* ChartFormatter.swift */; };
+		B2A1AA0F263866E40073550D /* PortfolioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA0E263866E40073550D /* PortfolioController.swift */; };
+		B2A1AA1726386B6B0073550D /* PortfolioFirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA1626386B6B0073550D /* PortfolioFirstCell.swift */; };
+		B2A1AA1D26386BE90073550D /* PortfolioThirdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */; };
 		B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC430263160C700F2562D /* FiatConverter.swift */; };
 		B2ADC435263160C800F2562D /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC431263160C700F2562D /* Tools.swift */; };
 		B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC432263160C800F2562D /* ContractAndAbout.swift */; };
@@ -109,6 +112,9 @@
 		B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonOperationCell.swift; sourceTree = "<group>"; };
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		B28D59912627684300B3E7EF /* ChartFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFormatter.swift; sourceTree = "<group>"; };
+		B2A1AA0E263866E40073550D /* PortfolioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioController.swift; sourceTree = "<group>"; };
+		B2A1AA1626386B6B0073550D /* PortfolioFirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioFirstCell.swift; sourceTree = "<group>"; };
+		B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioThirdCell.swift; sourceTree = "<group>"; };
 		B2ADC430263160C700F2562D /* FiatConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
 		B2ADC431263160C700F2562D /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		B2ADC432263160C800F2562D /* ContractAndAbout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractAndAbout.swift; sourceTree = "<group>"; };
@@ -217,6 +223,7 @@
 			children = (
 				B223BAB6260CEBF30071AEB9 /* Home */,
 				B232A6B6262ABDCD00FECF9B /* Alerts */,
+				B2A1AA0A263866C90073550D /* Portfolio */,
 				B2ADC42C26315FD500F2562D /* More */,
 			);
 			path = "View Controllers";
@@ -315,6 +322,24 @@
 				B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */,
 			);
 			path = "Operation Page";
+			sourceTree = "<group>";
+		};
+		B2A1AA0A263866C90073550D /* Portfolio */ = {
+			isa = PBXGroup;
+			children = (
+				B2A1AA0E263866E40073550D /* PortfolioController.swift */,
+				B2A1AA1B26386BC40073550D /* Portfolio Cells */,
+			);
+			path = Portfolio;
+			sourceTree = "<group>";
+		};
+		B2A1AA1B26386BC40073550D /* Portfolio Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B2A1AA1626386B6B0073550D /* PortfolioFirstCell.swift */,
+				B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */,
+			);
+			path = "Portfolio Cells";
 			sourceTree = "<group>";
 		};
 		B2ADC42C26315FD500F2562D /* More */ = {
@@ -624,9 +649,12 @@
 				B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
 				B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */,
+				B2A1AA0F263866E40073550D /* PortfolioController.swift in Sources */,
 				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* CoinDetailsController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
+				B2A1AA1726386B6B0073550D /* PortfolioFirstCell.swift in Sources */,
+				B2A1AA1D26386BE90073550D /* PortfolioThirdCell.swift in Sources */,
 				B2ADC435263160C800F2562D /* Tools.swift in Sources */,
 				B2ADC4492631611300F2562D /* SettingsCellTableViewCell.swift in Sources */,
 				B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */,

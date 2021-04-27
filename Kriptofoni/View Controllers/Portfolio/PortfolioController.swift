@@ -1,0 +1,97 @@
+//
+//  PortfolioController.swift
+//  Kriptofoni
+//
+//  Created by Cem Sertkaya on 27.04.2021.
+//
+
+import UIKit
+
+class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
+{
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var currencyButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        tableView.delegate = self; tableView.dataSource = self
+        
+        // Do any additional setup after loading the view.
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        // portfolioFirst // secondCell // portfolioThird // watchingListCell
+        if indexPath.row > 2
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
+            return cell
+        }
+        else
+        {
+            if indexPath.row == 0
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "portfolioFirst", for: indexPath) as! PortfolioFirstCell
+                return cell
+                
+            }
+            else if indexPath.row == 1
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! SecondCell
+                return cell
+            }
+            else
+            {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "portfolioThird", for: indexPath) as! PortfolioThirdCell
+                return cell
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        var height = 0
+        if indexPath.row > 2
+        {
+            height = 56
+        }
+        else
+        {
+            if indexPath.row == 0
+            {
+                height = 108
+                
+            }
+            else if indexPath.row == 1
+            {
+                height = 235
+            }
+            else if indexPath.row == 2
+            {
+                height = 81
+            }
+        }
+        return CGFloat(height)
+    }
+    
+    @IBAction func addButtonClicked(_ sender: Any)
+    {
+    }
+    
+    @IBAction func currencyButtonClicked(_ sender: Any)
+    {
+    }
+    
+    @IBAction func editButtonClicked(_ sender: Any)
+    {
+    }
+    
+}

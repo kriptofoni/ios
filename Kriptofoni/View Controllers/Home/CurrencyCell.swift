@@ -9,8 +9,6 @@ import UIKit
 
 class CurrencyCell: UITableViewCell
 {
-
-    @IBOutlet weak var count: UILabel!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var percent: UILabel!
