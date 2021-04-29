@@ -17,6 +17,11 @@ class CurrencySelectorController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        CoreData.getSupportedCurrencies { (currencies) in
+            var array = currencies
+            array.remove(at: 0)
+            self.currencyArray = array
+        } onFailure: {print("Error: Failed to load currencies.")}
         tableView.delegate = self; tableView.dataSource = self
     }
 

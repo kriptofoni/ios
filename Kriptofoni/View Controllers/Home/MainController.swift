@@ -534,11 +534,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             }
            
         }
-        else if segue.identifier == "toCurrencySelector"
-        {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = self.currencyTypes
-        }
     }
     
     //shows spinner

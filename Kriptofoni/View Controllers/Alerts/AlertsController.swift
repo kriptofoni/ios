@@ -57,10 +57,6 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        CoreData.getSupportedCurrencies { (currencies) in
-            self.currencyTypes = currencies
-            self.currencyTypes.remove(at: 0)
-        } onFailure: {print("Error: Failed to load currencies.")}
         tableView.delegate = self; tableView.dataSource = self
         let sWidth = sSize.width
         segmentedView.frame.size.width = sWidth
@@ -344,17 +340,15 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
             destinationVC.type = 1 // Use coin model in coin details
             destinationVC.currencyTypes = self.currencyTypes
         }
-        else if segue.identifier == "toCurrencySelector"
-        {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = self.currencyTypes
-        }
         else if segue.identifier == "toAddWatchingList"
         {
-            let destinationVC = segue.destination as! AddToWatchingListController
+            let destinationVC = segue.destination as! CoinSelector
             destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
                 $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
-            })        }
+            })
+            destinationVC.parentController = "watchList"
+        }
+        
     }
    
     //shows spinner

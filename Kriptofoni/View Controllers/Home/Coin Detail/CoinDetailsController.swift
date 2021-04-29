@@ -291,14 +291,9 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             destinationVC.coinId = currentCoinId
             destinationVC.dict = dict
         }
-        else if segue.identifier == "toCurrencySelectorFromDetails"
-        {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = currencyTypes
-        }
         else if segue.identifier == "toOperationCoinDetails"
         {
-            let destinationVC = segue.destination as! OperationController
+            let destinationVC = segue.destination as! AddToPortfolioController
             destinationVC.currencyTypes = self.currencyTypes
         }
     }

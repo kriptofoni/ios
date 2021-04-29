@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddToWatchingListController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
+class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
 {
     @IBOutlet weak var searchButton: UIBarButtonItem!
     @IBOutlet var searchBar: UISearchBar!
@@ -16,7 +16,8 @@ class AddToWatchingListController: UIViewController, UITableViewDelegate, UITabl
     var searchActiveCoinArray = [SearchCoin]()
     var searchActive = false
     var buttons = [UIBarButtonItem]()
-    
+    var parentController = "none"
+
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -56,23 +57,43 @@ class AddToWatchingListController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        var searchCoin = SearchCoin()
-        if searchActive
+        //When user selects coin
+        if parentController == "watchList" // if parent controller is watchlist, it adds this coin to watchlist
         {
-            searchCoin = self.searchActiveCoinArray[indexPath.row]
+            var searchCoin = SearchCoin()
+            if searchActive
+            {
+                searchCoin = self.searchActiveCoinArray[indexPath.row]
+            }
+            else
+            {
+                searchCoin = self.searchCoinArray[indexPath.row]
+            }
+            if CoreData.addWatchingList(id: searchCoin.getId())
+            {
+                self.view.makeToast("Coin has been added successfully.", duration: 2.0, position: .center)
+            }
+            else
+            {
+                self.view.makeToast("Coin is already in your watching list.", duration: 2.0, position: .center)
+            }
         }
-        else
+        else if parentController == "portfolio" // if parent controller is portfolio, it adds this coin to portfolio
         {
-            searchCoin = self.searchCoinArray[indexPath.row]
+            if searchActive
+            {
+                Currency.coinKey = self.searchActiveCoinArray[indexPath.row].getId()
+                Currency.coinShortening = self.searchActiveCoinArray[indexPath.row].getSymbol()
+                self.navigationController?.popViewController(animated: true)
+            }
+            else
+            {
+                Currency.coinKey = self.searchCoinArray[indexPath.row].getId()
+                Currency.coinShortening = self.searchCoinArray[indexPath.row].getSymbol()
+                self.navigationController?.popViewController(animated: true)
+            }
         }
-        if CoreData.addWatchingList(id: searchCoin.getId())
-        {
-            self.view.makeToast("Coin has been added successfully.", duration: 2.0, position: .center)
-        }
-        else
-        {
-            self.view.makeToast("Coin is already in your watching list.", duration: 2.0, position: .center)
-        }
+        
     }
     
     /// Search Bar Function

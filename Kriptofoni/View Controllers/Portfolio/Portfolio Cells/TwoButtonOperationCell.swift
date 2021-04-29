@@ -44,41 +44,63 @@ class TwoButtonOperationCell: UITableViewCell {
 }
 
 
-class OperationInputCell: UITableViewCell
+class OperationInputCell: UITableViewCell, UITextFieldDelegate
 {
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
+    var view = UIView()
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
+        Util.createBottomLine(textField : textField)
+        textField.keyboardType = UIKeyboardType.numberPad
+        
         // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView(gesture:)))
+        view.addGestureRecognizer(tapGesture)
+        textField.delegate = self
         // Configure the view for the selected state
     }
+    
+    ///Starts Editing The Text Field
+    @objc func didTapView(gesture: UITapGestureRecognizer){view.endEditing(true)}
+        
+    /// Hides the keyboard when the return key pressed
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {textField.resignFirstResponder();return true}
 
 }
 
-class OperationDateCell: UITableViewCell
+class OperationDateCell: UITableViewCell, UITextFieldDelegate
 {
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var textField: UITextField!
+    var view = UIView()
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
+        Util.createBottomLine(textField : textField)
         // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView(gesture:)))
+        view.addGestureRecognizer(tapGesture)
+        textField.delegate = self
         // Configure the view for the selected state
     }
+    
+    ///Starts Editing The Text Field
+    @objc func didTapView(gesture: UITapGestureRecognizer){view.endEditing(true)}
+        
+    /// Hides the keyboard when the return key pressed
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {textField.resignFirstResponder();return true}
 }
 
 class AddOperationButtonCell: UITableViewCell

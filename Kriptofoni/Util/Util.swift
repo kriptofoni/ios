@@ -123,5 +123,14 @@ class Util
         )
     }
     
+    static func createBottomLine(textField : UITextField)
+        {
+            let bottomLine = CALayer()
+            bottomLine.frame = CGRect(x: 0.0, y: textField.frame.height, width: textField.frame.width, height: 1.0)
+            bottomLine.backgroundColor = UIColor.black.cgColor
+            textField.borderStyle = UITextField.BorderStyle.none
+            textField.layer.addSublayer(bottomLine)
+        }
+    
    
 }

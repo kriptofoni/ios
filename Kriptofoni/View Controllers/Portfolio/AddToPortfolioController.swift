@@ -7,17 +7,33 @@
 
 import UIKit
 
-class OperationController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
    
     @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
+    var selectedCoinShorthening = ""
+    var searchCoinArray = [SearchCoin]()
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
+        currencyTypeButton.title = Currency.currencyKey.uppercased()
+        self.tableView.delegate = self;self.tableView.dataSource = self;
+        self.tableView.reloadData()
+        
+    }
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        currencyTypeButton.title = Currency.currencyKey.uppercased()
-        tableView.delegate = self; tableView.dataSource = self
+        CoreData.getCoins { [self] (result) in
+            searchCoinArray = result
+            print("Count" + String(searchCoinArray.count))
+                
+        } onFailure: {
+            print("CORE DATA GETTING COINS ERROR")
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -46,26 +62,34 @@ class OperationController: UIViewController, UITableViewDelegate, UITableViewDat
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Total " + Currency.currencySymbol
-            cell.textField.placeholder = "Amount of currency"
+            cell.label.text = "Total " + Currency.coinShortening.uppercased()
+            let tap = UITapGestureRecognizer(target: self, action: #selector(self.changeCoin))
+            cell.label.isUserInteractionEnabled = true
+            cell.label.addGestureRecognizer(tap)
+            cell.textField.placeholder = "Amount of coin"
+            cell.view = view
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
+            cell.view = view
             return cell
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
             cell.label.text = "Price"
             cell.textField.placeholder = "Price"
+            cell.view = view
             return cell
         case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
             cell.label.text = "Cost"
             cell.textField.placeholder = "Tap to Edit"
+            cell.view = view
             return cell
         case 5:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.label.text = "Notes"
             cell.textField.placeholder = "Tap to Edit"
+            cell.view = view
             return cell
         case 6:
             let cell = tableView.dequeueReusableCell(withIdentifier: "addOperationButtonCell", for: indexPath) as! AddOperationButtonCell
@@ -76,6 +100,12 @@ class OperationController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
+    
+    @objc func changeCoin(sender: UITapGestureRecognizer)
+    {
+        self.performSegue(withIdentifier: "toCoinSelector", sender: self)
+    }
+    
     @IBAction func currencyTypeButtonClicked(_ sender: Any)
     {
         self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)
@@ -84,12 +114,19 @@ class OperationController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        
          if segue.identifier == "toCurrencySelectorFromOperation"
-        {
+         {
             let destinationVC = segue.destination as! CurrencySelectorController
             destinationVC.currencyArray = currencyTypes
-        }
+         }
+         else if segue.identifier == "toCoinSelector"
+         {
+             let destinationVC = segue.destination as! CoinSelector
+             destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
+                 $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
+             })
+             destinationVC.parentController = "portfolio"
+         }
         
     }
 
