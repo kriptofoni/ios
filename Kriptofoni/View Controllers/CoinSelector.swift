@@ -69,7 +69,7 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
             {
                 searchCoin = self.searchCoinArray[indexPath.row]
             }
-            if CoreData.addWatchingList(id: searchCoin.getId())
+            if CoreDataWatchingList.addWatchingList(id: searchCoin.getId())
             {
                 self.view.makeToast("Coin has been added successfully.", duration: 2.0, position: .center)
             }

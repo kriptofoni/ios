@@ -3,6 +3,15 @@
     <entity name="CurrencyTypes" representedClassName="CurrencyTypes" syncable="YES" codeGenerationType="class">
         <attribute name="types" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="PortfolioCoin" representedClassName="PortfolioCoin" syncable="YES" codeGenerationType="class">
+        <attribute name="coinId" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fee" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="quantity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
     <entity name="StringCurrency" representedClassName="StringCurrency" syncable="YES" codeGenerationType="class">
         <attribute name="string" optional="YES" attributeType="String"/>
     </entity>
@@ -11,6 +20,7 @@
     </entity>
     <elements>
         <element name="CurrencyTypes" positionX="-54" positionY="63" width="128" height="44"/>
+        <element name="PortfolioCoin" positionX="-54" positionY="63" width="128" height="134"/>
         <element name="StringCurrency" positionX="-54" positionY="54" width="128" height="44"/>
         <element name="WatchingList" positionX="-54" positionY="63" width="128" height="44"/>
     </elements>

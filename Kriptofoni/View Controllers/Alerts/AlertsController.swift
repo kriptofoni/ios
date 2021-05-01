@@ -73,7 +73,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     
     func refreshWatchingList()
     {
-        CoreData.getWatchingList { (result, string) in
+        CoreDataWatchingList.getWatchingList { (result, string) in
             
             if string != ""
             {
@@ -308,7 +308,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     {
         if deleteMode // deleting mode
         {
-            CoreData.deleteCoinFromWatchingList(ids: self.coinsForDeleting) { (bool) in
+            CoreDataWatchingList.deleteCoinFromWatchingList(ids: self.coinsForDeleting) { (bool) in
                 self.deleteMode = false
                 self.update()
                 self.tableView.allowsMultipleSelection = false

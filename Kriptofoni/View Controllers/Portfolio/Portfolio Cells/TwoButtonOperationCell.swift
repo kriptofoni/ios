@@ -119,6 +119,7 @@ class AddOperationButtonCell: UITableViewCell
     }
     
     @IBAction func addOperationButtonClicked(_ sender: Any) {
+        print("cem")
     }
 }
 

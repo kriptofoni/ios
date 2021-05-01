@@ -1245,7 +1245,7 @@
                                             <outlet property="textField" destination="TgO-hG-PzP" id="akM-tg-cKP"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="addOperationButtonCell" rowHeight="50" id="Wk5-Ke-m7f" customClass="AddOperationButtonCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="addOperationButtonCell" rowHeight="50" id="Wk5-Ke-m7f" customClass="AddOperationButtonCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="289" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wk5-Ke-m7f" id="dwb-p2-2WP">

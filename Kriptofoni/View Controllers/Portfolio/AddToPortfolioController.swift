@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Toast_Swift
 
 class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
@@ -15,18 +16,27 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     var currencyTypes = [String]()
     var selectedCoinShorthening = ""
     var searchCoinArray = [SearchCoin]()
+    var pickerDate = UIDatePicker()
+    var dateTimestamp : Double = 0 //holds the timestamp of date picker result
+    var portfolioTotalDict  = [String:Double]()
+    var operationType = true // true -> buy , false -> sell
+    
+   
     
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         currencyTypeButton.title = Currency.currencyKey.uppercased()
-        self.tableView.delegate = self;self.tableView.dataSource = self;
+        CoreDataPortfolio.calculateTotalCoin { (result) in
+            self.portfolioTotalDict = result
+        }
         self.tableView.reloadData()
         
     }
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.tableView.delegate = self;self.tableView.dataSource = self;
         CoreData.getCoins { [self] (result) in
             searchCoinArray = result
             print("Count" + String(searchCoinArray.count))
@@ -59,6 +69,8 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonOperationCell", for: indexPath) as! TwoButtonOperationCell
+            cell.buyButton.addTarget(self, action: #selector(self.buyButtonClicked(sender:)), for: .touchUpInside)
+            cell.sellButton.addTarget(self, action: #selector(self.sellButtonClicked(sender:)), for: .touchUpInside)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
@@ -72,16 +84,19 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.view = view
+            cell.label.text = "Date"
+            cell.textField.placeholder = "Optional"
+            createDatePicker(textField: cell.textField)
             return cell
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Price"
+            cell.label.text = "Price    " + Currency.currencySymbol
             cell.textField.placeholder = "Price"
             cell.view = view
             return cell
         case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Cost"
+            cell.label.text = "Fee      " +  Currency.currencySymbol
             cell.textField.placeholder = "Tap to Edit"
             cell.view = view
             return cell
@@ -93,6 +108,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
             return cell
         case 6:
             let cell = tableView.dequeueReusableCell(withIdentifier: "addOperationButtonCell", for: indexPath) as! AddOperationButtonCell
+            cell.addOperationButton.addTarget(self, action: #selector(self.addButtonClicked (sender:)), for: .touchUpInside)
             return cell
         default:
             print("Hata")
@@ -100,6 +116,81 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
+    
+    @objc func buyButtonClicked(sender: UIButton!)
+    {
+        operationType = true
+    }
+    
+    @objc func sellButtonClicked(sender: UIButton!)
+    {
+         operationType = false
+    }
+    
+    
+
+    @objc func addButtonClicked(sender: UIButton!)
+    {
+        let quantity = getCell2(index: 1).textField.text!
+        let price = getCell2(index: 3).textField.text!
+        let fee = getCell2(index: 4).textField.text!
+        let note = getCell1(index: 5).textField.text!
+        if !quantity.isEmpty //mandatory variable
+        {
+            if !price.isEmpty //mandatory variable
+            {
+                if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
+                {
+                    if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
+                    {
+                        let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
+                        if portfolioQuantity! > Double(quantity)!
+                        {
+                            saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                        }
+                        else
+                        {
+                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(String(describing: portfolioQuantity)) \(Currency.coinKey). You can sell less than this quantity.")
+                        }
+                    }
+                    else
+                    {
+                        self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
+                    }
+                }
+                else
+                {
+                    saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                }
+                
+            }
+            else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid price.")}
+        }
+        else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid quantity.")}
+    }
+    
+    
+    func saveToPortfolio(coinId: String,quantity: Double, date: Double, price: Double, fee: Double, note: String, type: Bool)
+    {
+        CoreDataPortfolio.saveToPortfolio(coinId: coinId, quantity: quantity, date: date, price:  price, fee: fee, note: note, type: type) { (result) in
+            if result
+            {
+                self.navigationController?.popViewController(animated: true)
+                self.view.makeToast("\(Currency.coinShortening) has been added to your portfolio.", duration: 2.0, position: .center)
+            }
+        }
+    }
+    
+    
+    
+    @objc func donePressed()
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        getCell1(index: 2).textField.text = dateFormatter.string(from: pickerDate.date)
+        dateTimestamp = Double(pickerDate.date.timeIntervalSince1970)
+        self.view.endEditing(true)
+    }
     
     @objc func changeCoin(sender: UITapGestureRecognizer)
     {
@@ -111,6 +202,20 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)
     }
     
+    
+    func getCell1(index : Int) -> OperationDateCell
+    {
+        let indexPath = NSIndexPath(row: index, section: 0)
+        let operationDateCell = tableView.cellForRow(at: indexPath as IndexPath) as? OperationDateCell
+        return operationDateCell!
+    }
+    
+    func getCell2(index: Int) -> OperationInputCell
+    {
+        let indexPath = NSIndexPath(row: index, section: 0)
+        let operationInputCell = tableView.cellForRow(at: indexPath as IndexPath) as? OperationInputCell
+        return operationInputCell!
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
@@ -128,6 +233,32 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
              destinationVC.parentController = "portfolio"
          }
         
+    }
+    
+    //creates date picker and sets its settings
+    func createDatePicker(textField : UITextField)
+    {
+        //Date Picker
+        pickerDate.datePickerMode = .date
+        if #available(iOS 13.4, *)
+        {
+            pickerDate.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250.0)
+            pickerDate.preferredDatePickerStyle = .wheels
+        }
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(donePressed))
+        toolBar.setItems([doneBtn], animated: true)
+        textField.inputAccessoryView = toolBar
+        textField.inputView = pickerDate
+    }
+    
+    func makeAlert(titleInput:String, messageInput:String)//Error method with parameters
+    {
+        let alert = UIAlertController(title: titleInput, message: messageInput, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated:true, completion: nil)
     }
 
 }

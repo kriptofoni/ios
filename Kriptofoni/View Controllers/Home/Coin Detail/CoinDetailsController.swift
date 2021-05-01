@@ -236,7 +236,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     /// Adds coin to watcing list in core data.
     @objc func addWatchingListButtonClicked(sender: UIButton)
     {
-        if CoreData.addWatchingList(id:self.currentCoinId)
+        if CoreDataWatchingList.addWatchingList(id:self.currentCoinId)
         {
             self.view.makeToast("Coin has been added successfully.", duration: 2.0, position: .center)
         }
