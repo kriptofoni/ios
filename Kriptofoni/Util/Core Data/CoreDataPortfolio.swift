@@ -86,7 +86,7 @@ class CoreDataPortfolio
                if (portfolioTotalDict[operation.getCoinId()] != nil)
                {
                     let temp = portfolioTotalDict[operation.getCoinId()]
-                    if operation.getType()  //BUY OPERATION
+                    if operation.getType()//BUY OPERATION
                     {
                         portfolioTotalDict[operation.getCoinId()] = temp! + operation.getQuantity()
                     }
@@ -99,7 +99,23 @@ class CoreDataPortfolio
                {
                     portfolioTotalDict[operation.getCoinId()] = operation.getQuantity()
                }
+             
            }
+           completionBlock(portfolioTotalDict)
+        }
+    }
+    
+    
+    //calculates principal money. principal money = operation.price + operation.quantity + operation.fee
+    static func calculatePrincipalMoney(completionBlock: @escaping (Double) -> Void) -> Void
+    {
+        var principalMoney : Double = 0
+        getPortfolio { (result) in
+           for operation in result
+           {
+               principalMoney += operation.getPrice() * operation.getQuantity() + operation.getFee()
+           }
+           completionBlock(principalMoney)
         }
     }
 }

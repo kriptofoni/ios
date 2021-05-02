@@ -21,8 +21,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     var portfolioTotalDict  = [String:Double]()
     var operationType = true // true -> buy , false -> sell
     
-   
-    
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
@@ -46,6 +44,8 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         }
         // Do any additional setup after loading the view.
     }
+    
+    // MARK: - Table View Funcs
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {return 7}
     
@@ -116,18 +116,10 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
+    // MARK: - Button Clicked Funcs
     
-    @objc func buyButtonClicked(sender: UIButton!)
-    {
-        operationType = true
-    }
-    
-    @objc func sellButtonClicked(sender: UIButton!)
-    {
-         operationType = false
-    }
-    
-    
+    @objc func buyButtonClicked(sender: UIButton!) {operationType = true}
+    @objc func sellButtonClicked(sender: UIButton!) {operationType = false}
 
     @objc func addButtonClicked(sender: UIButton!)
     {
@@ -150,7 +142,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
                         }
                         else
                         {
-                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(String(describing: portfolioQuantity)) \(Currency.coinKey). You can sell less than this quantity.")
+                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
                         }
                     }
                     else
@@ -169,7 +161,21 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid quantity.")}
     }
     
+    @objc func donePressed()
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        getCell1(index: 2).textField.text = dateFormatter.string(from: pickerDate.date)
+        dateTimestamp = Double(pickerDate.date.timeIntervalSince1970)
+        self.view.endEditing(true)
+    }
     
+    @objc func changeCoin(sender: UITapGestureRecognizer) {self.performSegue(withIdentifier: "toCoinSelector", sender: self)}
+    
+    @IBAction func currencyTypeButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)}
+    
+    
+    // MARK: - Helper Funcs
     func saveToPortfolio(coinId: String,quantity: Double, date: Double, price: Double, fee: Double, note: String, type: Bool)
     {
         CoreDataPortfolio.saveToPortfolio(coinId: coinId, quantity: quantity, date: date, price:  price, fee: fee, note: note, type: type) { (result) in
@@ -180,28 +186,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
             }
         }
     }
-    
-    
-    
-    @objc func donePressed()
-    {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MM-yyyy"
-        getCell1(index: 2).textField.text = dateFormatter.string(from: pickerDate.date)
-        dateTimestamp = Double(pickerDate.date.timeIntervalSince1970)
-        self.view.endEditing(true)
-    }
-    
-    @objc func changeCoin(sender: UITapGestureRecognizer)
-    {
-        self.performSegue(withIdentifier: "toCoinSelector", sender: self)
-    }
-    
-    @IBAction func currencyTypeButtonClicked(_ sender: Any)
-    {
-        self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)
-    }
-    
     
     func getCell1(index : Int) -> OperationDateCell
     {
@@ -217,29 +201,14 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         return operationInputCell!
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-         if segue.identifier == "toCurrencySelectorFromOperation"
-         {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = currencyTypes
-         }
-         else if segue.identifier == "toCoinSelector"
-         {
-             let destinationVC = segue.destination as! CoinSelector
-             destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
-                 $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
-             })
-             destinationVC.parentController = "portfolio"
-         }
-        
-    }
-    
     //creates date picker and sets its settings
     func createDatePicker(textField : UITextField)
     {
         //Date Picker
+        pickerDate.minimumDate = Calendar.current.date(byAdding: .year, value: 30, to: Date())
+        pickerDate.maximumDate = Date()
         pickerDate.datePickerMode = .date
+
         if #available(iOS 13.4, *)
         {
             pickerDate.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250.0)
@@ -260,5 +229,25 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         alert.addAction(okButton)
         self.present(alert, animated:true, completion: nil)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+         if segue.identifier == "toCurrencySelectorFromOperation"
+         {
+            let destinationVC = segue.destination as! CurrencySelectorController
+            destinationVC.currencyArray = currencyTypes
+         }
+         else if segue.identifier == "toCoinSelector"
+         {
+             let destinationVC = segue.destination as! CoinSelector
+             destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
+                 $0.getMarketCapRank().intValue < $1.getMarketCapRank().intValue
+             })
+             destinationVC.parentController = "portfolio"
+         }
+        
+    }
+    
+    
 
 }

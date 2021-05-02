@@ -405,8 +405,8 @@
 				B23374322629C5DF0056FB3D /* Core Data */,
 				B2D54610262344B8004DD5BB /* AppUtility.swift */,
 				B2D5461D262352E8004DD5BB /* Util.swift */,
-				B28D59912627684300B3E7EF /* ChartFormatter.swift */,
 				B230F8AE2611104A007E3A4E /* CoinGecko.swift */,
+				B28D59912627684300B3E7EF /* ChartFormatter.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";

@@ -19,13 +19,25 @@ class Util
         cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
         cell.name.text = coin.getName()
         let percent = coin.getPercent()
-        if percent.intValue > 0{cell.percent.textColor = UIColor.green}
-        else{cell.percent.textColor = UIColor.red}
-        cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
         let change = coin.getChange()
-        if change.intValue > 0{cell.change.textColor = UIColor.green}
-        else{cell.change.textColor = UIColor.red}
+        cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
         cell.change.text = String(format: "%.2f", change.doubleValue)
+        if change.doubleValue > 0
+        {
+            cell.change.textColor = UIColor.green
+            cell.percent.textColor = UIColor.green
+        }
+        else if change.doubleValue < 0
+        {
+            cell.change.textColor = UIColor.red
+            cell.percent.textColor = UIColor.red
+        }
+        else
+        {
+            cell.change.textColor = UIColor.black
+            cell.percent.textColor = UIColor.black
+        }
+    
         cell.price.text = Currency.currencySymbol + " " + Util.toPrice(coin.getPrice().doubleValue, isCoinDetailPrice: false)
         if mainPage
         {
