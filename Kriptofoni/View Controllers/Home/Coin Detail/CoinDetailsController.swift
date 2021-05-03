@@ -16,7 +16,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var stringArray = ["Price","Price For Btc","Change For 1 Hour","Change For 24 Hours","Change For 7 Days","Market Value","24 Hours Vol", "Circulating Supply", "Total Supply"]
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
-    var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey; var currentCoinId = "";var chartType = "twentyFour_hours"
+    var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey; var currentCoinId = ""; var currentCoinShortening =  "";var chartType = "twentyFour_hours"
     var values = [ChartDataEntry]();var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
     var activityView: UIActivityIndicatorView?
     var dict : [String:Any] = [:]; var linkArray = [String](); var webSiteLink = String(); var twitterLink = String(); var redditLink = String()
@@ -51,11 +51,13 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if type == 0  //0 means that we are coming this page from a search operation
         {
             self.currentCoinId = self.selectedSearchCoin.getId()
+            self.currentCoinShortening = self.selectedSearchCoin.getSymbol()
             getData(id: self.currentCoinId, name: self.selectedSearchCoin.getName(), shortening: self.selectedSearchCoin.getSymbol(), url: self.selectedSearchCoin.getImageUrl())
         }
         else //1 means that we are coming this page from normal currency selecting
         {
             self.currentCoinId = self.selectedCoin.getId()
+            self.currentCoinShortening = self.selectedCoin.getShortening()
             getData(id: self.currentCoinId, name: self.selectedCoin.getName(), shortening: self.selectedCoin.getShortening(), url: self.selectedCoin.getIconViewUrl())
         }
     }
@@ -295,6 +297,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         {
             let destinationVC = segue.destination as! AddToPortfolioController
             destinationVC.currencyTypes = self.currencyTypes
+            Currency.coinKey = self.currentCoinId
+            Currency.coinShortening = self.currentCoinShortening
         }
     }
     

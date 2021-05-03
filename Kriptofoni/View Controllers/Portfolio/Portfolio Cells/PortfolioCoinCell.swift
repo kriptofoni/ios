@@ -15,6 +15,7 @@ class PortfolioCoinCell: UITableViewCell {
     @IBOutlet weak var change: UILabel!
     @IBOutlet weak var percent: UILabel!
     @IBOutlet weak var coinPrice: UILabel!
+    var isChecked = false
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

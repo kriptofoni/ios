@@ -106,7 +106,7 @@ class CoreDataPortfolio
     }
     
     
-    //calculates principal money. principal money = operation.price + operation.quantity + operation.fee
+    ///calculates principal money. principal money = operation.price + operation.quantity + operation.fee
     static func calculatePrincipalMoney(completionBlock: @escaping (Double) -> Void) -> Void
     {
         var principalMoney : Double = 0
@@ -117,5 +117,48 @@ class CoreDataPortfolio
            }
            completionBlock(principalMoney)
         }
+    }
+    
+    /// deletes coins from core data
+    static func deleteCoinFromPortfolio(ids: [String],completionBlock: @escaping (Bool) -> Void) -> Void
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.newBackgroundContext()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PortfolioCoin")
+        fetchRequest.returnsObjectsAsFaults = false
+        do
+        {
+            let results = try context.fetch(fetchRequest)
+            if results.count > 0
+            {
+                for result in results as! [NSManagedObject]
+                {
+                    if let coinId = result.value(forKey: "coinId") as? String
+                    {
+                        if ids.contains(coinId)
+                        {
+                            context.delete(result)
+                            do
+                            {
+                                try context.save()
+                                print("\(coinId) is deleted from portfolio.")
+                            }
+                            catch
+                            {
+                                // Handle Error
+                            }
+                            
+                        }
+                    }
+                }
+                completionBlock(true)
+            }
+            else
+            {
+                print("Error : There is no currency type in portfolio.")
+                completionBlock(false)
+            }
+        }
+        catch{print("Error: Core Data Currency")}
     }
 }

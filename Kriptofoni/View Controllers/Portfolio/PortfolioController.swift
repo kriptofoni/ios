@@ -13,16 +13,18 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var currencyButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
+    var deleteMode = false
+    var coinsForDeleting = [String]()
     var portfolioPrincipalMoney : Double = 0
     var portfolioTotalDict  = [String:Double]()
     var portfolioList = [Coin]()
     var portfolioCalculations = [Double]() // index 0 --> total value of coins, index 1 --> total loss or profit, index 2 --> percentage of loss or profit
     var activityView: UIActivityIndicatorView?
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
-        
         // Do any additional setup after loading the view.
     }
     
@@ -30,13 +32,20 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         self.currencyButton.title = Currency.currencyKey.uppercased()
+        update()
+    }
+    
+    ///update method for this controller, fetches all data, should be called in viewWillAppear and when user press delete button
+    func update()
+    {
         CoreDataPortfolio.calculateTotalCoin { (result) in
             self.portfolioTotalDict = result
             self.getCoinsForPortfolio()
         }
-        self.tableView.reloadData()
     }
     
+    
+    // MARK: - Table View Functions
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if portfolioList.isEmpty {
@@ -65,14 +74,21 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 let price = listIndex.getPrice().doubleValue
                 let quantity = portfolioTotalDict[listIndex.getId()]!
                 cell.name.text! = listIndex.getShortening().uppercased() + " " + String(quantity)
-                let url = URL(string: listIndex.getIconViewUrl())
-                cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
+                if deleteMode //delete box
+                {
+                    cell.iconView.image = nil
+                }
+                else
+                {
+                    let url = URL(string: listIndex.getIconViewUrl())
+                    cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
+                }
                 cell.coinPrice.text = Util.toPrice(price, isCoinDetailPrice: false)
                 cell.totalPrice.text = Currency.currencySymbol + Util.toPrice(price * quantity , isCoinDetailPrice: false)
                 let percent = listIndex.getPercent()
                 let change = listIndex.getChange()
-                cell.change.text = Currency.currencySymbol + " " + Util.toPrice(listIndex.getChange().doubleValue * quantity, isCoinDetailPrice: false)
-                cell.percent.text = String(format: "%.2f", listIndex.getPercent().doubleValue)
+                cell.change.text = Currency.currencySymbol + " " + Util.toPrice(change.doubleValue * quantity, isCoinDetailPrice: false)
+                cell.percent.text = String(format: "%.2f", percent.doubleValue)
                 if change.doubleValue > 0
                 {
                     cell.change.textColor = UIColor.green
@@ -151,15 +167,88 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
         return CGFloat(height)
     }
     
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    {
+        if !self.portfolioList.isEmpty && indexPath.row > 2
+            {
+                let cell = tableView.cellForRow(at: indexPath) as! PortfolioCoinCell
+                if deleteMode //if delete mode is closed
+                {
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    cell.isChecked = !cell.isChecked
+                    if cell.isChecked
+                    {
+                        self.coinsForDeleting.append(self.portfolioList[indexPath.row-3].getId())
+                        dump(self.coinsForDeleting)
+                        cell.iconView.image = UIImage(named: "arrow")
+                    }
+                    else
+                    {
+                        self.coinsForDeleting.removeAll{$0 == self.portfolioList[indexPath.row-3].getId()}
+                        dump(self.coinsForDeleting)
+                        cell.iconView.image = nil
+                    }
+                }
+               
+            }
+    }
+    
+    
+    // MARK: - Button Clicks
+    
+    //except delete condition, it sends user to add to portfolio page
     @IBAction func addButtonClicked(_ sender: Any)
     {
-        
+        if !deleteMode
+        {
+            self.performSegue(withIdentifier: "toOperationPortfolio", sender: self)
+        }
+        else
+        {
+            if !self.coinsForDeleting.isEmpty
+            {
+                CoreDataPortfolio.deleteCoinFromPortfolio(ids: self.coinsForDeleting) { (check) in
+                    if check {
+                        self.deleteMode = false
+                        self.update()
+                        self.tableView.allowsMultipleSelection = false
+                        self.tableView.allowsMultipleSelectionDuringEditing = false
+                        self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
+                        self.addButton.title = "Add"
+                    }
+                    
+                }
+            }
+            else
+            {
+                self.makeAlert(titleInput: "Oops!", messageInput: "Please select a coin to delete from portfolio.")
+            }
+            
+        }
     }
     
     @IBAction func currencyButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelector", sender: self)}
     
     @IBAction func editButtonClicked(_ sender: Any)
     {
+        if !deleteMode
+        {
+            deleteMode = true
+            self.tableView.allowsMultipleSelection = true
+            self.tableView.allowsMultipleSelectionDuringEditing = true
+            self.editButton.tintColor = UIColor.systemBlue
+            self.addButton.title = "Delete"
+        }
+        else
+        {
+            deleteMode = false
+            self.tableView.allowsMultipleSelection = false
+            self.tableView.allowsMultipleSelectionDuringEditing = false
+            self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
+            self.addButton.title = "Add"
+        }
+        self.tableView.reloadData()
     }
     
     @objc func openOperationPage(sender: Any) {self.performSegue(withIdentifier: "toOperationPortfolio", sender: self)}
@@ -177,21 +266,25 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
         if apiString != ""
         {
             DispatchQueue.main.async{self.showActivityIndicator()}
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in //gets coins from api
                     portfolioListTemp.append(contentsOf: result)
                     portfolioListTemp = portfolioListTemp.sorted(by: {$0.getCount() < $1.getCount()})
                     self.portfolioList = portfolioListTemp
                     DispatchQueue.main.async
                     {
-                        self.tableView.reloadData()
-                        self.hideActivityIndicator()
                         CoreDataPortfolio.calculatePrincipalMoney { (principalMoney) in
                             self.portfolioPrincipalMoney = principalMoney
                             self.portfolioCalculations = self.calculateTotalValues(portfolio: self.portfolioList, portfolioTotalDict: self.portfolioTotalDict, principalMoney: principalMoney)
+                            self.hideActivityIndicator()
+                            self.tableView.reloadData()
                         }
-                        
                     }
             }
+        }
+        else
+        {
+            self.portfolioList = [Coin]()
+            self.tableView.reloadData()
         }
         
     }
@@ -205,13 +298,11 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
         {
             currentTotalMoney += coin.getPrice().doubleValue * portfolioTotalDict[coin.getId()]!
         }
-        var lossOrProfit = currentTotalMoney - principalMoney // loss or profit
-        var percentage = (currentTotalMoney - principalMoney) / 100 * principalMoney
+        let lossOrProfit = currentTotalMoney - principalMoney // loss or profit
+        let percentage = (currentTotalMoney - principalMoney) / 100 * principalMoney
         returnArray.append(currentTotalMoney); returnArray.append(lossOrProfit); returnArray.append(percentage)
         return returnArray
     }
-    
-    
     
     //shows spinner
     func showActivityIndicator()
@@ -225,4 +316,12 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
+    
+    func makeAlert(titleInput:String, messageInput:String)//Error method with parameters
+    {
+        let alert = UIAlertController(title: titleInput, message: messageInput, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated:true, completion: nil)
+    }
 }

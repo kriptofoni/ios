@@ -326,8 +326,8 @@
 		B23374322629C5DF0056FB3D /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				B2D75CB02614FBCB000C0259 /* CoreData.swift */,
 				B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */,
+				B2D75CB02614FBCB000C0259 /* CoreData.swift */,
 				B2851F5C263C26F800A23EA8 /* CoreDataPortfolio.swift */,
 				B29E5D80263D873B00560150 /* CoreDataWatchingList.swift */,
 			);

@@ -290,7 +290,6 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
                 self.tableView.allowsMultipleSelectionDuringEditing = true
                 self.editButton.tintColor = UIColor.systemBlue
                 self.addAndDeleteButton.title = "Delete"
-                self.tableView.reloadData()
             }
             else
             {
@@ -299,8 +298,8 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
                 self.tableView.allowsMultipleSelectionDuringEditing = false
                 self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
                 self.addAndDeleteButton.title = "Add"
-                self.tableView.reloadData()
             }
+            self.tableView.reloadData()
         }
     }
     
@@ -308,14 +307,22 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     {
         if deleteMode // deleting mode
         {
-            CoreDataWatchingList.deleteCoinFromWatchingList(ids: self.coinsForDeleting) { (bool) in
-                self.deleteMode = false
-                self.update()
-                self.tableView.allowsMultipleSelection = false
-                self.tableView.allowsMultipleSelectionDuringEditing = false
-                self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
-                self.addAndDeleteButton.title = "Add"
+            if !self.coinsForDeleting.isEmpty
+            {
+                CoreDataWatchingList.deleteCoinFromWatchingList(ids: self.coinsForDeleting) { (bool) in
+                    self.deleteMode = false
+                    self.update()
+                    self.tableView.allowsMultipleSelection = false
+                    self.tableView.allowsMultipleSelectionDuringEditing = false
+                    self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
+                    self.addAndDeleteButton.title = "Add"
+                }
             }
+            else
+            {
+                self.makeAlert(titleInput: "Oops!", messageInput: "Please select a coin to delete from watching list.")
+            }
+            
         }
         else // adding mode
         {
@@ -364,7 +371,14 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
     
-
+    func makeAlert(titleInput:String, messageInput:String)//Error method with parameters
+    {
+        let alert = UIAlertController(title: titleInput, message: messageInput, preferredStyle: UIAlertController.Style.alert)
+        let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
+        alert.addAction(okButton)
+        self.present(alert, animated:true, completion: nil)
+    }
+    
 }
 
     
