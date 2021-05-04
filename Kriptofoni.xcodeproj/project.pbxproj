@@ -34,6 +34,8 @@
 		B2734EDB261EFC6F004F4296 /* AddToPortfolioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EDA261EFC6F004F4296 /* AddToPortfolioController.swift */; };
 		B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */; };
 		B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27E6D19261C47AF004E817A /* CoinDetail.swift */; };
+		B284871F26419428005F7526 /* PortfolioChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284871E26419428005F7526 /* PortfolioChartCell.swift */; };
+		B284872E26419CFE005F7526 /* CoinGeckoCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284872D26419CFE005F7526 /* CoinGeckoCharts.swift */; };
 		B2851F5D263C26F800A23EA8 /* CoreDataPortfolio.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2851F5C263C26F800A23EA8 /* CoreDataPortfolio.swift */; };
 		B28D59922627684300B3E7EF /* ChartFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28D59912627684300B3E7EF /* ChartFormatter.swift */; };
 		B29E5D81263D873B00560150 /* CoreDataWatchingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29E5D80263D873B00560150 /* CoreDataWatchingList.swift */; };
@@ -117,6 +119,8 @@
 		B2734EDA261EFC6F004F4296 /* AddToPortfolioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPortfolioController.swift; sourceTree = "<group>"; };
 		B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonOperationCell.swift; sourceTree = "<group>"; };
 		B27E6D19261C47AF004E817A /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
+		B284871E26419428005F7526 /* PortfolioChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioChartCell.swift; sourceTree = "<group>"; };
+		B284872D26419CFE005F7526 /* CoinGeckoCharts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGeckoCharts.swift; sourceTree = "<group>"; };
 		B2851F5C263C26F800A23EA8 /* CoreDataPortfolio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPortfolio.swift; sourceTree = "<group>"; };
 		B28D59912627684300B3E7EF /* ChartFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartFormatter.swift; sourceTree = "<group>"; };
 		B29E5D80263D873B00560150 /* CoreDataWatchingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataWatchingList.swift; sourceTree = "<group>"; };
@@ -334,6 +338,15 @@
 			path = "Core Data";
 			sourceTree = "<group>";
 		};
+		B284872C26419CDB005F7526 /* Coin Gecko Api */ = {
+			isa = PBXGroup;
+			children = (
+				B230F8AE2611104A007E3A4E /* CoinGecko.swift */,
+				B284872D26419CFE005F7526 /* CoinGeckoCharts.swift */,
+			);
+			path = "Coin Gecko Api";
+			sourceTree = "<group>";
+		};
 		B2A1AA0A263866C90073550D /* Portfolio */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,6 +364,7 @@
 				B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */,
 				B240B771263AC07E00A9F7D9 /* PortfolioCoinCell.swift */,
 				B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */,
+				B284871E26419428005F7526 /* PortfolioChartCell.swift */,
 			);
 			path = "Portfolio Cells";
 			sourceTree = "<group>";
@@ -402,10 +416,10 @@
 		B2D75CAF2614FBBD000C0259 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				B284872C26419CDB005F7526 /* Coin Gecko Api */,
 				B23374322629C5DF0056FB3D /* Core Data */,
 				B2D54610262344B8004DD5BB /* AppUtility.swift */,
 				B2D5461D262352E8004DD5BB /* Util.swift */,
-				B230F8AE2611104A007E3A4E /* CoinGecko.swift */,
 				B28D59912627684300B3E7EF /* ChartFormatter.swift */,
 			);
 			path = Util;
@@ -673,12 +687,14 @@
 				B2ADC4492631611300F2562D /* SettingsCellTableViewCell.swift in Sources */,
 				B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */,
 				B2ADC44A2631611300F2562D /* CoopAndHelpButtonCell.swift in Sources */,
+				B284871F26419428005F7526 /* PortfolioChartCell.swift in Sources */,
 				B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */,
 				B232A6BD262AC0B600FECF9B /* Alarm.swift in Sources */,
 				B223BA79260CD7DE0071AEB9 /* SceneDelegate.swift in Sources */,
 				B2851F5D263C26F800A23EA8 /* CoreDataPortfolio.swift in Sources */,
 				B2D5461E262352E9004DD5BB /* Util.swift in Sources */,
 				B2ADC437263160C800F2562D /* CooperationAndHelp.swift in Sources */,
+				B284872E26419CFE005F7526 /* CoinGeckoCharts.swift in Sources */,
 				B2734EDB261EFC6F004F4296 /* AddToPortfolioController.swift in Sources */,
 				B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */,
 				B23965212620360700D6CD5F /* FullScreenChartController.swift in Sources */,

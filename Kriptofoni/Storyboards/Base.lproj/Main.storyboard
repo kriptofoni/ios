@@ -1653,7 +1653,7 @@
                                             <outlet property="label3" destination="T8b-tE-hpq" id="WMG-TS-RfD"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="secondCell" rowHeight="235" id="Spf-L7-U5Z" customClass="SecondCell" customModule="Kriptofoni" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="secondCell" rowHeight="235" id="Spf-L7-U5Z" customClass="PortfolioChartCell" customModule="Kriptofoni" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="136" width="375" height="235"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Spf-L7-U5Z" id="imZ-TC-AGr">
@@ -1663,54 +1663,32 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zCd-Fw-NLC" customClass="LineChartView" customModule="Charts">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="195"/>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KYj-P9-U9H" customClass="CandleStickChartView" customModule="Charts">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="195"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                </view>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="07d-C8-2BF">
-                                                    <rect key="frame" x="8" y="200" width="359" height="27"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="07d-C8-2BF">
+                                                    <rect key="frame" x="10" y="203" width="355" height="27"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R1E-yS-uwt">
-                                                            <rect key="frame" x="0.0" y="0.0" width="30" height="27"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="aPw-x8-6rb"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" backgroundImage="fullchart">
-                                                                <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            </state>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="5"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
-                                                            <connections>
-                                                                <action selector="firstButtonClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="P8p-9Q-e7Q"/>
-                                                            </connections>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EjV-am-Wcj">
-                                                            <rect key="frame" x="41" y="0.0" width="30" height="27"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="1d5-IB-NwE"/>
-                                                            </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" backgroundImage="candlestick">
-                                                                <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            </state>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="5"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
-                                                            <connections>
-                                                                <action selector="secondButtonClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="3fT-wQ-oLV"/>
-                                                            </connections>
-                                                        </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M7x-nr-k1s">
-                                                            <rect key="frame" x="82" y="0.0" width="30" height="27"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="30" height="27"/>
                                                             <color key="backgroundColor" systemColor="systemYellowColor"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="PxT-rf-vhu"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <state key="normal" title="1H">
+                                                                <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            </state>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                    <integer key="value" value="5"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                            <connections>
+                                                                <action selector="oneHourClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="c6w-6N-lyS"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RP1-YC-efM">
+                                                            <rect key="frame" x="54" y="0.0" width="30" height="27"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="30" id="R6B-ux-8ng"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="24H">
@@ -1722,16 +1700,16 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="button24HClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="evf-gU-l9w"/>
+                                                                <action selector="twentyFourHourClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="E0T-nR-hmK"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RP1-YC-efM">
-                                                            <rect key="frame" x="123" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QXV-mJ-bFY">
+                                                            <rect key="frame" x="108" y="0.0" width="30" height="27"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="R6B-ux-8ng"/>
+                                                                <constraint firstAttribute="width" constant="30" id="U74-aP-dRV"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" title="1W">
+                                                            <state key="normal" title="7D">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </state>
                                                             <userDefinedRuntimeAttributes>
@@ -1740,11 +1718,11 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="button1WClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="sLf-QC-AyP"/>
+                                                                <action selector="sevenDayClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="eAq-wd-sod"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QXV-mJ-bFY">
-                                                            <rect key="frame" x="164" y="0.0" width="31" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FOE-si-EYT">
+                                                            <rect key="frame" x="162" y="0.0" width="31" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="1M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1755,11 +1733,11 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="button1MClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="dTE-Dk-dnu"/>
+                                                                <action selector="oneMonthClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="Xj0-y9-pgU"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FOE-si-EYT">
-                                                            <rect key="frame" x="206" y="0.0" width="30" height="27"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0c0-N0-krX">
+                                                            <rect key="frame" x="217" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="3M">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1770,26 +1748,11 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="button3MClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="5DW-Ug-eAT"/>
-                                                            </connections>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0c0-N0-krX">
-                                                            <rect key="frame" x="247" y="0.0" width="30" height="27"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <state key="normal" title="6M">
-                                                                <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            </state>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="5"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
-                                                            <connections>
-                                                                <action selector="button6MClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="OgG-0e-2Ja"/>
+                                                                <action selector="threeMonthClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="led-Ff-2xw"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqA-nO-SjS">
-                                                            <rect key="frame" x="288" y="0.0" width="30" height="27"/>
+                                                            <rect key="frame" x="271" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="1Y">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1800,11 +1763,11 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="button1YClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="Xdc-pb-f9E"/>
+                                                                <action selector="oneYearClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="fbC-tX-EKq"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pSn-8C-xUe">
-                                                            <rect key="frame" x="329" y="0.0" width="30" height="27"/>
+                                                            <rect key="frame" x="325" y="0.0" width="30" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <state key="normal" title="All">
                                                                 <color key="titleColor" red="0.47450980390000003" green="0.46274509800000002" blue="0.46274509800000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1815,47 +1778,36 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                             <connections>
-                                                                <action selector="buttonAllClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="K4p-Ws-w7v"/>
+                                                                <action selector="allClicked:" destination="Spf-L7-U5Z" eventType="touchUpInside" id="MNm-SE-Suh"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="R1E-yS-uwt" firstAttribute="baseline" secondItem="EjV-am-Wcj" secondAttribute="baseline" id="Pul-AB-Iop"/>
-                                                        <constraint firstItem="EjV-am-Wcj" firstAttribute="baseline" secondItem="R1E-yS-uwt" secondAttribute="baseline" id="djn-Qg-lcd"/>
-                                                        <constraint firstItem="R1E-yS-uwt" firstAttribute="firstBaseline" secondItem="EjV-am-Wcj" secondAttribute="firstBaseline" id="f2I-uM-4p1"/>
-                                                        <constraint firstItem="R1E-yS-uwt" firstAttribute="baseline" secondItem="EjV-am-Wcj" secondAttribute="baseline" id="jY9-tW-lP9"/>
-                                                        <constraint firstItem="EjV-am-Wcj" firstAttribute="firstBaseline" secondItem="R1E-yS-uwt" secondAttribute="firstBaseline" id="oat-JB-hVP"/>
-                                                        <constraint firstItem="EjV-am-Wcj" firstAttribute="firstBaseline" secondItem="R1E-yS-uwt" secondAttribute="firstBaseline" id="smk-y5-1TP"/>
-                                                        <constraint firstItem="QXV-mJ-bFY" firstAttribute="centerX" secondItem="07d-C8-2BF" secondAttribute="centerX" id="y4w-lP-dQJ"/>
+                                                        <constraint firstItem="FOE-si-EYT" firstAttribute="centerX" secondItem="07d-C8-2BF" secondAttribute="centerX" id="kvi-hM-G8Y"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="KYj-P9-U9H" firstAttribute="leading" secondItem="imZ-TC-AGr" secondAttribute="leadingMargin" constant="-16" id="1ed-xI-xo4"/>
-                                                <constraint firstItem="KYj-P9-U9H" firstAttribute="trailing" secondItem="zCd-Fw-NLC" secondAttribute="trailing" id="AD2-DL-xPs"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="07d-C8-2BF" secondAttribute="bottom" constant="-3" id="P20-Os-Scp"/>
-                                                <constraint firstItem="07d-C8-2BF" firstAttribute="centerX" secondItem="imZ-TC-AGr" secondAttribute="centerX" id="REF-z5-rJd"/>
-                                                <constraint firstItem="zCd-Fw-NLC" firstAttribute="top" secondItem="KYj-P9-U9H" secondAttribute="top" id="bAb-DR-wts"/>
-                                                <constraint firstItem="07d-C8-2BF" firstAttribute="top" secondItem="zCd-Fw-NLC" secondAttribute="bottom" constant="5" id="fad-br-zM4"/>
-                                                <constraint firstItem="zCd-Fw-NLC" firstAttribute="centerX" secondItem="07d-C8-2BF" secondAttribute="centerX" id="k7b-Tm-2he"/>
-                                                <constraint firstItem="KYj-P9-U9H" firstAttribute="leading" secondItem="zCd-Fw-NLC" secondAttribute="leading" id="qY4-km-Jrz"/>
-                                                <constraint firstItem="KYj-P9-U9H" firstAttribute="bottom" secondItem="zCd-Fw-NLC" secondAttribute="bottom" id="sFu-m7-YGu"/>
-                                                <constraint firstItem="07d-C8-2BF" firstAttribute="leading" secondItem="imZ-TC-AGr" secondAttribute="leadingMargin" constant="-8" id="tRw-7p-NjV"/>
-                                                <constraint firstItem="KYj-P9-U9H" firstAttribute="top" secondItem="imZ-TC-AGr" secondAttribute="topMargin" constant="-11" id="v4V-Rp-3fJ"/>
+                                                <constraint firstItem="07d-C8-2BF" firstAttribute="leading" secondItem="imZ-TC-AGr" secondAttribute="leadingMargin" constant="-6" id="6cU-dj-djN"/>
+                                                <constraint firstAttribute="trailing" secondItem="07d-C8-2BF" secondAttribute="trailing" constant="10" id="N5b-1w-IvY"/>
+                                                <constraint firstItem="zCd-Fw-NLC" firstAttribute="top" secondItem="imZ-TC-AGr" secondAttribute="topMargin" constant="-11" id="dgb-tW-Idh"/>
+                                                <constraint firstItem="07d-C8-2BF" firstAttribute="top" secondItem="zCd-Fw-NLC" secondAttribute="bottom" constant="8" id="jjz-aq-02v"/>
+                                                <constraint firstItem="zCd-Fw-NLC" firstAttribute="centerX" secondItem="07d-C8-2BF" secondAttribute="centerX" id="mL7-SU-QJc"/>
+                                                <constraint firstItem="07d-C8-2BF" firstAttribute="centerX" secondItem="imZ-TC-AGr" secondAttribute="centerX" id="pY1-I6-YpD"/>
+                                                <constraint firstItem="zCd-Fw-NLC" firstAttribute="leading" secondItem="imZ-TC-AGr" secondAttribute="leadingMargin" constant="-16" id="rbf-bO-wyF"/>
+                                                <constraint firstItem="07d-C8-2BF" firstAttribute="leading" secondItem="imZ-TC-AGr" secondAttribute="leading" constant="10" id="rrm-z0-8xZ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="07d-C8-2BF" secondAttribute="bottom" constant="-6" id="wlf-cp-URC"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="button1M" destination="QXV-mJ-bFY" id="krG-5j-zYG"/>
-                                            <outlet property="button1W" destination="RP1-YC-efM" id="jTl-VD-X3S"/>
-                                            <outlet property="button1Y" destination="lqA-nO-SjS" id="2qU-yf-fpb"/>
-                                            <outlet property="button24H" destination="M7x-nr-k1s" id="X7W-E6-nso"/>
-                                            <outlet property="button3M" destination="FOE-si-EYT" id="lgn-Ox-aaL"/>
-                                            <outlet property="button6M" destination="0c0-N0-krX" id="73G-xj-BDe"/>
-                                            <outlet property="buttonAll" destination="pSn-8C-xUe" id="vlH-lV-FBE"/>
-                                            <outlet property="candleStickChartView" destination="KYj-P9-U9H" id="HGG-6y-bQX"/>
-                                            <outlet property="chartView" destination="zCd-Fw-NLC" id="gyJ-h4-cAw"/>
-                                            <outlet property="firstButton" destination="R1E-yS-uwt" id="BxR-Zz-t1k"/>
-                                            <outlet property="secondButton" destination="EjV-am-Wcj" id="zYr-Zx-hjC"/>
+                                            <outlet property="all" destination="pSn-8C-xUe" id="qQl-uI-khH"/>
+                                            <outlet property="chartView" destination="zCd-Fw-NLC" id="k1H-Gd-hb2"/>
+                                            <outlet property="oneHour" destination="M7x-nr-k1s" id="quG-B5-h08"/>
+                                            <outlet property="oneMonth" destination="FOE-si-EYT" id="Uu8-da-egZ"/>
+                                            <outlet property="oneYear" destination="lqA-nO-SjS" id="hsB-g2-rVa"/>
+                                            <outlet property="sevenDay" destination="QXV-mJ-bFY" id="jiQ-Zg-FE2"/>
+                                            <outlet property="threeMonth" destination="0c0-N0-krX" id="Kjt-FG-NqU"/>
+                                            <outlet property="twentyFourHour" destination="RP1-YC-efM" id="8st-NI-sB4"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="portfolioThird" rowHeight="81" id="dUe-WI-MI5" customClass="PortfolioThirdCell" customModule="Kriptofoni" customModuleProvider="target">

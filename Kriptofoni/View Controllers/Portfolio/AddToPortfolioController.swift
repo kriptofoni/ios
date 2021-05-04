@@ -10,7 +10,6 @@ import Toast_Swift
 
 class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
-   
     @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
@@ -25,9 +24,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         currencyTypeButton.title = Currency.currencyKey.uppercased()
-        CoreDataPortfolio.calculateTotalCoin { (result) in
-            self.portfolioTotalDict = result
-        }
+        CoreDataPortfolio.calculateTotalCoin { (result) in self.portfolioTotalDict = result}
         self.tableView.reloadData()
         
     }
@@ -85,7 +82,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.view = view
             cell.label.text = "Date"
-            cell.textField.placeholder = "Optional"
+            cell.textField.placeholder = "Please select a date."
             createDatePicker(textField: cell.textField)
             return cell
         case 3:
@@ -129,34 +126,39 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         let note = getCell1(index: 5).textField.text!
         if !quantity.isEmpty //mandatory variable
         {
-            if !price.isEmpty //mandatory variable
+            if !(getCell1(index: 2).textField.text!.isEmpty) // datec controll
             {
-                if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
+                if !price.isEmpty //mandatory variable
                 {
-                    if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
+                    if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
                     {
-                        let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
-                        if portfolioQuantity! > Double(quantity)!
+                        if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
                         {
-                            saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                            let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
+                            if portfolioQuantity! > Double(quantity)!
+                            {
+                                saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                            }
+                            else
+                            {
+                                self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
+                            }
                         }
                         else
                         {
-                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
+                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
                         }
                     }
                     else
                     {
-                        self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
+                        saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
                     }
+                    
                 }
-                else
-                {
-                    saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
-                }
-                
+                else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid price.")}
             }
-            else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid price.")}
+            else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a date.")}
+            
         }
         else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid quantity.")}
     }
@@ -165,6 +167,20 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd-MM-yyyy"
+        let calendar = Calendar.current // or e.g. Calendar(identifier: .persian)
+        let now = Date().localDate()
+        // Specify date components
+        var dateComponents = DateComponents()
+        dateComponents.year = calendar.component(.year, from: pickerDate.date)
+        dateComponents.month = calendar.component(.month, from: pickerDate.date)
+        dateComponents.day = calendar.component(.day, from: pickerDate.date)
+        dateComponents.hour = calendar.component(.hour, from: now)
+        dateComponents.minute = calendar.component(.minute, from: now)
+        // Create date from components
+        let userCalendar = Calendar(identifier: .gregorian) // since the components above (like year 1980) are for Gregorian
+        let newDateTime = userCalendar.date(from: dateComponents)
+        pickerDate.date = newDateTime!
+        print(newDateTime!)
         getCell1(index: 2).textField.text = dateFormatter.string(from: pickerDate.date)
         dateTimestamp = Double(pickerDate.date.timeIntervalSince1970)
         self.view.endEditing(true)
@@ -205,10 +221,9 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     func createDatePicker(textField : UITextField)
     {
         //Date Picker
-        pickerDate.minimumDate = Calendar.current.date(byAdding: .year, value: 30, to: Date())
         pickerDate.maximumDate = Date()
         pickerDate.datePickerMode = .date
-
+        pickerDate.setDate(Date(), animated: false)
         if #available(iOS 13.4, *)
         {
             pickerDate.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 250.0)
@@ -251,3 +266,15 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     
 
 }
+
+extension Date {
+    func localDate() -> Date {
+        let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+
+        return localDate
+    }
+}
+
+

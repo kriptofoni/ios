@@ -87,7 +87,7 @@ class ChartUtil
         set1.drawCirclesEnabled = false
         set1.lineWidth = 1.5
         set1.drawFilledEnabled = true
-        if (dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0 // Color of chart
+        if values.last!.y - values.first!.y > 0 // Color of chart
         {
             set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)
         }

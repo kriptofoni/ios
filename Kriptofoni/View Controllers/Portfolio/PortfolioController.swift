@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Charts
 
 class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
@@ -133,7 +134,8 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
                 else if indexPath.row == 1 //chartCell
                 {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! SecondCell
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! PortfolioChartCell
+                    for (index,item) in cell.buttons.enumerated() {item.addTarget(self, action: #selector(self.chartTimerClicked(sender:)), for: .touchUpInside); item.tag = index}
                     return cell
                 }
                 else
@@ -196,6 +198,31 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     // MARK: - Button Clicks
+    
+    
+    @objc func chartTimerClicked(sender: UIButton)
+    {
+        
+        let now = NSDate().timeIntervalSince1970
+        var secondTime = ""
+        switch sender.tag
+        {
+            case 0: secondTime = String(now - (60*60)) // 1 hour
+            case 1: secondTime = String(now - (60*60*24)) // 24 hour
+            case 2: secondTime = String(now - (60*60*24*7)) // 1 week
+            case 3: secondTime = String(now - (60*60*24*31)) // 1 month
+            case 4: secondTime = String(now - (60*60*24*31*3)) // 3 month
+            case 5: secondTime = String(now - (60*60*24*31*12)) // 1 year
+            case 6: secondTime = String(0) // All
+            default:
+                print("error")
+        }
+        DispatchQueue.main.async{self.showActivityIndicator()}
+        CoinGeckoCharts.getDataPortfolioChart(ids: portfolioTotalDict, currency: Currency.currencyKey, secondTime: secondTime) { (entries) in
+            DispatchQueue.main.async{self.hideActivityIndicator()}
+            self.tableView.reloadData()
+        }
+    }
     
     //except delete condition, it sends user to add to portfolio page
     @IBAction func addButtonClicked(_ sender: Any)
@@ -272,10 +299,10 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                     self.portfolioList = portfolioListTemp
                     DispatchQueue.main.async
                     {
+                        self.hideActivityIndicator()
                         CoreDataPortfolio.calculatePrincipalMoney { (principalMoney) in
                             self.portfolioPrincipalMoney = principalMoney
                             self.portfolioCalculations = self.calculateTotalValues(portfolio: self.portfolioList, portfolioTotalDict: self.portfolioTotalDict, principalMoney: principalMoney)
-                            self.hideActivityIndicator()
                             self.tableView.reloadData()
                         }
                     }

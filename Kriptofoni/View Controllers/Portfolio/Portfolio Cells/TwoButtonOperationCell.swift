@@ -54,7 +54,7 @@ class OperationInputCell: UITableViewCell, UITextFieldDelegate
         super.awakeFromNib()
         self.selectionStyle = .none
         Util.createBottomLine(textField : textField)
-        textField.keyboardType = UIKeyboardType.numberPad
+        textField.keyboardType = UIKeyboardType.decimalPad
         
         // Initialization code
     }

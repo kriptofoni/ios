@@ -432,6 +432,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         performSegue(withIdentifier: "toCoinDetails", sender: self)
     }
     
+    
     // MARK: - Button, segmented view, search bar triggering functions
     
     /// Pushs the necessary array to table view according to segmented control

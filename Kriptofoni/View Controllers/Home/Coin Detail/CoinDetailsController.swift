@@ -67,7 +67,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     {
         CoinGecko.getCoinDetails(id: id, currencyType: currentCurrencyKey) { (result) in
             self.dict = result
-            CoinGecko.getDataForCharts(id: id, currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
+            CoinGeckoCharts.getDataForCharts(id: id, currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
                 self.values = chartdata
                 DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
             }
@@ -265,7 +265,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                     print("cem")
             }
             DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
-            CoinGecko.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
+            CoinGeckoCharts.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
                     self.values = chartdata
                     DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 }

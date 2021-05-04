@@ -92,7 +92,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     func getChartData(type : String)
     {
         DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
-        CoinGecko.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
+        CoinGeckoCharts.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
                 self.values = chartdata
                 DispatchQueue.main.async{self.hideActivityIndicator();self.updateChart()}
             }
