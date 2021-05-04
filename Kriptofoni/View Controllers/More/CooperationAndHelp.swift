@@ -24,7 +24,7 @@ class CooperationAndHelp: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 4
+        return 3
         
     }
     
@@ -33,16 +33,10 @@ class CooperationAndHelp: UIViewController, UITableViewDelegate, UITableViewData
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CoopAndHelpTextFieldCell", for: indexPath) as! CoopAndHelpTextFieldCell
-            cell.textField.placeholder = "Please enter your E-Mail address"
-            return cell
-        }
-        else if indexPath.row == 1
-        {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CoopAndHelpTextFieldCell", for: indexPath) as! CoopAndHelpTextFieldCell
             cell.textField.placeholder = "Please enter Subject"
             return cell
         }
-        else if indexPath.row == 2
+        else if indexPath.row == 1
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CoopAndHelpTextViewCell", for: indexPath) as! CoopAndHelpTextViewCell
             cell.textView.text = "PlaceHolder"
@@ -60,17 +54,13 @@ class CooperationAndHelp: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
         var height = 0
-        if indexPath.row == 0
-        {
-            height = 100
-        }
-        else if indexPath.row == 1
+        if indexPath.row == 1
         {
             height = 100
         }
         else if indexPath.row == 2
         {
-            height = 500
+            height = 233
         }
         else
         {
@@ -95,14 +85,12 @@ class CooperationAndHelp: UIViewController, UITableViewDelegate, UITableViewData
     
     @objc func tappedButton(sender : UIButton)
     {
-        let mailText = getCell(index: 0).textField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let subjectText = getCell(index: 1).textField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let mainText = getCellView(index: 2).textView.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         guard MFMailComposeViewController.canSendMail() else {return}
         let composer = MFMailComposeViewController()
         composer.mailComposeDelegate = self
         composer.setToRecipients(["denizgencay35@gmail.com"])
-        composer.setPreferredSendingEmailAddress(mailText) // check if it works
         composer.setSubject(subjectText)
         composer.setMessageBody(mainText, isHTML: false)
         present(composer, animated: true)
