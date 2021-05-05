@@ -15,6 +15,8 @@ class CoinGeckoCharts
     
     static func getDataPortfolioChart(ids: [String: Double], currency: String,secondTime: String,completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
     {
+        var array = [ChartDataEntry]()
+        completionBlock(array)
         /*
         var array = [ChartDataEntry]()
         let now = NSDate().timeIntervalSince1970

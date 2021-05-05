@@ -87,13 +87,16 @@ class ChartUtil
         set1.drawCirclesEnabled = false
         set1.lineWidth = 1.5
         set1.drawFilledEnabled = true
-        if values.last!.y - values.first!.y > 0 // Color of chart
+        if !values.isEmpty
         {
-            set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)
-        }
-        else
-        {
-            set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(UIColor.red)
+            if values.last!.y - values.first!.y > 0 // Color of chart
+            {
+                set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)
+            }
+            else
+            {
+                set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(UIColor.red)
+            }
         }
         let data = LineChartData(dataSet: set1)
         let chartDataFormatter = LineChartFormatter(type: chartType)

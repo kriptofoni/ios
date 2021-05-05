@@ -19,8 +19,11 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     var portfolioPrincipalMoney : Double = 0
     var portfolioTotalDict  = [String:Double]()
     var portfolioList = [Coin]()
+    var values = [ChartDataEntry]();
     var portfolioCalculations = [Double]() // index 0 --> total value of coins, index 1 --> total loss or profit, index 2 --> percentage of loss or profit
     var activityView: UIActivityIndicatorView?
+    let now = NSDate().timeIntervalSince1970
+    var secondTime = ""
     
     override func viewDidLoad()
     {
@@ -33,16 +36,90 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         self.currencyButton.title = Currency.currencyKey.uppercased()
-        update()
+        secondTime = String((now - (60*60)))
+        fetchData()
     }
     
-    ///update method for this controller, fetches all data, should be called in viewWillAppear and when user press delete button
-    func update()
+    //fetches all data, should be called in viewWillAppear and when user press delete button
+    func fetchData()
     {
         CoreDataPortfolio.calculateTotalCoin { (result) in
             self.portfolioTotalDict = result
-            self.getCoinsForPortfolio()
+            self.getCoinsForPortfolio(isUpdate: false)
         }
+    }
+    
+    
+    ///update method for this controller,
+    func updateWithTimer()
+    {
+        getCoinsForPortfolio(isUpdate: true)
+    }
+    
+    
+    
+    ///gets coin attributes from api
+    func getCoinsForPortfolio(isUpdate: Bool) //if this is an update time, make visible this spinner
+    {
+        var apiString = ""
+        var portfolioListTemp = [Coin]()
+        for (id,_) in self.portfolioTotalDict
+        {
+            if apiString == "" {apiString = id}
+            else { apiString = apiString + "," + id}
+        }
+        if apiString != ""
+        {
+            if !isUpdate {DispatchQueue.main.async{self.showActivityIndicator()}}
+            print(apiString)
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in //gets coins from api
+                    portfolioListTemp.append(contentsOf: result)
+                    portfolioListTemp = portfolioListTemp.sorted(by: {$0.getCount() < $1.getCount()})
+                    self.portfolioList = portfolioListTemp
+                    DispatchQueue.main.async
+                    {
+                        CoreDataPortfolio.calculatePrincipalMoney { (principalMoney) in
+                            self.portfolioPrincipalMoney = principalMoney
+                            self.portfolioCalculations = self.calculateTotalValues(portfolio: self.portfolioList, portfolioTotalDict: self.portfolioTotalDict, principalMoney: principalMoney)
+                            CoinGeckoCharts.getDataPortfolioChart(ids: self.portfolioTotalDict, currency: Currency.currencyKey, secondTime: self.secondTime) { (newValues) in
+                                self.values = newValues
+                                if !isUpdate
+                                {
+                                    self.hideActivityIndicator(); print("Fetched")
+                                }
+                                else
+                                {
+                                    print("Updated")
+                                    
+                                }
+                                self.tableView.reloadData()
+                            }
+                        }
+                    }
+            }
+        }
+        else
+        {
+            self.portfolioList = [Coin]()
+            self.tableView.reloadData()
+        }
+        
+    }
+    
+    
+    /// calculates current total value of user's coins, loss or profit and percentage of loss or profit
+    func calculateTotalValues(portfolio : [Coin], portfolioTotalDict : [String:Double], principalMoney : Double) -> [Double] //return array's size will be 3
+    {
+        var returnArray = [Double]()
+        var currentTotalMoney : Double = 0 // current total value of user's coins
+        for coin in portfolio
+        {
+            currentTotalMoney += coin.getPrice().doubleValue * portfolioTotalDict[coin.getId()]!
+        }
+        let lossOrProfit = currentTotalMoney - principalMoney // loss or profit
+        let percentage = (currentTotalMoney - principalMoney) / 100 * principalMoney
+        returnArray.append(currentTotalMoney); returnArray.append(lossOrProfit); returnArray.append(percentage)
+        return returnArray
     }
     
     
@@ -136,6 +213,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! PortfolioChartCell
                     for (index,item) in cell.buttons.enumerated() {item.addTarget(self, action: #selector(self.chartTimerClicked(sender:)), for: .touchUpInside); item.tag = index}
+                    ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: values, dict: [:], chartType: "")
                     return cell
                 }
                 else
@@ -198,27 +276,24 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     // MARK: - Button Clicks
-    
-    
     @objc func chartTimerClicked(sender: UIButton)
     {
         
-        let now = NSDate().timeIntervalSince1970
-        var secondTime = ""
         switch sender.tag
         {
-            case 0: secondTime = String(now - (60*60)) // 1 hour
-            case 1: secondTime = String(now - (60*60*24)) // 24 hour
-            case 2: secondTime = String(now - (60*60*24*7)) // 1 week
-            case 3: secondTime = String(now - (60*60*24*31)) // 1 month
-            case 4: secondTime = String(now - (60*60*24*31*3)) // 3 month
-            case 5: secondTime = String(now - (60*60*24*31*12)) // 1 year
-            case 6: secondTime = String(0) // All
+            case 0: self.secondTime = String((now - (60*60)))
+            case 1: self.secondTime = String((now - (60*60*24))) // 24 hour
+            case 2: self.secondTime = String((now - (60*60*24*7))) // 1 week
+            case 3: self.secondTime = String((now - (60*60*24*31))) // 1 month
+            case 4: self.secondTime = String((now - (60*60*24*31*3))) // 3 month
+            case 5: self.secondTime = String((now - (60*60*24*31*12))) // 1 year
+            case 6: self.secondTime = String(0) // All
             default:
                 print("error")
         }
         DispatchQueue.main.async{self.showActivityIndicator()}
-        CoinGeckoCharts.getDataPortfolioChart(ids: portfolioTotalDict, currency: Currency.currencyKey, secondTime: secondTime) { (entries) in
+        CoinGeckoCharts.getDataPortfolioChart(ids: portfolioTotalDict, currency: Currency.currencyKey, secondTime: self.secondTime) { (entries) in
+            self.values = entries
             DispatchQueue.main.async{self.hideActivityIndicator()}
             self.tableView.reloadData()
         }
@@ -227,10 +302,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     //except delete condition, it sends user to add to portfolio page
     @IBAction func addButtonClicked(_ sender: Any)
     {
-        if !deleteMode
-        {
-            self.performSegue(withIdentifier: "toOperationPortfolio", sender: self)
-        }
+        if !deleteMode {self.performSegue(withIdentifier: "toOperationPortfolio", sender: self)}
         else
         {
             if !self.coinsForDeleting.isEmpty
@@ -238,7 +310,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 CoreDataPortfolio.deleteCoinFromPortfolio(ids: self.coinsForDeleting) { (check) in
                     if check {
                         self.deleteMode = false
-                        self.update()
+                        self.fetchData()
                         self.tableView.allowsMultipleSelection = false
                         self.tableView.allowsMultipleSelectionDuringEditing = false
                         self.editButton.tintColor = Util.hexStringToUIColor(hex: "797676")
@@ -279,57 +351,6 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func openOperationPage(sender: Any) {self.performSegue(withIdentifier: "toOperationPortfolio", sender: self)}
-    
-    ///gets coin attributes from api
-    func getCoinsForPortfolio()
-    {
-        var apiString = ""
-        var portfolioListTemp = [Coin]()
-        for (id,_) in self.portfolioTotalDict
-        {
-            if apiString == "" {apiString = id}
-            else { apiString = apiString + "," + id}
-        }
-        if apiString != ""
-        {
-            DispatchQueue.main.async{self.showActivityIndicator()}
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: apiString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: [String: Int](), priceChangePercentage: "24h,7d") { (result) in //gets coins from api
-                    portfolioListTemp.append(contentsOf: result)
-                    portfolioListTemp = portfolioListTemp.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.portfolioList = portfolioListTemp
-                    DispatchQueue.main.async
-                    {
-                        self.hideActivityIndicator()
-                        CoreDataPortfolio.calculatePrincipalMoney { (principalMoney) in
-                            self.portfolioPrincipalMoney = principalMoney
-                            self.portfolioCalculations = self.calculateTotalValues(portfolio: self.portfolioList, portfolioTotalDict: self.portfolioTotalDict, principalMoney: principalMoney)
-                            self.tableView.reloadData()
-                        }
-                    }
-            }
-        }
-        else
-        {
-            self.portfolioList = [Coin]()
-            self.tableView.reloadData()
-        }
-        
-    }
-    
-    /// calculates current total value of user's coins, loss or profit and percentage of loss or profit
-    func calculateTotalValues(portfolio : [Coin], portfolioTotalDict : [String:Double], principalMoney : Double) -> [Double] //return array's size will be 3
-    {
-        var returnArray = [Double]()
-        var currentTotalMoney : Double = 0 // current total value of user's coins
-        for coin in portfolio
-        {
-            currentTotalMoney += coin.getPrice().doubleValue * portfolioTotalDict[coin.getId()]!
-        }
-        let lossOrProfit = currentTotalMoney - principalMoney // loss or profit
-        let percentage = (currentTotalMoney - principalMoney) / 100 * principalMoney
-        returnArray.append(currentTotalMoney); returnArray.append(lossOrProfit); returnArray.append(percentage)
-        return returnArray
-    }
     
     //shows spinner
     func showActivityIndicator()
