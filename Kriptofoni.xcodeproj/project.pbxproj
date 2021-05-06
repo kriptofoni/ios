@@ -30,6 +30,8 @@
 		B240B77B263AC89C00A9F7D9 /* PortfolioCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B240B77A263AC89C00A9F7D9 /* PortfolioCoin.swift */; };
 		B242DFEE261591AD000A5F6A /* Core.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B242DFEC261591AD000A5F6A /* Core.xcdatamodeld */; };
 		B25D0D8A260FD317004DA9F9 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D0D89260FD317004DA9F9 /* MainController.swift */; };
+		B25D57732643FF5D003A4E2B /* NewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D57722643FF5D003A4E2B /* NewsController.swift */; };
+		B25D577C26440EC1003A4E2B /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D577B26440EC1003A4E2B /* FiatConverter.swift */; };
 		B271A8AD261241700088C94D /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B271A8AC261241700088C94D /* Coin.swift */; };
 		B2734EDB261EFC6F004F4296 /* AddToPortfolioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EDA261EFC6F004F4296 /* AddToPortfolioController.swift */; };
 		B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */; };
@@ -42,7 +44,6 @@
 		B2A1AA0F263866E40073550D /* PortfolioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA0E263866E40073550D /* PortfolioController.swift */; };
 		B2A1AA1726386B6B0073550D /* PortfolioFirstCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA1626386B6B0073550D /* PortfolioFirstCell.swift */; };
 		B2A1AA1D26386BE90073550D /* PortfolioThirdCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */; };
-		B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC430263160C700F2562D /* FiatConverter.swift */; };
 		B2ADC435263160C800F2562D /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC431263160C700F2562D /* Tools.swift */; };
 		B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC432263160C800F2562D /* ContractAndAbout.swift */; };
 		B2ADC437263160C800F2562D /* CooperationAndHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ADC433263160C800F2562D /* CooperationAndHelp.swift */; };
@@ -115,6 +116,8 @@
 		B240B77A263AC89C00A9F7D9 /* PortfolioCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioCoin.swift; sourceTree = "<group>"; };
 		B242DFED261591AD000A5F6A /* Core.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Core.xcdatamodel; sourceTree = "<group>"; };
 		B25D0D89260FD317004DA9F9 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		B25D57722643FF5D003A4E2B /* NewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsController.swift; sourceTree = "<group>"; };
+		B25D577B26440EC1003A4E2B /* FiatConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
 		B271A8AC261241700088C94D /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
 		B2734EDA261EFC6F004F4296 /* AddToPortfolioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPortfolioController.swift; sourceTree = "<group>"; };
 		B2734EE7261EFCE3004F4296 /* TwoButtonOperationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonOperationCell.swift; sourceTree = "<group>"; };
@@ -127,7 +130,6 @@
 		B2A1AA0E263866E40073550D /* PortfolioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioController.swift; sourceTree = "<group>"; };
 		B2A1AA1626386B6B0073550D /* PortfolioFirstCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioFirstCell.swift; sourceTree = "<group>"; };
 		B2A1AA1C26386BE90073550D /* PortfolioThirdCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioThirdCell.swift; sourceTree = "<group>"; };
-		B2ADC430263160C700F2562D /* FiatConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiatConverter.swift; sourceTree = "<group>"; };
 		B2ADC431263160C700F2562D /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		B2ADC432263160C800F2562D /* ContractAndAbout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContractAndAbout.swift; sourceTree = "<group>"; };
 		B2ADC433263160C800F2562D /* CooperationAndHelp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CooperationAndHelp.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				B223BAB6260CEBF30071AEB9 /* Home */,
 				B232A6B6262ABDCD00FECF9B /* Alerts */,
 				B2A1AA0A263866C90073550D /* Portfolio */,
+				B25D576E2643FF02003A4E2B /* News */,
 				B2ADC42C26315FD500F2562D /* More */,
 			);
 			path = "View Controllers";
@@ -338,6 +341,14 @@
 			path = "Core Data";
 			sourceTree = "<group>";
 		};
+		B25D576E2643FF02003A4E2B /* News */ = {
+			isa = PBXGroup;
+			children = (
+				B25D57722643FF5D003A4E2B /* NewsController.swift */,
+			);
+			path = News;
+			sourceTree = "<group>";
+		};
 		B284872C26419CDB005F7526 /* Coin Gecko Api */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,9 +384,9 @@
 			isa = PBXGroup;
 			children = (
 				B2ADC451263161AB00F2562D /* MoreController.swift */,
+				B25D577B26440EC1003A4E2B /* FiatConverter.swift */,
 				B2ADC432263160C800F2562D /* ContractAndAbout.swift */,
 				B2ADC433263160C800F2562D /* CooperationAndHelp.swift */,
-				B2ADC430263160C700F2562D /* FiatConverter.swift */,
 				B2ADC431263160C700F2562D /* Tools.swift */,
 				B2ADC4602631631700F2562D /* Pdf Files */,
 				B2ADC4502631612C00F2562D /* Cells */,
@@ -673,7 +684,6 @@
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
 				B2ADC44C2631611300F2562D /* ToolsCell.swift in Sources */,
-				B2ADC434263160C800F2562D /* FiatConverter.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
 				B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */,
 				B2A1AA0F263866E40073550D /* PortfolioController.swift in Sources */,
@@ -694,6 +704,7 @@
 				B2851F5D263C26F800A23EA8 /* CoreDataPortfolio.swift in Sources */,
 				B2D5461E262352E9004DD5BB /* Util.swift in Sources */,
 				B2ADC437263160C800F2562D /* CooperationAndHelp.swift in Sources */,
+				B25D57732643FF5D003A4E2B /* NewsController.swift in Sources */,
 				B284872E26419CFE005F7526 /* CoinGeckoCharts.swift in Sources */,
 				B2734EDB261EFC6F004F4296 /* AddToPortfolioController.swift in Sources */,
 				B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */,
@@ -707,6 +718,7 @@
 				B232A6CF262AC36600FECF9B /* EmptyWatchlistCell.swift in Sources */,
 				B2ADC44B2631611300F2562D /* CoopAndHelpTextViewCell.swift in Sources */,
 				B2734EE8261EFCE3004F4296 /* TwoButtonOperationCell.swift in Sources */,
+				B25D577C26440EC1003A4E2B /* FiatConverter.swift in Sources */,
 				B2CB6EAF261B22D100F8FF30 /* FirstCell.swift in Sources */,
 				B240B772263AC07E00A9F7D9 /* PortfolioCoinCell.swift in Sources */,
 			);

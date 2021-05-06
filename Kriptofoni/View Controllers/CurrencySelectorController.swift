@@ -21,7 +21,7 @@ class CurrencySelectorController: UIViewController, UITableViewDelegate, UITable
             var array = currencies
             array.remove(at: 0)
             self.currencyArray = array
-        } onFailure: {print("Error: Failed to load currencies.")}
+        } 
         tableView.delegate = self; tableView.dataSource = self
     }
 

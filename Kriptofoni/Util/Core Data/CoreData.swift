@@ -14,7 +14,7 @@ class CoreData
 
 {
     //
-    static func getCoins(completionBlock: @escaping ([SearchCoin]) -> Void,onFailure: () -> Void) -> Void
+    static func getCoins(completionBlock: @escaping ([SearchCoin]) -> Void) -> Void
     {
         var newCurrencies = [SearchCoin]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -105,7 +105,7 @@ class CoreData
     
     
     /// Gets saved currency types from core data and convert these types to string array from a string
-    static func getSupportedCurrencies(completionBlock: @escaping ([String]) -> Void,onFailure: () -> Void) -> Void
+    static func getSupportedCurrencies(completionBlock: @escaping ([String]) -> Void) -> Void
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.newBackgroundContext()

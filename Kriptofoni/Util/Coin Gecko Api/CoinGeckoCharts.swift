@@ -13,59 +13,77 @@ import Charts
 class CoinGeckoCharts
 {
     
-    static func getDataPortfolioChart(ids: [String: Double], currency: String,secondTime: String,completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
+    
+    //Gets prices for chart in portfolio, calculates total sum of prices for drawing charts
+    static func getDataPortfolioChart(ids: [String: Double], currency: String,type: String,completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
     {
-        var array = [ChartDataEntry]()
-        completionBlock(array)
-        /*
-        var array = [ChartDataEntry]()
-        let now = NSDate().timeIntervalSince1970
-        let nowString = String(now)
-        //let urlFor24H = "https://api.coingecko.com/api/v3/coins/\(id)/market_chart/range?vs_currency=\(currency)&from=\(secondTime)&to=\(nowString)"
-        let url = NSURL(string: urlFor24H)
-        var request = URLRequest(url: url! as URL)
-        request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            // Check if Error took place
-            if let error = error
-            {
-                print("Error took place \(error)")
-                return
-            }
-            /*
-            guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
-            else
-            {
-                  print("Error with the response, unexpected status code: \(response)")
-                  return
-            }
-            */
-            if let data = data
-            {
-                do
+        var coinsInPortfolio = [PortfolioOperation]()
+        CoreDataPortfolio.getPortfolio { (coins) in coinsInPortfolio = coins}
+        var result = [ChartDataEntry]()
+        var yValues = [[ChartDataEntry]]()
+        let myGroup = DispatchGroup()
+        for (key,_) in ids
+        {
+            var yValue = [ChartDataEntry]()
+            myGroup.enter()
+            getDataForCharts(id: key, currency: Currency.currencyKey, type: type) { (entries) in
+                for item in entries
                 {
-                    
-                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:Any]
-                    let prices = jSONResult["prices"] as! [[NSNumber]]
-                    var x: Double = 1.0
-                    for (index,price) in prices.enumerated() // take quarter of this
+                    var quantityCount: Double = 0
+                    for coin in coinsInPortfolio
                     {
-                        if index % 4 == 0
+                        if coin.getCoinId() == key
                         {
-                            let epochTime = TimeInterval(price[0].doubleValue / 1000)
-                            let charData = ChartDataEntry(x: epochTime , y: price[1].doubleValue)
-                            array.append(charData)
-                            x = x + 1
+                            let newTimestamp = coin.getDate() - (1000*60*20)
+                            if newTimestamp < item.x
+                            {
+                                if coin.getType() {quantityCount += coin.getQuantity()}
+                                else {quantityCount -= coin.getQuantity()}
+                            }
+                            
                         }
                     }
-                    completionBlock(array)
+                    if quantityCount > 0
+                    {
+                        item.y = quantityCount * item.y
+                    }
+                    else
+                    {
+                        item.y = 0
+                    }
+                    yValue.append(item)
                     
                 }
-                catch{print("API FETCH FAILED CALL COUNT getDataForCharts"}
+                yValues.append(yValue)
+                myGroup.leave()
             }
         }
-        task.resume()
-      */
+        myGroup.notify(queue: .main)
+        {
+            //sort
+            var length = Int.max
+            var instance = [ChartDataEntry]()
+            for value in yValues
+            {
+                let count = value.count
+                if count < length
+                {
+                    length = count
+                    instance = value
+                }
+            }
+            for (index,item) in instance.enumerated()
+            {
+                var total : Double = 0
+                for value in yValues
+                {
+                    total += value[index].y
+                }
+                item.y = total
+                result.append(item)
+            }
+            completionBlock(result)
+        }
     }
  
     
@@ -80,6 +98,7 @@ class CoinGeckoCharts
         var secondTime = ""
         switch type
         {
+            case "one_hour": secondTime = String(now - (60*60))
             case "twentyFour_hours": secondTime  = String(now - (60*60*24))
             case "one_week_before": secondTime = String(now - (60*60*24*7))
             case "one_month_before": secondTime = String(now - (60*60*24*31))
@@ -100,14 +119,14 @@ class CoinGeckoCharts
                 print("Error took place \(error)")
                 return
             }
-            /*
+            
             guard let httpResponse = response as? HTTPURLResponse,(200...299).contains(httpResponse.statusCode)
             else
             {
                   print("Error with the response, unexpected status code: \(response)")
                   return
             }
-            */
+            
             if let data = data
             {
                 do
@@ -118,13 +137,11 @@ class CoinGeckoCharts
                     var x: Double = 1.0
                     for (index,price) in prices.enumerated() // take quarter of this
                     {
-                        if index % 4 == 0
-                        {
-                            let epochTime = TimeInterval(price[0].doubleValue / 1000)
-                            let charData = ChartDataEntry(x: epochTime , y: price[1].doubleValue)
-                            array.append(charData)
-                            x = x + 1
-                        }
+                        if type != "one_hour" && index % 4 != 0 {continue}
+                        let epochTime = TimeInterval(price[0].doubleValue / 1000)
+                        let charData = ChartDataEntry(x: epochTime , y: price[1].doubleValue)
+                        array.append(charData)
+                        x = x + 1
                     }
                     completionBlock(array)
                     

@@ -9,6 +9,7 @@ import Foundation
 import Charts
 
 @objc(LineChartFormatter)
+
 class LineChartFormatter: NSObject, IAxisValueFormatter
 {
     var type : String

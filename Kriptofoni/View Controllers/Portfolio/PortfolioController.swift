@@ -8,7 +8,7 @@
 import UIKit
 import Charts
 
-class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate
 {
     @IBOutlet weak var addButton: UIBarButtonItem!
     @IBOutlet weak var currencyButton: UIBarButtonItem!
@@ -23,12 +23,13 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     var portfolioCalculations = [Double]() // index 0 --> total value of coins, index 1 --> total loss or profit, index 2 --> percentage of loss or profit
     var activityView: UIActivityIndicatorView?
     let now = NSDate().timeIntervalSince1970
-    var secondTime = ""
+    var chartType = "one_hour"
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
+        
         // Do any additional setup after loading the view.
     }
     
@@ -36,11 +37,10 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         self.currencyButton.title = Currency.currencyKey.uppercased()
-        secondTime = String((now - (60*60)))
         fetchData()
     }
     
-    //fetches all data, should be called in viewWillAppear and when user press delete button
+    ///fetches all data, should be called in viewWillAppear and when user press delete button
     func fetchData()
     {
         CoreDataPortfolio.calculateTotalCoin { (result) in
@@ -49,14 +49,11 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    
     ///update method for this controller,
     func updateWithTimer()
     {
         getCoinsForPortfolio(isUpdate: true)
     }
-    
-    
     
     ///gets coin attributes from api
     func getCoinsForPortfolio(isUpdate: Bool) //if this is an update time, make visible this spinner
@@ -81,7 +78,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                         CoreDataPortfolio.calculatePrincipalMoney { (principalMoney) in
                             self.portfolioPrincipalMoney = principalMoney
                             self.portfolioCalculations = self.calculateTotalValues(portfolio: self.portfolioList, portfolioTotalDict: self.portfolioTotalDict, principalMoney: principalMoney)
-                            CoinGeckoCharts.getDataPortfolioChart(ids: self.portfolioTotalDict, currency: Currency.currencyKey, secondTime: self.secondTime) { (newValues) in
+                            CoinGeckoCharts.getDataPortfolioChart(ids: self.portfolioTotalDict, currency: Currency.currencyKey, type: self.chartType) { (newValues) in
                                 self.values = newValues
                                 if !isUpdate
                                 {
@@ -213,6 +210,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath) as! PortfolioChartCell
                     for (index,item) in cell.buttons.enumerated() {item.addTarget(self, action: #selector(self.chartTimerClicked(sender:)), for: .touchUpInside); item.tag = index}
+                    cell.chartView.delegate = self
                     ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: values, dict: [:], chartType: "")
                     return cell
                 }
@@ -278,21 +276,20 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     // MARK: - Button Clicks
     @objc func chartTimerClicked(sender: UIButton)
     {
-        
         switch sender.tag
         {
-            case 0: self.secondTime = String((now - (60*60)))
-            case 1: self.secondTime = String((now - (60*60*24))) // 24 hour
-            case 2: self.secondTime = String((now - (60*60*24*7))) // 1 week
-            case 3: self.secondTime = String((now - (60*60*24*31))) // 1 month
-            case 4: self.secondTime = String((now - (60*60*24*31*3))) // 3 month
-            case 5: self.secondTime = String((now - (60*60*24*31*12))) // 1 year
-            case 6: self.secondTime = String(0) // All
+            case 0: chartType = "one_hour"
+            case 1: chartType = "twentyFour_hours"// 24 hour
+            case 2: chartType = "one_week_before"// 1 week
+            case 3: chartType = "one_month_before"// 1 month
+            case 4: chartType = "three_months_before"// 3 month
+            case 5: chartType = "one_year_before"// 1 year
+            case 6: chartType = "all"// All
             default:
                 print("error")
         }
         DispatchQueue.main.async{self.showActivityIndicator()}
-        CoinGeckoCharts.getDataPortfolioChart(ids: portfolioTotalDict, currency: Currency.currencyKey, secondTime: self.secondTime) { (entries) in
+        CoinGeckoCharts.getDataPortfolioChart(ids: portfolioTotalDict, currency: Currency.currencyKey, type: chartType) { (entries) in
             self.values = entries
             DispatchQueue.main.async{self.hideActivityIndicator()}
             self.tableView.reloadData()
@@ -355,6 +352,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     //shows spinner
     func showActivityIndicator()
     {
+        hideActivityIndicator()
         if #available(iOS 13.0, *) {activityView = UIActivityIndicatorView(style: .medium)}
         else {activityView = UIActivityIndicatorView(style: .gray)}
         activityView?.center = self.view.center

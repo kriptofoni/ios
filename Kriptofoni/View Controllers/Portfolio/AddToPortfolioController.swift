@@ -19,7 +19,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     var dateTimestamp : Double = 0 //holds the timestamp of date picker result
     var portfolioTotalDict  = [String:Double]()
     var operationType = true // true -> buy , false -> sell
-    
+    let numberFormatter = NumberFormatter()
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
@@ -31,14 +31,14 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        numberFormatter.locale = Locale(identifier: "en_US")
+        numberFormatter.decimalSeparator = "."
         self.tableView.delegate = self;self.tableView.dataSource = self;
         CoreData.getCoins { [self] (result) in
             searchCoinArray = result
             print("Count" + String(searchCoinArray.count))
                 
-        } onFailure: {
-            print("CORE DATA GETTING COINS ERROR")
-        }
+        } 
         // Do any additional setup after loading the view.
     }
     

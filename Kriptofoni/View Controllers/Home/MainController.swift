@@ -26,16 +26,20 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var mostIncIn24H = [Coin]();var mostDecIn24H = [Coin]();var mostIncIn7D = [Coin]();var mostDecIn7D = [Coin]();var coinArray = [Coin]()
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
-    var tableViewPosition = 0;var tableViewPage = 1
+    var tableViewPosition = 0;
+    static var tableViewPage = 1
+    static var isCoreDataUpdated = false
     var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
     var searchActive = false
     var timer: Timer?
     var isFirstTime = true
     var sSize: CGRect = UIScreen.main.bounds
+    var scrollingFetchProcess = false
     
    
     //Locks the screen before view is appeared and realease this locking before view is disappeared
     override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all);timer?.invalidate();timer = nil}
+    
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
@@ -45,8 +49,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         addSwipeGesture()
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
-        update()
-        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        appStartingControls()
+        //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         
     }
     
@@ -54,7 +58,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        appStartingControls()
         segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "COINS",  at: 0)
         segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
         segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
@@ -67,51 +70,57 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
-            showActivityIndicator()
+            showActivityIndicator(scroll: false)
             CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
                 DispatchQueue.main.async{
                     self.navigationItem.title = navigationTitle
+                    self.saveCurrencies()
+                    self.getSearchArray()
                     self.hideActivityIndicator()
                 }
             }
-            saveCurrencies()
-            getSearchArray()
-            
         }
-        else//Core must not be empty, it should update itself
+        else//Core must not be empty
         {
             print("CORE DATA IS NOT EMPTY")
-            CoreData.getSupportedCurrencies { (currencies) in
-                self.currencyTypes = currencies
-                print(String(self.currencyTypes.count) + "COUNT")
-            } onFailure: {print("Error: Failed to load currencies.")}
-            CoreData.getCoins { (result) in
-                DispatchQueue.main.async{self.hideActivityIndicator()}
-                self.searchCoinArray = result
-                self.update()
-                if self.isFirstTime // if it is the first time after app is launched
-                {
-                    DispatchQueue.global(qos: .background).async {
-                        self.getSearchArray()
-                        self.updateCurrencies()
-                       print("This is run on the background queue")
+            if !MainController.isCoreDataUpdated //App just update one time its core data for every time app has been launched
+            {
+                MainController.isCoreDataUpdated = true
+                CoreData.getSupportedCurrencies { (currencies) in self.currencyTypes = currencies}
+                CoreData.getCoins { (result) in
+                    self.searchCoinArray = result
+                    self.start()
+                    DispatchQueue.global(qos: .background).async
+                    {
+                            self.getSearchArray()
+                            self.updateCurrencies()
+                            print("CORE DATA IS UPDATED.")
+                            print("This is run on the background queue")
                     }
+                    
                 }
-                //self.timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
-            } onFailure: {print("HATAAA")}
-
+            }
         }
     }
    
-    @objc func update()
+    @objc func start()
     {
-        print("UPDATED MAIN")
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }
-        getCoins(page: tableViewPage)
-        getCoinsFor24(page: 1, type: "INC");getCoinsFor24(page: 1, type: "DEC")
-        getCoinsFor7(page: 1, type: "INC");getCoinsFor7(page: 1, type: "DEC")
+        getCoins(page: 1, update: false, scroll: false)
+        getCoinsFor24(page: 1, type: "INC",update: false);getCoinsFor24(page: 1, type: "DEC",update: false)
+        getCoinsFor7(page: 1, type: "INC", update: false);getCoinsFor7(page: 1, type: "DEC", update: false)
+    }
+    
+    @objc func update()
+    {
+        CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
+            DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
+        }
+        getCoins(page: 1, update: true, scroll: false)
+        getCoinsFor24(page: 1, type: "INC",update: true);getCoinsFor24(page: 1, type: "DEC",update: true)
+        getCoinsFor7(page: 1, type: "INC", update: true);getCoinsFor7(page: 1, type: "DEC", update: true)
     }
     
     func getSearchArray()
@@ -159,11 +168,9 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                         print("CURRENCIES ARE SAVED.")
                         CoreData.getCoins { [self] (result) in
                             self.searchCoinArray = result
-                            self.getCoinsFor24(page: 1, type: "INC");self.getCoinsFor24(page: 1, type: "DEC")
-                            self.getCoinsFor7(page: 1, type: "INC");self.getCoinsFor7(page: 1, type: "DEC")
-                        } onFailure: {
-                            print("CORE DATA GETTING COINS ERROR")
-                        }
+                            self.getCoinsFor24(page: 1, type: "INC",update: false);self.getCoinsFor24(page: 1, type: "DEC",update: false)
+                            self.getCoinsFor7(page: 1, type: "INC",update: false);self.getCoinsFor7(page: 1, type: "DEC",update: false)
+                        } 
                     }
                     catch{print("error")}
                 }
@@ -205,19 +212,35 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
     }
     
-    ///Gets COINS from api
-    func getCoins(page : Int)
+    ///Gets Coins from api. If update is true, func only update first 100 coin.
+    func getCoins(page : Int, update: Bool, scroll: Bool)
     {
-        let emptyHashMap = [String : Int]()
-        CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: emptyHashMap, priceChangePercentage: "24h,7d" ) { (result) in
-            self.coinArray.removeAll(keepingCapacity: false)
-            self.coinArray.append(contentsOf: result)
-            DispatchQueue.main.async{self.tableView.reloadData()}
+        if scroll {showActivityIndicator(scroll: true)}
+        CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: [String : Int](), priceChangePercentage: "24h,7d" ) { (result) in
+            
+            if update
+            {
+                let first100Coin = result
+                for (index,coin) in first100Coin.enumerated()
+                {
+                    self.coinArray[index] = coin
+                }
+                print("Page1 Updated.")
+            }
+            else
+            {
+                self.coinArray.append(contentsOf: result)
+                print(String(self.coinArray.count) + "Count" + String(page) + "Page")
+            }
+            DispatchQueue.main.async {
+                if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
+                self.tableView.reloadData()
+            }
         }
     }
     
     /// Get coins according to 24H changes, type is for selecting INC or DEC
-    func getCoinsFor24(page: Int, type : String)
+    func getCoinsFor24(page: Int, type : String, update: Bool)
     {
         var copyArray = self.searchCoinArray
         var coinNumber = [String : Int]()
@@ -253,7 +276,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     /// Gets coins according to 7D changes, type is for selecting INC or DEC
-    func getCoinsFor7(page: Int, type: String)
+    func getCoinsFor7(page: Int, type: String, update: Bool)
     {
         var copyArray = self.searchCoinArray
         var coinNumber = [String : Int]()
@@ -288,6 +311,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
     }
     
+    ///Gets supported currencies from api and saves them to core data
     func saveCurrencies()
     {
         CoinGecko.getSupportedCurrencies() { (resultString) in
@@ -310,6 +334,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
     }
     
+    ///Gets supported currencies from api and updates into old data
     func updateCurrencies()
     {
         CoinGecko.getSupportedCurrencies() { (resultString) in
@@ -337,6 +362,15 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     
     // MARK: - Table View Functions
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == coinArray.count-1 && !scrollingFetchProcess { //you might decide to load sooner than -1 I guess...
+            MainController.tableViewPage += 1
+            scrollingFetchProcess = true
+            getCoins(page: MainController.tableViewPage, update: false, scroll: true)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         var count = 0
@@ -362,40 +396,13 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         {
             var cellArrayGetIndex =  Coin()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
-            //print(String(indexPath.row) + "INDEX")
-            
             switch tableViewPosition
             {
-                case 0:
-                    if !coinArray.isEmpty {cellArrayGetIndex = self.coinArray[indexPath.row]}
-                    if indexPath.row  == (tableViewPage * 100) / 2
-                    {
-                        //tableViewPage += 1; getCoins(page: self.tableViewPage);  print("cem")
-                    }
-                case 1:
-                    if !mostIncIn24H.isEmpty{cellArrayGetIndex = self.mostIncIn24H[indexPath.row]}
-                    if indexPath.row > 30
-                    {
-                        
-                    }
-                case 2:
-                    if !mostDecIn24H.isEmpty{cellArrayGetIndex = self.mostDecIn24H[indexPath.row]}
-                    if indexPath.row > 30
-                    {
-                        
-                    }
-                case 3:
-                    if !mostIncIn7D.isEmpty {cellArrayGetIndex = self.mostIncIn7D[indexPath.row]}
-                    if indexPath.row > 30
-                    {
-                        
-                    }
-                case 4:
-                    if !mostDecIn7D.isEmpty {cellArrayGetIndex = self.mostDecIn7D[indexPath.row]}
-                    if indexPath.row > 30
-                    {
-                        
-                    }
+                case 0: if !coinArray.isEmpty {cellArrayGetIndex = self.coinArray[indexPath.row]}
+                case 1: if !mostIncIn24H.isEmpty{cellArrayGetIndex = self.mostIncIn24H[indexPath.row]}
+                case 2: if !mostDecIn24H.isEmpty{cellArrayGetIndex = self.mostDecIn24H[indexPath.row]}
+                case 3: if !mostIncIn7D.isEmpty {cellArrayGetIndex = self.mostIncIn7D[indexPath.row]}
+                case 4: if !mostDecIn7D.isEmpty {cellArrayGetIndex = self.mostDecIn7D[indexPath.row]}
                 default:print("HATA")
             }
             Util.setCurrencyCell(cell: cell, coin: cellArrayGetIndex, index: indexPath.row, mainPage: true)
@@ -538,11 +545,13 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     //shows spinner
-    func showActivityIndicator()
+    func showActivityIndicator(scroll : Bool)
     {
         if #available(iOS 13.0, *) {activityView = UIActivityIndicatorView(style: .medium)}
         else {activityView = UIActivityIndicatorView(style: .gray)}
-        activityView?.center = self.view.center
+        if scroll {activityView?.center = CGPoint(x: self.view.center.x, y: UIScreen.main.bounds.size.height * 3/4)}
+        else{activityView?.center = self.view.center}
+        
         self.view.addSubview(activityView!)
         activityView?.startAnimating()
     }

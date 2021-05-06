@@ -33,7 +33,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         self.currencyChangeButton.title = Currency.currencyKey.uppercased()
-        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(start), userInfo: nil, repeats: true)
         if segmentedView.selectedSegmentIndex == 1
         {
             refreshWatchingList()
@@ -272,9 +272,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
             searchCoinArray = result
             print("Count" + String(searchCoinArray.count))
             performSegue(withIdentifier: "toAddWatchingList", sender: self)
-        } onFailure: {
-            print("CORE DATA GETTING COINS ERROR")
-        }
+        } 
     }
     
     @IBAction func currencySelectorButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelector", sender: self)}
@@ -330,9 +328,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
                 searchCoinArray = result
                 print("Count" + String(searchCoinArray.count))
                 performSegue(withIdentifier: "toAddWatchingList", sender: self)
-            } onFailure: {
-                print("CORE DATA GETTING COINS ERROR")
-            }
+            } 
         }
         
     }

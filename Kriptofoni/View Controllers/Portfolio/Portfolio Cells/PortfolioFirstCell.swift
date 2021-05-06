@@ -14,6 +14,7 @@ class PortfolioFirstCell: UITableViewCell {
     @IBOutlet weak var label3: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
         // Initialization code
     }
 
