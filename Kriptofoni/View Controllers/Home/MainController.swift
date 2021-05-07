@@ -27,7 +27,11 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;
-    static var tableViewPage = 1
+    static var coinsPage = 1
+    static var mostIncIn24Page = 1
+    static var mostDecIn24Page = 1
+    static var mostIncIn7dPage = 1
+    static var mostDecIn7dPage  = 1
     static var isCoreDataUpdated = false
     var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
     var searchActive = false
@@ -109,8 +113,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }
         getCoins(page: 1, update: false, scroll: false)
-        getCoinsFor24(page: 1, type: "INC",update: false);getCoinsFor24(page: 1, type: "DEC",update: false)
-        getCoinsFor7(page: 1, type: "INC", update: false);getCoinsFor7(page: 1, type: "DEC", update: false)
+        getCoinsFor24(page: 1, type: "INC",update: false, scroll: false);getCoinsFor24(page: 1, type: "DEC",update: false, scroll: false)
+        getCoinsFor7(page: 1, type: "INC", update: false, scroll: false);getCoinsFor7(page: 1, type: "DEC", update: false, scroll: false)
     }
     
     @objc func update()
@@ -119,8 +123,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }
         getCoins(page: 1, update: true, scroll: false)
-        getCoinsFor24(page: 1, type: "INC",update: true);getCoinsFor24(page: 1, type: "DEC",update: true)
-        getCoinsFor7(page: 1, type: "INC", update: true);getCoinsFor7(page: 1, type: "DEC", update: true)
+        getCoinsFor24(page: 1, type: "INC",update: true, scroll: false);getCoinsFor24(page: 1, type: "DEC",update: true, scroll: false)
+        getCoinsFor7(page: 1, type: "INC", update: true,scroll: false);getCoinsFor7(page: 1, type: "DEC", update: true,scroll: false)
     }
     
     func getSearchArray()
@@ -168,8 +172,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                         print("CURRENCIES ARE SAVED.")
                         CoreData.getCoins { [self] (result) in
                             self.searchCoinArray = result
-                            self.getCoinsFor24(page: 1, type: "INC",update: false);self.getCoinsFor24(page: 1, type: "DEC",update: false)
-                            self.getCoinsFor7(page: 1, type: "INC",update: false);self.getCoinsFor7(page: 1, type: "DEC",update: false)
+                            self.getCoinsFor24(page: 1, type: "INC",update: false,scroll: false);self.getCoinsFor24(page: 1, type: "DEC",update: false, scroll: false)
+                            self.getCoinsFor7(page: 1, type: "INC",update: false, scroll: false);self.getCoinsFor7(page: 1, type: "DEC",update: false, scroll: false)
                         } 
                     }
                     catch{print("error")}
@@ -217,7 +221,6 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     {
         if scroll {showActivityIndicator(scroll: true)}
         CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: page, sparkline: false, hashMap: [String : Int](), priceChangePercentage: "24h,7d" ) { (result) in
-            
             if update
             {
                 let first100Coin = result
@@ -227,10 +230,15 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 }
                 print("Page1 Updated.")
             }
-            else
+            else if scroll
             {
                 self.coinArray.append(contentsOf: result)
                 print(String(self.coinArray.count) + "Count" + String(page) + "Page")
+            }
+            else if !update && !scroll
+            {
+                self.coinArray.append(contentsOf: result)
+                print("Page1 First load.")
             }
             DispatchQueue.main.async {
                 if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
@@ -240,44 +248,91 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     /// Get coins according to 24H changes, type is for selecting INC or DEC
-    func getCoinsFor24(page: Int, type : String, update: Bool)
+    func getCoinsFor24(page: Int, type : String, update: Bool, scroll: Bool)
     {
+        if scroll {showActivityIndicator(scroll: true)}
         var copyArray = self.searchCoinArray
         var coinNumber = [String : Int]()
+        print(String(copyArray.count) + "Cop6 sl")
         if copyArray.count > 6000
         {
             var newString = ""
             if type == "INC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue})}
             else if type == "DEC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue})}
-            for m in 0...49
+            for m in ((page-1)*50)...((page*50)-1)
             {
-                newString += copyArray[m].getId() + ","
-                coinNumber[copyArray[m].getId()] = m + 1
+                    newString += copyArray[m].getId() + ","
+                    coinNumber[copyArray[m].getId()] = m + 1
             }
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
-                    self.mostIncIn24H.removeAll(keepingCapacity: false)
-                    self.mostIncIn24H.append(contentsOf: result)
-                    self.mostIncIn24H = self.mostIncIn24H.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                    if update
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        for (index,coin) in first50Coin.enumerated()
+                        {
+                            self.mostIncIn24H[index] = coin
+                        }
+                        print("MostIncIn24H Updated.")
+                    }
+                    else if scroll
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        self.mostIncIn24H.append(contentsOf: first50Coin)
+                        print(String(self.mostIncIn24H.count) + "Count" + String(page) + "Page")
+                    }
+                    else if !update && !scroll //First load
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        self.mostIncIn24H.append(contentsOf: first50Coin)
+                        print("MostIncIn24H First Load.")
+                    }
                 }
                 else if type == "DEC"
                 {
-                    self.mostDecIn24H.removeAll(keepingCapacity: false)
-                    self.mostDecIn24H.append(contentsOf: result)
-                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.mostDecIn24H = self.mostDecIn24H.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                    if update
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        for (index,coin) in first50Coin.enumerated()
+                        {
+                            self.mostDecIn24H[index] = coin
+                        }
+                        print("MostDecIn24H Updated.")
+                    }
+                    else if scroll
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        self.mostDecIn24H.append(contentsOf: first50Coin)
+                        print(String(self.mostDecIn24H.count) + "Count" + String(page) + "Page")
+                    }
+                    else if !update && !scroll //First load
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        self.mostDecIn24H.append(contentsOf: first50Coin)
+                        print("MostIncIn24H Updated.")
+                    }
                 }
-                DispatchQueue.main.async{self.tableView.reloadData()}
+                DispatchQueue.main.async
+                {
+                    if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
+                    self.tableView.reloadData()
+                }
             }
           
         }
     }
     
     /// Gets coins according to 7D changes, type is for selecting INC or DEC
-    func getCoinsFor7(page: Int, type: String, update: Bool)
+    func getCoinsFor7(page: Int, type: String, update: Bool, scroll: Bool)
     {
+        if scroll {showActivityIndicator(scroll: true)}
         var copyArray = self.searchCoinArray
         var coinNumber = [String : Int]()
         if copyArray.count > 6000
@@ -285,27 +340,69 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             var newString = ""
             if type == "INC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue > $1.getPriceChangePercantage7D().doubleValue})}
             else if type == "DEC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue < $1.getPriceChangePercantage7D().doubleValue})}
-            for m in 0...49
+            for m in ((page-1)*50)...((page*50)-1)
             {
-                newString += copyArray[m].getId() + ","
-                coinNumber[copyArray[m].getId()] = m + 1
+                    newString += copyArray[m].getId() + ","
+                    coinNumber[copyArray[m].getId()] = m + 1
             }
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: page , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
+            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
                 if type == "INC"
                 {
-                    self.mostIncIn7D.removeAll(keepingCapacity: false)
-                    self.mostIncIn7D.append(contentsOf: result)
-                    self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.mostIncIn7D = self.mostIncIn7D.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                    if update
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        for (index,coin) in first50Coin.enumerated()
+                        {
+                            self.mostIncIn7D[index] = coin
+                        }
+                        print("MostIncIn7D Updated.")
+                    }
+                    else if scroll
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        self.mostIncIn7D.append(contentsOf: first50Coin)
+                    }
+                    else if !update && !scroll //First load
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        self.mostIncIn7D.append(contentsOf: first50Coin)
+                    }
                 }
                 else if type == "DEC"
                 {
-                    self.mostDecIn7D.removeAll(keepingCapacity: false)
-                    self.mostDecIn7D.append(contentsOf: result)
-                    self.mostDecIn7D = self.mostDecIn7D.sorted(by: {$0.getCount() < $1.getCount()})
-                    self.mostDecIn7D  = self.mostDecIn7D.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                    if update
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        for (index,coin) in first50Coin.enumerated()
+                        {
+                            self.mostDecIn7D[index] = coin
+                        }
+                        print("MostDecIn7D Updated.")
+                    }
+                    else if scroll
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        self.mostDecIn7D.append(contentsOf: first50Coin)
+                    }
+                    else if !update && !scroll //First load
+                    {
+                        var first50Coin = result
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        self.mostDecIn7D.append(contentsOf: first50Coin)
+                    }
+
                 }
-                DispatchQueue.main.async{self.tableView.reloadData()}
+                DispatchQueue.main.async
+                {
+                    if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
+                    self.tableView.reloadData()
+                }
+
             }
             
         }
@@ -364,12 +461,47 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     // MARK: - Table View Functions
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == coinArray.count-1 && !scrollingFetchProcess { //you might decide to load sooner than -1 I guess...
-            MainController.tableViewPage += 1
-            scrollingFetchProcess = true
-            getCoins(page: MainController.tableViewPage, update: false, scroll: true)
+        if !searchActive
+        {
+            var coins = [Coin]()
+            switch segmentedView.selectedSegmentIndex
+            {
+                case 0:
+                        coins = self.coinArray;
+                        if indexPath.row == coins.count-1 && !scrollingFetchProcess
+                        {
+                            MainController.coinsPage += 1;
+                            getCoins(page: MainController.coinsPage, update: false, scroll: true);
+                            scrollingFetchProcess = true
+                        
+                        }
+                case 1:
+                        coins = self.mostIncIn24H;
+                        if indexPath.row == coins.count-1 && !scrollingFetchProcess
+                        {
+                            print("cem")
+                            MainController.mostIncIn24Page += 1
+                            getCoinsFor24(page: MainController.mostIncIn24Page, type: "INC",update: false,scroll: true);
+                            scrollingFetchProcess = true
+                        }
+                    
+                case 2:
+                       coins = self.mostDecIn24H
+                       if indexPath.row == coins.count-1 && !scrollingFetchProcess {MainController.mostDecIn24Page += 1;getCoinsFor24(page: MainController.mostDecIn24Page, type: "DEC",update: false,scroll: true);scrollingFetchProcess = true}
+                    
+                case 3:
+                      coins = self.mostIncIn7D;
+                      if indexPath.row == coins.count-1 && !scrollingFetchProcess { MainController.mostIncIn7dPage += 1;getCoinsFor7(page: MainController.mostIncIn7dPage, type: "INC", update: false, scroll: true);scrollingFetchProcess = true}
+                    
+                case 4:
+                      coins = self.mostDecIn7D;
+                      if indexPath.row == coins.count-1 && !scrollingFetchProcess {MainController.mostDecIn7dPage += 1;getCoinsFor7(page: MainController.mostDecIn7dPage, type: "DEC", update: false,scroll: true);scrollingFetchProcess = true}
+                    
+                default: print("Error")
+            }
         }
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {

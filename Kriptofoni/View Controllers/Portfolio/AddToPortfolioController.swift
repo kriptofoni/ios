@@ -8,7 +8,7 @@
 import UIKit
 import Toast_Swift
 //operation portfolio
-class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate
 {
     @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
@@ -28,6 +28,8 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         self.tableView.reloadData()
         
     }
+    
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -41,6 +43,8 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         } 
         // Do any additional setup after loading the view.
     }
+    
+    
     
     // MARK: - Table View Funcs
     
@@ -113,6 +117,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         return cell
     }
     
+   
     // MARK: - Button Clicked Funcs
     
     @objc func buyButtonClicked(sender: UIButton!) {operationType = true}
@@ -124,36 +129,72 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         let price = getCell2(index: 3).textField.text!
         let fee = getCell2(index: 4).textField.text!
         let note = getCell1(index: 5).textField.text!
-        if !quantity.isEmpty //mandatory variable
+        
+        if !quantity.isEmpty && (Double(quantity) != nil) //mandatory variable
         {
             if !(getCell1(index: 2).textField.text!.isEmpty) // datec controll
             {
-                if !price.isEmpty //mandatory variable
+                if !price.isEmpty && (Double(price) != nil) //mandatory variable
                 {
-                    if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
+                    if fee.isEmpty
                     {
-                        if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
+                        if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
                         {
-                            let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
-                            if portfolioQuantity! > Double(quantity)!
+                            if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
                             {
-                                saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                                let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
+                                if portfolioQuantity! > Double(quantity)!
+                                {
+                                    saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                                }
+                                else
+                                {
+                                    self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
+                                }
                             }
                             else
                             {
-                                self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
+                                self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
                             }
                         }
                         else
                         {
-                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
+                            saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
                         }
                     }
                     else
                     {
-                        saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                        if Double(fee) != nil
+                        {
+                            if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
+                            {
+                                if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
+                                {
+                                    let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
+                                    if portfolioQuantity! > Double(quantity)!
+                                    {
+                                        saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                                    }
+                                    else
+                                    {
+                                        self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
+                                    }
+                                }
+                                else
+                                {
+                                    self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
+                                }
+                            }
+                            else
+                            {
+                                saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                            }
+                        }
+                        else
+                        {
+                            self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid fee.")
+                        }
                     }
-                    
                 }
                 else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid price.")}
             }

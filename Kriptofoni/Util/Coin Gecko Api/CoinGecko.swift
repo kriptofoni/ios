@@ -254,6 +254,7 @@ class CoinGecko
     {
         let baseUrl = "https://api.coingecko.com/api/v3/"
         let newString = baseUrl + "coins/markets/"
+        
         var array = [Coin]()
         var components = URLComponents(string: newString)
         components?.queryItems =

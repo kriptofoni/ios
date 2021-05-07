@@ -72,6 +72,15 @@ class OperationInputCell: UITableViewCell, UITextFieldDelegate
         
     /// Hides the keyboard when the return key pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {textField.resignFirstResponder();return true}
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+           if string == "," {
+               textField.text = textField.text! + "."
+               return false
+           }
+           return true     // Could also filter on numbers only
+   }
+
 
 }
 

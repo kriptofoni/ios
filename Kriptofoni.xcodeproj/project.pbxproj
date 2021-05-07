@@ -63,6 +63,7 @@
 		B2D5476B26451F9500D013C7 /* FiatSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5476A26451F9500D013C7 /* FiatSelectorController.swift */; };
 		B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D75CB02614FBCB000C0259 /* CoreData.swift */; };
 		B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EB6B26261338690056AAB0 /* SearchCell.swift */; };
+		B2F7AA2F264572EF00AEEF8D /* LaunchScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7AA2E264572EF00AEEF8D /* LaunchScreenController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +151,7 @@
 		B2D5476A26451F9500D013C7 /* FiatSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatSelectorController.swift; sourceTree = "<group>"; };
 		B2D75CB02614FBCB000C0259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		B2EB6B26261338690056AAB0 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
+		B2F7AA2E264572EF00AEEF8D /* LaunchScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenController.swift; sourceTree = "<group>"; };
 		C4BBB19FB931770C412FE51F /* Pods_KriptofoniTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KriptofoniTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -238,6 +240,7 @@
 		B218BAF32618B2EB00E45732 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B2F7AA2E264572EF00AEEF8D /* LaunchScreenController.swift */,
 				B2BBFEE4262EB6930006E1FF /* CoinSelector.swift */,
 				B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */,
 				B223BAB6260CEBF30071AEB9 /* Home */,
@@ -692,6 +695,7 @@
 				B2D54611262344B8004DD5BB /* AppUtility.swift in Sources */,
 				B2ADC4482631611300F2562D /* CoopAndHelpTextFieldCell.swift in Sources */,
 				B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */,
+				B2F7AA2F264572EF00AEEF8D /* LaunchScreenController.swift in Sources */,
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
 				B2D5476B26451F9500D013C7 /* FiatSelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,

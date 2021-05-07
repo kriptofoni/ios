@@ -1318,6 +1318,28 @@
             </objects>
             <point key="canvasLocation" x="-1687" y="3911"/>
         </scene>
+        <!--Launch Screen Controller-->
+        <scene sceneID="7lw-S4-1xG">
+            <objects>
+                <viewController id="8Aw-54-lpA" customClass="LaunchScreenController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Zfp-l3-2YW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmo-iu-icc">
+                                <rect key="frame" x="141" y="127" width="93" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Loading..."/>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7ZO-3p-1h5"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q4h-0m-1uq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="37.600000000000001" y="-685.90704647676171"/>
+        </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="AMK-k6-p2R">
             <objects>
@@ -2649,9 +2671,9 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="yzc-H2-Qam"/>
-        <segue reference="Tjv-VU-jcb"/>
+        <segue reference="Lf7-dZ-sEB"/>
         <segue reference="l8T-uk-jBf"/>
-        <segue reference="iGt-WA-B8Z"/>
+        <segue reference="tS1-2f-B3P"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrow" width="24" height="24"/>
