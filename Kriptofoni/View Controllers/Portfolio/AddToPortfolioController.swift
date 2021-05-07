@@ -7,7 +7,7 @@
 
 import UIKit
 import Toast_Swift
-
+//operation portfolio
 class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
     @IBOutlet weak var currencyTypeButton: UIBarButtonItem!

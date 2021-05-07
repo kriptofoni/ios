@@ -60,6 +60,7 @@
 		B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */; };
 		B2D54611262344B8004DD5BB /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D54610262344B8004DD5BB /* AppUtility.swift */; };
 		B2D5461E262352E9004DD5BB /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5461D262352E8004DD5BB /* Util.swift */; };
+		B2D5476B26451F9500D013C7 /* FiatSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D5476A26451F9500D013C7 /* FiatSelectorController.swift */; };
 		B2D75CB12614FBCB000C0259 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D75CB02614FBCB000C0259 /* CoreData.swift */; };
 		B2EB6B27261338690056AAB0 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EB6B26261338690056AAB0 /* SearchCell.swift */; };
 /* End PBXBuildFile section */
@@ -146,6 +147,7 @@
 		B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectorController.swift; sourceTree = "<group>"; };
 		B2D54610262344B8004DD5BB /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		B2D5461D262352E8004DD5BB /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		B2D5476A26451F9500D013C7 /* FiatSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatSelectorController.swift; sourceTree = "<group>"; };
 		B2D75CB02614FBCB000C0259 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		B2EB6B26261338690056AAB0 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		C4BBB19FB931770C412FE51F /* Pods_KriptofoniTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KriptofoniTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -383,8 +385,8 @@
 		B2ADC42C26315FD500F2562D /* More */ = {
 			isa = PBXGroup;
 			children = (
+				B2D5476F2645247C00D013C7 /* Fiat */,
 				B2ADC451263161AB00F2562D /* MoreController.swift */,
-				B25D577B26440EC1003A4E2B /* FiatConverter.swift */,
 				B2ADC432263160C800F2562D /* ContractAndAbout.swift */,
 				B2ADC433263160C800F2562D /* CooperationAndHelp.swift */,
 				B2ADC431263160C700F2562D /* Tools.swift */,
@@ -422,6 +424,15 @@
 				B2CB6EAE261B22D100F8FF30 /* FirstCell.swift */,
 			);
 			path = "Coin Detail";
+			sourceTree = "<group>";
+		};
+		B2D5476F2645247C00D013C7 /* Fiat */ = {
+			isa = PBXGroup;
+			children = (
+				B2D5476A26451F9500D013C7 /* FiatSelectorController.swift */,
+				B25D577B26440EC1003A4E2B /* FiatConverter.swift */,
+			);
+			path = Fiat;
 			sourceTree = "<group>";
 		};
 		B2D75CAF2614FBBD000C0259 /* Util */ = {
@@ -682,6 +693,7 @@
 				B2ADC4482631611300F2562D /* CoopAndHelpTextFieldCell.swift in Sources */,
 				B2ADC436263160C800F2562D /* ContractAndAbout.swift in Sources */,
 				B2CF09D42618B3FD006445D6 /* CurrencySelectorController.swift in Sources */,
+				B2D5476B26451F9500D013C7 /* FiatSelectorController.swift in Sources */,
 				B223BA77260CD7DE0071AEB9 /* AppDelegate.swift in Sources */,
 				B2ADC44C2631611300F2562D /* ToolsCell.swift in Sources */,
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,

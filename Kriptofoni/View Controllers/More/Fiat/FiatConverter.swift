@@ -13,7 +13,11 @@ class FiatConverter: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     @IBOutlet weak var currencyTextField: UITextField!
     @IBOutlet weak var cryptoAmountTextField: UITextField!
     @IBOutlet weak var currencyAmountTextField: UITextField!
+    static var selectedCoinId = ""
+    static var selectedCoinName = ""
+    static var selectedCurrency = ""
     
+    var pageType = ""
     private var cryptos = ["usd","try","cad"]
     private let currencies = ["usd","try","cad"]
     
@@ -23,12 +27,15 @@ class FiatConverter: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
+        cryptoTextField.addTarget(self, action: #selector(coinSelectorFunc), for: .touchDown)
+        currencyTextField.addTarget(self, action: #selector(currencySelectorFunc), for: .touchDown)
         cryptoTextField.inputView = cryptoPickerView
         currencyTextField.inputView = currencyPickerView
         
         cryptoTextField.placeholder = "Crypto"
         currencyTextField.placeholder = "Currency"
+        
+    
         
         cryptoTextField.textAlignment = .center
         currencyTextField.textAlignment = .center
@@ -42,6 +49,26 @@ class FiatConverter: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
         currencyPickerView.tag = 2
     }
     
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(true)
+        cryptoTextField.text = FiatConverter.selectedCoinName
+        currencyTextField.text = FiatConverter.selectedCurrency
+        
+    }
+    
+    @objc func coinSelectorFunc(textField: UITextField)
+    {
+        pageType = "coin"
+        self.performSegue(withIdentifier: "toSelector", sender: self)
+    }
+    
+    @objc func currencySelectorFunc(textField: UITextField)
+    {
+        pageType = "currency"
+        self.performSegue(withIdentifier: "toSelector", sender: self)
+    }
     
     @IBAction func cryptoEdit(_ sender: Any)
     {
@@ -133,8 +160,15 @@ class FiatConverter: UIViewController, UIPickerViewDelegate, UIPickerViewDataSou
   
     @IBAction func convertButton(_ sender: Any) {
         
-        
-        
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toSelector"
+        {
+            let destinationVC = segue.destination as! FiatSelectorController
+            destinationVC.pageType = pageType
+            
+        }
+    }
 }
