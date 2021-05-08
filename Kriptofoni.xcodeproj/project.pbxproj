@@ -20,6 +20,7 @@
 		B223BA83260CD7E10071AEB9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B223BA81260CD7E10071AEB9 /* LaunchScreen.storyboard */; };
 		B223BA8E260CD7E10071AEB9 /* KriptofoniTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA8D260CD7E10071AEB9 /* KriptofoniTests.swift */; };
 		B223BA99260CD7E10071AEB9 /* KriptofoniUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA98260CD7E10071AEB9 /* KriptofoniUITests.swift */; };
+		B226A2C22646CC900044C082 /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B226A2C12646CC900044C082 /* WelcomeController.swift */; };
 		B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8AE2611104A007E3A4E /* CoinGecko.swift */; };
 		B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8B326111A2D007E3A4E /* SearchCoin.swift */; };
 		B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B232A6B7262ABE1300FECF9B /* AlertsController.swift */; };
@@ -108,6 +109,7 @@
 		B223BA94260CD7E10071AEB9 /* KriptofoniUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KriptofoniUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B223BA98260CD7E10071AEB9 /* KriptofoniUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KriptofoniUITests.swift; sourceTree = "<group>"; };
 		B223BA9A260CD7E10071AEB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B226A2C12646CC900044C082 /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
 		B230F8AE2611104A007E3A4E /* CoinGecko.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGecko.swift; sourceTree = "<group>"; };
 		B230F8B326111A2D007E3A4E /* SearchCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoin.swift; sourceTree = "<group>"; };
 		B232A6B7262ABE1300FECF9B /* AlertsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsController.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 		B218BAF32618B2EB00E45732 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B226A2C12646CC900044C082 /* WelcomeController.swift */,
 				B2F7AA2E264572EF00AEEF8D /* LaunchScreenController.swift */,
 				B2BBFEE4262EB6930006E1FF /* CoinSelector.swift */,
 				B2CF09D32618B3FD006445D6 /* CurrencySelectorController.swift */,
@@ -725,6 +728,7 @@
 				B2734EDB261EFC6F004F4296 /* AddToPortfolioController.swift in Sources */,
 				B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */,
 				B23965212620360700D6CD5F /* FullScreenChartController.swift in Sources */,
+				B226A2C22646CC900044C082 /* WelcomeController.swift in Sources */,
 				B271A8AD261241700088C94D /* Coin.swift in Sources */,
 				B2BBFEE5262EB6930006E1FF /* CoinSelector.swift in Sources */,
 				B2C4BF8C26284CCD00F87340 /* Currency.swift in Sources */,

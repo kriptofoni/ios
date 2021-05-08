@@ -42,7 +42,12 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
    
     //Locks the screen before view is appeared and realease this locking before view is disappeared
-    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);AppUtility.lockOrientation(.all);timer?.invalidate();timer = nil}
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        AppUtility.lockOrientation(.all)
+        timer?.invalidate();timer = nil
+    }
     
     override func viewWillAppear(_ animated: Bool)
     {
@@ -54,7 +59,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
         appStartingControls()
-        //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         
     }
     
@@ -63,17 +68,17 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     {
         super.viewDidLoad()
         setSegmentSettings()
-        
     }
     
     func appStartingControls()
     {
-        if CoreData.isEmpty()// First opening after downloading app, core data must be empty.
+        if CoreData.isEmpty()  // First opening after downloading app, core data must be empty.
         {
             print("CORE DATA IS EMPTY.")
             showActivityIndicator(scroll: false)
             CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
-                DispatchQueue.main.async{
+                DispatchQueue.main.async
+                {
                     self.navigationItem.title = navigationTitle
                     self.saveCurrencies()
                     self.getSearchArray()
@@ -81,38 +86,35 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 }
             }
         }
-        else//Core must not be empty
+        else  //Core must not be empty
         {
             print("CORE DATA IS NOT EMPTY")
             if !MainController.isCoreDataUpdated //App just update one time its core data for every time app has been launched
             {
                 MainController.isCoreDataUpdated = true
-                CoreData.getSupportedCurrencies { (currencies) in self.currencyTypes = currencies}
-                CoreData.getCoins { (result) in
-                    self.searchCoinArray = result
-                    self.start()
-                    DispatchQueue.global(qos: .background).async
-                    {
-                            self.getSearchArray()
-                            self.updateCurrencies()
-                            print("CORE DATA IS UPDATED.")
-                            print("This is run on the background queue")
-                    }
-                    
+                self.navigationItem.title = LaunchScreenController.totalMarketValue
+                self.currencyTypes = LaunchScreenController.currencyTypes
+                self.coinArray = LaunchScreenController.coinArray ; print(coinArray.count); print("Coin Array")
+                self.mostIncIn24H = LaunchScreenController.mostIncIn24H
+                self.mostDecIn24H = LaunchScreenController.mostDecIn24H
+                self.mostIncIn7D = LaunchScreenController.mostIncIn7D
+                self.mostDecIn7D = LaunchScreenController.mostDecIn7D
+                self.searchCoinArray = LaunchScreenController.searchCoinArray
+                DispatchQueue.global(qos: .background).async
+                {
+                        self.getSearchArray()
+                        self.updateCurrencies()
+                        print("CORE DATA IS UPDATED.")
+                        print("This is run on the background queue")
                 }
+            }
+            else //controller opening 
+            {
+                update()
             }
         }
     }
    
-    @objc func start()
-    {
-        CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
-            DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
-        }
-        getCoins(page: 1, update: false, scroll: false)
-        getCoinsFor24(page: 1, type: "INC",update: false, scroll: false);getCoinsFor24(page: 1, type: "DEC",update: false, scroll: false)
-        getCoinsFor7(page: 1, type: "INC", update: false, scroll: false);getCoinsFor7(page: 1, type: "DEC", update: false, scroll: false)
-    }
     
     @objc func update()
     {

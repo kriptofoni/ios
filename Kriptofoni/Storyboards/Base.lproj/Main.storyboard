@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Leh-9D-fbB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8Aw-54-lpA">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -1348,10 +1348,44 @@
                             <constraint firstItem="9ak-TW-okq" firstAttribute="bottom" secondItem="a9S-PG-pDW" secondAttribute="bottom" constant="257" id="tpj-N6-WdI"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <segue destination="Leh-9D-fbB" kind="presentation" identifier="toAppFromLaunchScreen" modalPresentationStyle="fullScreen" id="Srk-pV-hi6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q4h-0m-1uq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="37.600000000000001" y="-685.90704647676171"/>
+            <point key="canvasLocation" x="-497" y="-699"/>
+        </scene>
+        <!--Welcome Controller-->
+        <scene sceneID="EXC-AU-6tU">
+            <objects>
+                <viewController restorationIdentifier="welcome" storyboardIdentifier="welcome" id="NIc-d1-yKh" customClass="WelcomeController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eK3-D8-0qg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="welcome" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emt-WJ-yLG">
+                                <rect key="frame" x="153" y="103" width="68" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="DvB-j2-1jO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="emt-WJ-yLG" firstAttribute="top" secondItem="DvB-j2-1jO" secondAttribute="top" constant="103" id="Aec-lV-YRo"/>
+                            <constraint firstItem="emt-WJ-yLG" firstAttribute="leading" secondItem="DvB-j2-1jO" secondAttribute="leading" constant="153" id="FgQ-zn-VbH"/>
+                            <constraint firstItem="emt-WJ-yLG" firstAttribute="centerX" secondItem="eK3-D8-0qg" secondAttribute="centerX" id="Pn0-j6-AtA"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <segue destination="Leh-9D-fbB" kind="presentation" identifier="toAppFromWelcome" modalPresentationStyle="fullScreen" id="h2f-eF-Ylx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qda-2I-7YW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="540" y="-699"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="AMK-k6-p2R">
@@ -2083,7 +2117,7 @@
         <scene sceneID="2Dx-dz-3ll">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="M8j-Jy-RwH" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Alarm" id="Y7V-Gp-zbl"/>
+                    <tabBarItem key="tabBarItem" title="Alarm" image="alarm" id="Y7V-Gp-zbl"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oV0-Nh-Txa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -2693,6 +2727,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="Srk-pV-hi6"/>
         <segue reference="yzc-H2-Qam"/>
         <segue reference="Tjv-VU-jcb"/>
         <segue reference="l8T-uk-jBf"/>
@@ -2700,6 +2735,7 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="aboutUs" width="512" height="512"/>
+        <image name="alarm" width="25" height="25"/>
         <image name="arrow" width="24" height="24"/>
         <image name="candlestick" width="30" height="27"/>
         <image name="fullchart" width="30" height="27"/>
@@ -2720,7 +2756,7 @@
             <color red="0.18000000715255737" green="0.74099999666213989" blue="0.5220000147819519" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Special Orange">
-            <color red="0.97254901960784312" green="0.792156862745098" blue="0.15294117647058825" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97299998998641968" green="0.79199999570846558" blue="0.15299999713897705" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
