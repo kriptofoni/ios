@@ -43,7 +43,10 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         controllerStarter()
     }
     
-    override func viewDidLoad(){super.viewDidLoad()}
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+    }
     
     /// Starter function for view controller
     func controllerStarter()
@@ -100,10 +103,11 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "firstCell", for: indexPath) as! FirstCell
+            cell.leftLabel.textColor = Util.defaultFont
             cell.leftLabel.text = currentCurrencySymbol + " " + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
-            if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{cell.rigthLabel.textColor = UIColor.green}
-            else{cell.rigthLabel.textColor = UIColor.red}
-            cell.rigthLabel.text = "%" + String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
+            let data = (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue
+            Util.changeLabelColor(data: data, label: cell.rigthLabel)
+            cell.rigthLabel.text = "%" + String(format: "%.3f", data)
             return cell
         }
         else if indexPath.row == 1 // Chart Cell also contains chart settings
@@ -131,18 +135,19 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
             cell.leftLabel.text = stringArray[indexPath.row-2]
-            if (self.dict["price_change_percentage_24h"]! as! NSNumber).intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
-            else{cell.rightLabelUp.textColor = UIColor.red}
-            cell.rightLabelUp.text = "%" + String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
+            let data = (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue
+            Util.changeLabelColor(data: data, label: cell.rightLabelUp)
+            cell.rightLabelUp.text = "%" + String(format: "%.3f", data)
             cell.rightLabelDown.text = currentCurrencySymbol + " " + Util.toPrice((self.dict["current_price_for_currency"]! as! NSNumber).doubleValue, isCoinDetailPrice: true)
+            cell.rightLabelDown.textColor = Util.defaultFont
             return cell
         }
         else if indexPath.row == 3 //OneToTwoCell --> 1 label at left side and 2 label at right side of cell
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "oneToTwoCell", for: indexPath) as! OneToTwoCell
             cell.leftLabel.text = stringArray[indexPath.row-2]
-            if (self.dict["price_change_percentage_24h_bitcoin"]! as! NSNumber).intValue > 0{cell.rightLabelUp.textColor = UIColor.green}
-            else{cell.rightLabelUp.textColor = UIColor.red}
+            let data = (self.dict["price_change_percentage_24h_bitcoin"]! as! NSNumber).doubleValue
+            Util.changeLabelColor(data: data, label: cell.rightLabelUp)
             cell.rightLabelUp.text = "%" + String(format: "%.5f", (self.dict["price_change_percentage_24h_bitcoin"]! as! NSNumber).doubleValue)
             cell.rightLabelDown.text = "BTC " + String(format: "%.3f", (self.dict["current_price_for_bitcoin"]! as! NSNumber).doubleValue)
         }
@@ -153,27 +158,30 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             switch indexPath.row
             {
                 case 4:
-                    let element = (self.dict["price_change_percentage_1h_in_currency"]! as! NSNumber);
-                    if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
-                    else {cell.rightLabel.textColor = UIColor.red}
+                    let element = (self.dict["price_change_percentage_1h_in_currency"]! as! NSNumber).doubleValue;
+                    Util.changeLabelColor(data: element, label: cell.rightLabel)
                     cell.rightLabel.text = "%" +  String(format: "%.3f", (self.dict["price_change_percentage_1h_in_currency"]! as! NSNumber).doubleValue)
                 case 5:
-                    let element = (self.dict["price_change_percentage_24h"]! as! NSNumber);
-                    if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
-                    else {cell.rightLabel.textColor = UIColor.red}
+                    let element = (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue;
+                    Util.changeLabelColor(data: element, label: cell.rightLabel)
                     cell.rightLabel.text =  "%" +  String(format: "%.3f", (self.dict["price_change_percentage_24h"]! as! NSNumber).doubleValue)
                 case 6:
-                    let element = (self.dict["price_change_percentage_7d_in_currency"]! as! NSNumber);
-                    if element.doubleValue > 0 {cell.rightLabel.textColor = UIColor.green}
-                    else {cell.rightLabel.textColor = UIColor.red}
+                    let element = (self.dict["price_change_percentage_7d_in_currency"]! as! NSNumber).doubleValue;
+                    Util.changeLabelColor(data: element, label: cell.rightLabel)
                     cell.rightLabel.text = "%" + String(format: "%.3f", (self.dict[ "price_change_percentage_7d_in_currency"]! as! NSNumber).doubleValue)
-                case 7:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["market_cap"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
-                case 8:  cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["volumeFor24H"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
-                case 9: cell.rightLabel.text = Util.toPrice((self.dict["circulating_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                case 7:
+                    cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["market_cap"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                    cell.rightLabel.textColor = Util.defaultFont
+                case 8:
+                    cell.rightLabel.text = self.currentCurrencySymbol + " "  +  Util.toPrice((self.dict["volumeFor24H"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                    cell.rightLabel.textColor = Util.defaultFont
+                case 9:
+                    cell.rightLabel.text = Util.toPrice((self.dict["circulating_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)
+                    cell.rightLabel.textColor = Util.defaultFont
                 case 10:
+                    cell.rightLabel.textColor = Util.defaultFont
                     if (self.dict["total_supply"]! as! NSNumber).doubleValue == 0 { cell.rightLabel.text = "-"}
                     else {cell.rightLabel.text = Util.toPrice((self.dict["total_supply"]! as! NSNumber).doubleValue, isCoinDetailPrice: false)}
-                    
                default: print("Error: table view error. ")
                         
             }
@@ -182,6 +190,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         else if indexPath.row >= 11 && indexPath.row < 14
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "socialMediaCell", for: indexPath) as! SocialMediaCell
+            cell.label.textColor = Util.defaultFont
             cell.label.text = socialMediaTexture[indexPath.row - 11]
             cell.socialMediaIcon.image = UIImage(named: iconNames[indexPath.row - 11])
             if indexPath.row == 11 {webSiteLink = self.dict["website"] as! String}
@@ -350,6 +359,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     
     //hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
+    
     
 }
 

@@ -37,11 +37,11 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         if segmentedView.selectedSegmentIndex == 1
         {
             refreshWatchingList()
-            self.navigationItem.title = "Watching List"
+            self.navigationItem.title = "İzleme Listesi"
         }
         else
         {
-            self.navigationItem.title = "Alarms"
+            self.navigationItem.title = "Alarmlar"
         }
     }
     
@@ -57,18 +57,12 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        setSegmentedView()
         tableView.delegate = self; tableView.dataSource = self
-        let sWidth = sSize.width
-        segmentedView.frame.size.width = sWidth
-        segmentedView.segmentStyle = .textOnly
-        segmentedView.insertSegment(withTitle: "ALARMS",  at: 0)
-        segmentedView.insertSegment(withTitle: "WATHCING LIST", at: 1);
-        segmentedView.underlineSelected = true
-        segmentedView.selectedSegmentIndex = 0
-        segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
+        
     }
     
-    
+   
     
     
     func refreshWatchingList()
@@ -151,8 +145,8 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
                 let url = URL(string: cellArrayIndex.getIconViewUrl())
                 cell.symbolView.sd_setImage(with: url) { (_, _, _, _) in}
                 cell.name.text = cellArrayIndex.getName()
-                if cellArrayIndex.getPercent().doubleValue > 0 { cell.percent.textColor = UIColor.green; cell.price.textColor = UIColor.green} // green-red color control according to 24h percent
-                else {cell.percent.textColor = UIColor.red; cell.price.textColor = UIColor.red}
+                Util.changeLabelColor(data: cellArrayIndex.getPercent().doubleValue, label: cell.percent)
+                Util.changeLabelColor(data: cellArrayIndex.getPercent().doubleValue, label: cell.price)
                 cell.percent.text = "%" + String(format: "%.2f", cellArrayIndex.getPercent().doubleValue)
                 cell.price.text = Currency.currencySymbol + " " + Util.toPrice(cellArrayIndex.getPrice().doubleValue, isCoinDetailPrice: false)
                 cell.count.text = String(indexPath.row + 1)
@@ -375,6 +369,19 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         self.present(alert, animated:true, completion: nil)
     }
     
+    func setSegmentedView()
+    {
+        self.segmentedView.backgroundColor = UIColor(named: "Header Color")
+        self.segmentedView.selectedSegmentContentColor = Util.defaultFont
+        let sWidth = sSize.width
+        segmentedView.frame.size.width = sWidth
+        segmentedView.segmentStyle = .textOnly
+        segmentedView.insertSegment(withTitle: "ALARMLAR",  at: 0)
+        segmentedView.insertSegment(withTitle: "İzleme Listesi", at: 1);
+        segmentedView.underlineSelected = true
+        segmentedView.selectedSegmentIndex = 0
+        segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
+    }
 }
 
     

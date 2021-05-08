@@ -10,7 +10,7 @@ import Toast_Swift
 //operation portfolio
 class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate
 {
-    @IBOutlet weak var currencyTypeButton: UIBarButtonItem!
+   
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
     var selectedCoinShorthening = ""
@@ -23,10 +23,8 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
-        currencyTypeButton.title = Currency.currencyKey.uppercased()
         CoreDataPortfolio.calculateTotalCoin { (result) in self.portfolioTotalDict = result}
         self.tableView.reloadData()
-        
     }
     
     
@@ -39,9 +37,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         CoreData.getCoins { [self] (result) in
             searchCoinArray = result
             print("Count" + String(searchCoinArray.count))
-                
-        } 
-        // Do any additional setup after loading the view.
+        }
     }
     
     
@@ -49,7 +45,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: - Table View Funcs
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {return 7}
-    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
@@ -70,45 +65,48 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonOperationCell", for: indexPath) as! TwoButtonOperationCell
+            cell.buyButton.setTitle("AL", for: .normal)
+            cell.sellButton.setTitle("SAT", for: .normal)
             cell.buyButton.addTarget(self, action: #selector(self.buyButtonClicked(sender:)), for: .touchUpInside)
             cell.sellButton.addTarget(self, action: #selector(self.sellButtonClicked(sender:)), for: .touchUpInside)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Total " + Currency.coinShortening.uppercased()
+            cell.label.text = "Toplam " + Currency.coinShortening.uppercased()
             let tap = UITapGestureRecognizer(target: self, action: #selector(self.changeCoin))
             cell.label.isUserInteractionEnabled = true
             cell.label.addGestureRecognizer(tap)
-            cell.textField.placeholder = "Amount of coin"
+            cell.textField.placeholder = "Kripto Para Miktarı"
             cell.view = view
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.view = view
-            cell.label.text = "Date"
-            cell.textField.placeholder = "Please select a date."
+            cell.label.text = "Tarih"
+            cell.textField.placeholder = "Lütfen bir tarih seçiniz."
             createDatePicker(textField: cell.textField)
             return cell
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Price    " + Currency.currencySymbol
-            cell.textField.placeholder = "Price"
+            cell.label.text = "Ücret    " + Currency.currencySymbol
+            cell.textField.placeholder = "Ücret"
             cell.view = view
             return cell
         case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
-            cell.label.text = "Fee      " +  Currency.currencySymbol
-            cell.textField.placeholder = "Tap to Edit"
+            cell.label.text = "Kesinti      " +  Currency.currencySymbol
+            cell.textField.placeholder = "Kesinti"
             cell.view = view
             return cell
         case 5:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
-            cell.label.text = "Notes"
-            cell.textField.placeholder = "Tap to Edit"
+            cell.label.text = "Notlar"
+            cell.textField.placeholder = "Editlemek için dokunun."
             cell.view = view
             return cell
         case 6:
             let cell = tableView.dequeueReusableCell(withIdentifier: "addOperationButtonCell", for: indexPath) as! AddOperationButtonCell
+            cell.addOperationButton.setTitle("Portföyüme Ekle", for: .normal)
             cell.addOperationButton.addTarget(self, action: #selector(self.addButtonClicked (sender:)), for: .touchUpInside)
             return cell
         default:
@@ -229,8 +227,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     
     @objc func changeCoin(sender: UITapGestureRecognizer) {self.performSegue(withIdentifier: "toCoinSelector", sender: self)}
     
-    @IBAction func currencyTypeButtonClicked(_ sender: Any) {self.performSegue(withIdentifier: "toCurrencySelectorFromOperation", sender: self)}
-    
     
     // MARK: - Helper Funcs
     func saveToPortfolio(coinId: String,quantity: Double, date: Double, price: Double, fee: Double, note: String, type: Bool)
@@ -288,12 +284,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-         if segue.identifier == "toCurrencySelectorFromOperation"
-         {
-            let destinationVC = segue.destination as! CurrencySelectorController
-            destinationVC.currencyArray = currencyTypes
-         }
-         else if segue.identifier == "toCoinSelector"
+         if segue.identifier == "toCoinSelector"
          {
              let destinationVC = segue.destination as! CoinSelector
              destinationVC.searchCoinArray = self.searchCoinArray.sorted(by: {
@@ -301,19 +292,19 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
              })
              destinationVC.parentController = "portfolio"
          }
-        
     }
     
     
 
 }
 
-extension Date {
-    func localDate() -> Date {
+extension Date
+{
+    func localDate() -> Date
+    {
         let nowUTC = Date()
         let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
         guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
-
         return localDate
     }
 }

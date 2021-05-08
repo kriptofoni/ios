@@ -11,7 +11,28 @@ import Charts
 
 class Util
 {
+    static var bodyColor = UIColor(named: "Body Color")
+    static var menuColor = UIColor(named: "Menu Color")
+    static var newGreen = UIColor(named: "New Green")
+    static var newRed = UIColor(named: "New Red")
+    static var defaultFont = UIColor(named: "Default Font Color")
     
+    
+    static func changeLabelColor(data: Double, label: UILabel)
+    {
+        if data > 0
+        {
+            label.textColor = Util.newGreen
+        }
+        else if data < 0
+        {
+            label.textColor = Util.newRed
+        }
+        else
+        {
+            label.textColor = Util.defaultFont
+        }
+    }
     //Set cell attributes's value in CurrencyCell
     static func setCurrencyCell(cell: CurrencyCell, coin: Coin, index : Int, mainPage : Bool)
     {
@@ -24,18 +45,18 @@ class Util
         cell.change.text = String(format: "%.2f", change.doubleValue)
         if change.doubleValue > 0
         {
-            cell.change.textColor = UIColor.green
-            cell.percent.textColor = UIColor.green
+            cell.change.textColor = UIColor(named: "New Green")
+            cell.percent.textColor = UIColor(named: "New Green")
         }
         else if change.doubleValue < 0
         {
-            cell.change.textColor = UIColor.red
-            cell.percent.textColor = UIColor.red
+            cell.change.textColor = UIColor(named: "New Red")
+            cell.percent.textColor = UIColor(named: "New Red")
         }
         else
         {
-            cell.change.textColor = UIColor.black
-            cell.percent.textColor = UIColor.black
+            cell.change.textColor = UIColor(named: "Default Text Color")
+            cell.percent.textColor = UIColor(named: "Default Text Color")
         }
     
         cell.price.text = Currency.currencySymbol + " " + Util.toPrice(coin.getPrice().doubleValue, isCoinDetailPrice: false)

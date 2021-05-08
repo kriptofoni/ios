@@ -17,6 +17,7 @@ class CoinGeckoCharts
     //Gets prices for chart in portfolio, calculates total sum of prices for drawing charts
     static func getDataPortfolioChart(ids: [String: Double], currency: String,type: String,completionBlock: @escaping ([ChartDataEntry]) -> Void)  -> Void
     {
+        print(type)
         var coinsInPortfolio = [PortfolioOperation]()
         CoreDataPortfolio.getPortfolio { (coins) in coinsInPortfolio = coins}
         var result = [ChartDataEntry]()

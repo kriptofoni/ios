@@ -39,12 +39,16 @@ class SecondCell: UITableViewCell
         super.awakeFromNib()
         self.selectionStyle = .none
         buttons = [button24H, button1W, button1M, button3M, button6M, button1Y, buttonAll]
-        switch traitCollection.userInterfaceStyle
-        {
-            case .light, .unspecified: backgroundColorOfButton = .white; chartView.backgroundColor = .white; candleStickChartView.backgroundColor = .white
-            case .dark: backgroundColorOfButton = .black; chartView.backgroundColor = .black; candleStickChartView.backgroundColor = .black
-            @unknown default: backgroundColorOfButton = .white; chartView.backgroundColor = .white; candleStickChartView.backgroundColor = .white
-        }
+        backgroundColorOfButton = UIColor(named: "Body Color")!; chartView.backgroundColor = UIColor(named: "Body Color")!; candleStickChartView.backgroundColor = UIColor(named: "Body Color")!;
+        button24H.setTitle("24S", for: .normal)
+        button1W.setTitle("1H", for: .normal)
+        button1M.setTitle("1A", for: .normal)
+        button3M.setTitle("3A", for: .normal)
+        button6M.setTitle("6A", for: .normal)
+        button1Y.setTitle("1Y", for: .normal)
+        buttonAll.setTitle("TÜM", for: .normal)
+        
+        
     }
     override func setSelected(_ selected: Bool, animated: Bool) {super.setSelected(selected, animated: animated)}
     @IBAction func firstButtonClicked(_ sender: Any){}

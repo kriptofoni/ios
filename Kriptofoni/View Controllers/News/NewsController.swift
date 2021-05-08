@@ -14,7 +14,7 @@ class NewsController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        guard let url = URL(string: "https://www.investing.com/") else{
+        guard let url = URL(string: "https://tr.investing.com/news/cryptocurrency-news") else {
           return
         }
         webView.load(URLRequest(url: url))

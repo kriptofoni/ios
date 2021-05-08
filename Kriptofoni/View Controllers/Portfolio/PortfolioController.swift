@@ -11,7 +11,6 @@ import Charts
 class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource, ChartViewDelegate
 {
     @IBOutlet weak var addButton: UIBarButtonItem!
-    @IBOutlet weak var currencyButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     var deleteMode = false
@@ -23,20 +22,18 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     var portfolioCalculations = [Double]() // index 0 --> total value of coins, index 1 --> total loss or profit, index 2 --> percentage of loss or profit
     var activityView: UIActivityIndicatorView?
     let now = NSDate().timeIntervalSince1970
-    var chartType = "one_hour"
+    var chartType = "twentyFour_hours"
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         tableView.delegate = self; tableView.dataSource = self
         
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
-        self.currencyButton.title = Currency.currencyKey.uppercased()
         fetchData()
     }
     
@@ -160,25 +157,12 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
                 cell.coinPrice.text = Util.toPrice(price, isCoinDetailPrice: false)
                 cell.totalPrice.text = Currency.currencySymbol + Util.toPrice(price * quantity , isCoinDetailPrice: false)
-                let percent = listIndex.getPercent()
-                let change = listIndex.getChange()
-                cell.change.text = Currency.currencySymbol + " " + Util.toPrice(change.doubleValue * quantity, isCoinDetailPrice: false)
-                cell.percent.text = String(format: "%.2f", percent.doubleValue)
-                if change.doubleValue > 0
-                {
-                    cell.change.textColor = UIColor.green
-                    cell.percent.textColor = UIColor.green
-                }
-                else if change.doubleValue < 0
-                {
-                    cell.change.textColor = UIColor.red
-                    cell.percent.textColor = UIColor.red
-                }
-                else
-                {
-                    cell.change.textColor = UIColor.black
-                    cell.percent.textColor = UIColor.black
-                }
+                let percent = listIndex.getPercent().doubleValue
+                let change = listIndex.getChange().doubleValue
+                cell.change.text = Currency.currencySymbol + " " + Util.toPrice(change * quantity, isCoinDetailPrice: false)
+                cell.percent.text = String(format: "%.2f", percent)
+                Util.changeLabelColor(data: change, label: cell.change)
+                Util.changeLabelColor(data: change, label: cell.percent)
                 return cell
             }
             else
@@ -186,23 +170,12 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 if indexPath.row == 0
                 {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "portfolioFirst", for: indexPath) as! PortfolioFirstCell
-                    cell.label1.text = "My Portfolio"
+                    cell.label1.text = "Portföyüm"
                     cell.label2.text =  Currency.currencySymbol + " " + Util.toPrice(self.portfolioCalculations[0], isCoinDetailPrice: true)
                     let totalChange = self.portfolioCalculations[1]
                     let totalChangePercent = self.portfolioCalculations[2]
                     cell.label3.text = "\(Currency.currencySymbol) \(Util.toPrice(totalChange, isCoinDetailPrice: true)) (%\(String(totalChangePercent)))"
-                    if totalChange > 0
-                    {
-                        cell.label3.textColor = UIColor.green
-                    }
-                    else if totalChange < 0
-                    {
-                        cell.label3.textColor = UIColor.red
-                    }
-                    else
-                    {
-                        cell.label3.textColor = UIColor.black
-                    }
+                    Util.changeLabelColor(data: totalChange, label: cell.label3)
                     return cell
                     
                 }
@@ -217,10 +190,10 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
                 else
                 {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "portfolioThird", for: indexPath) as! PortfolioThirdCell
-                    cell.label1.text = "Total Principal Money: \(Currency.currencySymbol)\(Util.toPrice(self.portfolioPrincipalMoney, isCoinDetailPrice: false))"// You should change there according to currency type...
-                    cell.label2.text = "Coin/Quantity"
-                    cell.label3.text = "24h Profit/Loss"
-                    cell.label4.text = "Price"
+                    cell.label1.text = "Ana Para: \(Currency.currencySymbol)\(Util.toPrice(self.portfolioPrincipalMoney, isCoinDetailPrice: false))"// You should change there according to currency type...
+                    cell.label2.text = "Kripto Para/Miktar"
+                    cell.label3.text = "24s Kâr/Zarar"
+                    cell.label4.text = "Güncel Fiyat"
                     return cell
                 }
             }
@@ -278,13 +251,12 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         switch sender.tag
         {
-            case 0: chartType = "one_hour"
-            case 1: chartType = "twentyFour_hours"// 24 hour
-            case 2: chartType = "one_week_before"// 1 week
-            case 3: chartType = "one_month_before"// 1 month
-            case 4: chartType = "three_months_before"// 3 month
-            case 5: chartType = "one_year_before"// 1 year
-            case 6: chartType = "all"// All
+            case 0: chartType = "twentyFour_hours"// 24 hour
+            case 1: chartType = "one_week_before"// 1 week
+            case 2: chartType = "one_month_before"// 1 month
+            case 3: chartType = "three_months_before"// 3 month
+            case 4: chartType = "one_year_before"// 1 year
+            case 5: chartType = "all"// All
             default:
                 print("error")
         }

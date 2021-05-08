@@ -15,8 +15,8 @@ class TwoButtonOperationCell: UITableViewCell {
     {
         super.awakeFromNib()
         self.selectionStyle = .none
-        buyButton.borderColor = UIColor.green
-        buyButton.setTitleColor(UIColor.green, for: .normal)
+        buyButton.borderColor = Util.newGreen
+        buyButton.setTitleColor(Util.newGreen, for: .normal)
         // Initialization code
     }
 
@@ -27,8 +27,8 @@ class TwoButtonOperationCell: UITableViewCell {
     }
     @IBAction func buyButtonAction(_ sender: Any)
     {
-        buyButton.borderColor = UIColor.green
-        buyButton.setTitleColor(UIColor.green, for: .normal)
+        buyButton.borderColor = Util.newGreen
+        buyButton.setTitleColor(Util.newGreen, for: .normal)
         sellButton.borderColor = UIColor.gray
         sellButton.setTitleColor(UIColor.gray, for: .normal)
     }
@@ -37,8 +37,8 @@ class TwoButtonOperationCell: UITableViewCell {
     {
         buyButton.borderColor = UIColor.gray
         buyButton.setTitleColor(UIColor.gray, for: .normal)
-        sellButton.borderColor = UIColor.red
-        sellButton.setTitleColor(UIColor.red, for: .normal)
+        sellButton.borderColor = Util.newRed
+        sellButton.setTitleColor(Util.newRed, for: .normal)
     }
     
 }

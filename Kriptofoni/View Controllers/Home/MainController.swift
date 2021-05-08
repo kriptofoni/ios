@@ -62,11 +62,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "COINS",  at: 0)
-        segmentedView.insertSegment(withTitle: "MOST INC IN 24H", at: 1); segmentedView.insertSegment(withTitle: "MOS DEC IN 24H", at: 2)
-        segmentedView.insertSegment(withTitle: "MOST INC IN 7D", at: 3); segmentedView.insertSegment(withTitle: "MOST DEC IN 7D", at: 4)
-        segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
-        segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
+        setSegmentSettings()
+        
     }
     
     func appStartingControls()
@@ -690,7 +687,18 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     //hides spinner
     func hideActivityIndicator() {if (activityView != nil){activityView?.stopAnimating()}}
-
+    
+    func setSegmentSettings()
+    {
+        segmentedView.segmentStyle = .textOnly; segmentedView.insertSegment(withTitle: "Kripto Paralar",  at: 0)
+        segmentedView.insertSegment(withTitle: "24 Saatin Yükselenleri", at: 1); segmentedView.insertSegment(withTitle: "24 Saatin Düşenleri", at: 2)
+        segmentedView.insertSegment(withTitle: "7 Günün Yükselenleri", at: 3); segmentedView.insertSegment(withTitle: " 7 Günün Düşenleri", at: 4)
+        segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
+        segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
+        self.segmentedView.backgroundColor = UIColor(named: "Header Color")
+        self.segmentedView.selectedSegmentContentColor = Util.defaultFont
+        
+    }
 }
 
 

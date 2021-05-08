@@ -33,12 +33,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         if !charType {changeChartTypeButton.setBackgroundImage(UIImage(named: "linechart"), for: .normal)}
         else {changeChartTypeButton.setBackgroundImage(UIImage(named: "candlestick"), for: .normal)}
         twentyFour.setTitleColor(Util.hexStringToUIColor(hex: "F2A900"), for: .normal) // OUR YELLOW
-        switch traitCollection.userInterfaceStyle
-        {
-            case .light, .unspecified: chartView.backgroundColor = .white; candleView.backgroundColor = .white
-            case .dark: chartView.backgroundColor = .black; candleView.backgroundColor = .white
-            @unknown default: chartView.backgroundColor = .white;candleView.backgroundColor = .white
-        }
+        chartView.backgroundColor = UIColor(named: "Body Color")!; candleView.backgroundColor = UIColor(named: "Body Color")!;
         chartView.delegate = self;candleView.delegate = self
         updateChart()
         

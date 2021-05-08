@@ -84,7 +84,7 @@ class ChartUtil
         chartView.rightAxis.enabled = false
         chartView.xAxis.labelPosition = .bottom
         chartView.xAxis.setLabelCount(xAxisLabelCount, force: true) // Sets the x axis label count according to time scale
-        let set1 = LineChartDataSet(entries: values ,label: "Prices")
+        let set1 = LineChartDataSet(entries: values ,label: "Fiyatlar")
         set1.drawCirclesEnabled = false
         set1.lineWidth = 1.5
         set1.drawFilledEnabled = true
@@ -92,11 +92,11 @@ class ChartUtil
         {
             if values.last!.y - values.first!.y > 0 // Color of chart
             {
-                set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(UIColor.green)
+                set1.fill = Fill(color: UIColor.green);set1.fillAlpha = 0.6; set1.setColor(Util.newGreen!)
             }
             else
             {
-                set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(UIColor.red)
+                set1.fill = Fill(color: UIColor.red);set1.fillAlpha = 0.6; set1.setColor(Util.newRed!)
             }
         }
         let data = LineChartData(dataSet: set1)

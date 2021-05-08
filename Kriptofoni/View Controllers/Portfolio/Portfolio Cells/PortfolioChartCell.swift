@@ -11,7 +11,6 @@ import Charts
 class PortfolioChartCell: UITableViewCell {
 
     @IBOutlet weak var chartView: LineChartView!
-    @IBOutlet weak var oneHour: UIButton!
     @IBOutlet weak var twentyFourHour: UIButton!
     @IBOutlet weak var sevenDay: UIButton!
     @IBOutlet weak var oneMonth: UIButton!
@@ -22,17 +21,18 @@ class PortfolioChartCell: UITableViewCell {
     var buttons = [UIButton]()
     var backgroundColorOfButton : UIColor  = UIColor()
     
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
         self.selectionStyle = .none
-        buttons = [oneHour, twentyFourHour, sevenDay, oneMonth, threeMonth, oneYear, all]
-        switch traitCollection.userInterfaceStyle
-        {
-            case .light, .unspecified: backgroundColorOfButton = .white; chartView.backgroundColor = .white;
-            case .dark: backgroundColorOfButton = .black; chartView.backgroundColor = .black;
-            @unknown default: backgroundColorOfButton = .white; chartView.backgroundColor = .white;
-        }
-        // Initialization code
+        buttons = [twentyFourHour, sevenDay, oneMonth, threeMonth, oneYear, all]
+        twentyFourHour.setTitle("24S", for: .normal)
+        sevenDay.setTitle("7G", for: .normal)
+        oneMonth.setTitle("1A", for: .normal)
+        threeMonth.setTitle("3A", for: .normal)
+        oneYear.setTitle("1Y", for: .normal)
+        all.setTitle("TÜM", for: .normal)
+        backgroundColorOfButton = UIColor(named: "Body Color")!; chartView.backgroundColor = UIColor(named: "Body Color")!;
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -40,7 +40,7 @@ class PortfolioChartCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    @IBAction func oneHourClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: oneHour, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
+    
     @IBAction func twentyFourHourClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: twentyFourHour, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
     @IBAction func sevenDayClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: sevenDay, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
     @IBAction func oneMonthClicked(_ sender: Any) {Util.setButtonColorsBackGround(except: oneMonth, buttons: buttons, normalBackground: backgroundColorOfButton); xAxisLabelCount = 12}
