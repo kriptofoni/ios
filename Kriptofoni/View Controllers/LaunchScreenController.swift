@@ -35,8 +35,7 @@ class LaunchScreenController: UIViewController
     ///Gets Coins from api. If update is true, func only update first 100 coin.
     func getCoins()
     {
-        DispatchQueue.main.async {self.showActivityIndicator(scroll: false)}
-        showActivityIndicator(scroll: true)
+        DispatchQueue.main.async {self.showActivityIndicator(scroll: true)}
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (marketValue) in
             LaunchScreenController.totalMarketValue = marketValue
             DispatchQueue.main.async
@@ -46,10 +45,28 @@ class LaunchScreenController: UIViewController
                     {
                         (currencies) in LaunchScreenController.currencyTypes = currencies
                         LaunchScreenController.searchCoinArray = result
-                        self.getCoinsFor24(type: "INC")
-                        self.getCoinsFor24(type: "DEC")
-                        self.getCoinsFor7(type: "INC")
-                        self.getCoinsFor7(type: "DEC")
+                        self.getCoinsFor24(type: "INC"){  bool in
+                            self.getCoinsFor24(type: "DEC") { bool1 in
+                                self.getCoinsFor7(type: "INC") { bool2 in
+                                    self.getCoinsFor7(type: "DEC") { bool3 in
+                                        DispatchQueue.main.async
+                                        {
+                                            self.hideActivityIndicator()
+                                            self.performSegue(withIdentifier: "toAppFromLaunchScreen", sender: self)
+                                            print("Count" + String(LaunchScreenController.coinArray.count))
+                                            print("Count" + String(LaunchScreenController.mostIncIn24H.count))
+                                            print("Count" + String(LaunchScreenController.mostDecIn24H.count))
+                                            print("Count" + String(LaunchScreenController.mostIncIn7D.count))
+                                            print("Count" + String(LaunchScreenController.mostDecIn7D.count))
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
+                        
                     }
                     
                 }
@@ -58,7 +75,7 @@ class LaunchScreenController: UIViewController
     
     }
     /// Get coins according to 24H changes, type is for selecting INC or DEC
-    func getCoinsFor24(type : String)
+    func getCoinsFor24(type : String, completionBlock: @escaping (Bool) -> Void) -> Void
     {
         var copyArray = LaunchScreenController.searchCoinArray
         var coinNumber = [String : Int]()
@@ -80,6 +97,7 @@ class LaunchScreenController: UIViewController
                     first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
                     LaunchScreenController.mostIncIn24H.append(contentsOf: first50Coin)
                     print("MostIncIn24H First Load.")
+                    completionBlock(true)
                 }
                 else if type == "DEC"
                 {
@@ -87,13 +105,14 @@ class LaunchScreenController: UIViewController
                     first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
                     LaunchScreenController.mostDecIn24H.append(contentsOf: first50Coin)
                     print("MostDecIn24H First Load")
+                    completionBlock(true)
                 }
             }
         }
     }
     
     /// Gets coins according to 7D changes, type is for selecting INC or DEC
-    func getCoinsFor7(type: String)
+    func getCoinsFor7(type: String, completionBlock: @escaping (Bool) -> Void) -> Void
     {
         
         var copyArray = LaunchScreenController.searchCoinArray
@@ -115,26 +134,25 @@ class LaunchScreenController: UIViewController
                         var first50Coin = result
                         first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
                         LaunchScreenController.mostIncIn7D.append(contentsOf: first50Coin)
+                        print("MostIncIn7D First Load.")
+                        completionBlock(true)
                 }
                 else if type == "DEC"
                 {
                     
                         var first50Coin = result
                         first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                       LaunchScreenController.mostDecIn7D.append(contentsOf: first50Coin)
+                        LaunchScreenController.mostDecIn7D.append(contentsOf: first50Coin)
                         CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: "", order: "market_cap_desc", per_page: 100, page: 1, sparkline: false, hashMap: [String : Int](), priceChangePercentage: "24h,7d" ) { (result) in
                             LaunchScreenController.coinArray = result
-                            DispatchQueue.main.async {
-                                self.hideActivityIndicator()
-                                self.performSegue(withIdentifier: "toAppFromLaunchScreen", sender: self)
-                            }
-                            
+                            print("MostDecIn7D First Load.")
+                            completionBlock(true)
                         }
                     }
                 }
             }
             
-        }
+    }
     
     //shows spinner
     func showActivityIndicator(scroll : Bool)

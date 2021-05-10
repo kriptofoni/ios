@@ -1416,7 +1416,7 @@
         <scene sceneID="vn4-tL-MWs">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="A3O-hu-FUX" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Anasayfa" id="P6K-MP-kpR"/>
+                    <tabBarItem key="tabBarItem" title="Anasayfa" image="home" id="P6K-MP-kpR"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="5Y2-V5-7er">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -2477,7 +2477,7 @@
         <scene sceneID="Nmy-h1-An1">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hfk-Dl-rEy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Diğer" id="ojH-53-1ZX"/>
+                    <tabBarItem key="tabBarItem" title="Diğer" image="more" id="ojH-53-1ZX"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="Ese-ED-UmS"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hrV-X0-AiH">
@@ -2501,7 +2501,7 @@
         <scene sceneID="tm6-er-BTg">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xxO-Sy-xh1" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Portföy" id="NJu-nX-u2H"/>
+                    <tabBarItem key="tabBarItem" title="Portföy" image="portfolio" id="NJu-nX-u2H"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uxo-iK-qIb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -2524,7 +2524,7 @@
         <scene sceneID="V9E-6j-D9W">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0PQ-YE-vqe" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Haber" id="Lsu-OO-Yes"/>
+                    <tabBarItem key="tabBarItem" title="Haber" image="news" id="Lsu-OO-Yes"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="61u-Dr-ppK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -2740,6 +2740,10 @@
         <image name="candlestick" width="30" height="27"/>
         <image name="fullchart" width="30" height="27"/>
         <image name="hesaplama-araci" width="512" height="512"/>
+        <image name="home" width="25" height="25"/>
+        <image name="more" width="25" height="25"/>
+        <image name="news" width="25" height="25"/>
+        <image name="portfolio" width="25" height="25"/>
         <image name="search" width="24" height="24"/>
         <image name="splash" width="512" height="512"/>
         <image name="square.and.arrow.up.fill" catalog="system" width="115" height="128"/>
