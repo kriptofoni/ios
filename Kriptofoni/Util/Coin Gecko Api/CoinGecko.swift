@@ -221,7 +221,7 @@ class CoinGecko
             if let error = error
             {
                 print("Error took place \(error)")
-                return
+                completionBlock("")
             }
            
             if let data = data
@@ -274,7 +274,7 @@ class CoinGecko
             if let error = error
             {
                 print("Error took place \(error)")
-                return
+                completionBlock([Coin]())
             }
             
             if let data = data

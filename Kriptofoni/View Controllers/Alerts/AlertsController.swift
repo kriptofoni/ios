@@ -36,12 +36,13 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
         //timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(start), userInfo: nil, repeats: true)
         if segmentedView.selectedSegmentIndex == 1
         {
-            refreshWatchingList()
             self.navigationItem.title = "İzleme Listesi"
+            refreshWatchingList()
         }
         else
         {
             self.navigationItem.title = "Alarmlar"
+            
         }
     }
     

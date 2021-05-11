@@ -26,7 +26,7 @@ class CoreDataWatchingList
                 {
                     if !ids.contains(item) // If does not contains we don't delete so we will save it to core data again
                     {
-                        newStringToSave =  "," + item
+                        newStringToSave =  newStringToSave + "," + item
                     }
                 }
                 let watchingList = NSFetchRequest<NSFetchRequestResult>(entityName: "WatchingList")
