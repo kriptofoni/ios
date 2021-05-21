@@ -1,0 +1,36 @@
+PODS:
+  - Charts (3.6.0):
+    - Charts/Core (= 3.6.0)
+  - Charts/Core (3.6.0)
+  - ScrollableSegmentedControl (1.5.0)
+  - SDWebImage (5.10.4):
+    - SDWebImage/Core (= 5.10.4)
+  - SDWebImage/Core (5.10.4)
+  - TinyConstraints (4.0.1)
+  - Toast-Swift (5.0.1)
+
+DEPENDENCIES:
+  - Charts
+  - ScrollableSegmentedControl (~> 1.5.0)
+  - SDWebImage (~> 5.0)
+  - TinyConstraints
+  - Toast-Swift (~> 5.0.1)
+
+SPEC REPOS:
+  trunk:
+    - Charts
+    - ScrollableSegmentedControl
+    - SDWebImage
+    - TinyConstraints
+    - Toast-Swift
+
+SPEC CHECKSUMS:
+  Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
+  ScrollableSegmentedControl: 2e64bbe8968a7fcd8aae5014434481464fcdfe60
+  SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
+  TinyConstraints: 8dd91295e56797648c7bc335dd20e1d91ec4c192
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
+
+PODFILE CHECKSUM: a38b9b6b7c6003cf4777f96a3d7f2c8c08a207fa
+
+COCOAPODS: 1.10.0
