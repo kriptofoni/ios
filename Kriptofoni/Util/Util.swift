@@ -43,12 +43,12 @@ class Util
         let change = coin.getChange()
         cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
         cell.change.text = String(format: "%.2f", change.doubleValue)
-        if change.doubleValue > 0
+        if percent.doubleValue > 0
         {
             cell.change.textColor = UIColor(named: "New Green")
             cell.percent.textColor = UIColor(named: "New Green")
         }
-        else if change.doubleValue < 0
+        else if percent.doubleValue < 0
         {
             cell.change.textColor = UIColor(named: "New Red")
             cell.percent.textColor = UIColor(named: "New Red")
