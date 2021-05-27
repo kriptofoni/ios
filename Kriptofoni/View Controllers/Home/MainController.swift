@@ -350,23 +350,26 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     if update
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
-                        for (index,coin) in first50Coin.enumerated()
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
+                        if !first50Coin.isEmpty
                         {
-                            self.mostIncIn7D[index] = coin
+                            for (index,coin) in first50Coin.enumerated()
+                            {
+                                self.mostIncIn7D[index] = coin
+                            }
+                            print("MostIncIn7D Updated.")
                         }
-                        print("MostIncIn7D Updated.")
                     }
                     else if scroll
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
                         self.mostIncIn7D.append(contentsOf: first50Coin)
                     }
                     else if !update && !scroll //First load
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
                         self.mostIncIn7D.append(contentsOf: first50Coin)
                     }
                 }
@@ -375,23 +378,27 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     if update
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                        for (index,coin) in first50Coin.enumerated()
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
+                        if !first50Coin.isEmpty
                         {
-                            self.mostDecIn7D[index] = coin
+                            for (index,coin) in first50Coin.enumerated()
+                            {
+                                self.mostDecIn7D[index] = coin
+                            }
+                            print("MostDecIn7D Updated.")
                         }
-                        print("MostDecIn7D Updated.")
+                        
                     }
                     else if scroll
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
                         self.mostDecIn7D.append(contentsOf: first50Coin)
                     }
                     else if !update && !scroll //First load
                     {
                         var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
                         self.mostDecIn7D.append(contentsOf: first50Coin)
                     }
 
@@ -527,16 +534,17 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         {
             var cellArrayGetIndex =  Coin()
             let cell = tableView.dequeueReusableCell(withIdentifier: "currencyCell", for: indexPath) as! CurrencyCell
+            var sevenDay = false
             switch tableViewPosition
             {
                 case 0: if !coinArray.isEmpty {cellArrayGetIndex = self.coinArray[indexPath.row]}
                 case 1: if !mostIncIn24H.isEmpty{cellArrayGetIndex = self.mostIncIn24H[indexPath.row]}
                 case 2: if !mostDecIn24H.isEmpty{cellArrayGetIndex = self.mostDecIn24H[indexPath.row]}
-                case 3: if !mostIncIn7D.isEmpty {cellArrayGetIndex = self.mostIncIn7D[indexPath.row]}
-                case 4: if !mostDecIn7D.isEmpty {cellArrayGetIndex = self.mostDecIn7D[indexPath.row]}
+                case 3: if !mostIncIn7D.isEmpty {cellArrayGetIndex = self.mostIncIn7D[indexPath.row]; sevenDay = true}
+                case 4: if !mostDecIn7D.isEmpty {cellArrayGetIndex = self.mostDecIn7D[indexPath.row]; sevenDay = true}
                 default:print("HATA")
             }
-            Util.setCurrencyCell(cell: cell, coin: cellArrayGetIndex, index: indexPath.row, mainPage: true)
+            Util.setCurrencyCell(cell: cell, coin: cellArrayGetIndex, index: indexPath.row, mainPage: true,sevenDay: sevenDay)
             return cell
         }
         else

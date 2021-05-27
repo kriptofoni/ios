@@ -17,8 +17,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var iconNames = ["globe","reddit","twitter"]
     var socialMediaTexture = ["Website","Reddit","Twitter"]
     var currentCurrencySymbol = Currency.currencySymbol; var currentCurrencyKey = Currency.currencyKey; var currentCoinId = ""; var currentCoinShortening =  "";var chartType = "twentyFour_hours"
-    var values = [ChartDataEntry]();
-    var candleValues = [CandleChartDataEntry]();
+    var lineValues = [ChartDataEntry]();var candleValues = [CandleChartDataEntry](); var candleXAxis = [Double]()
     var isLineCharts = true; // if user press change the graph to candle, this bool is going to be false
     var activityView: UIActivityIndicatorView?
     var dict : [String:Any] = [:]; var linkArray = [String](); var webSiteLink = String(); var twitterLink = String(); var redditLink = String()
@@ -73,10 +72,11 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         CoinGecko.getCoinDetails(id: id, currencyType: currentCurrencyKey) { (result) in
             self.dict = result
             CoinGeckoCharts.getDataForCharts(id: id, currency: self.currentCurrencyKey, type: self.chartType) { (chartdata) in
-                self.values = chartdata
+                self.lineValues = chartdata
                 DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
-                CoinGeckoCharts.getDataForCandleCharts(id: self.currentCoinId, currency: Currency.currencyKey, type: self.chartType) { result in
+                CoinGeckoCharts.getDataForCandleCharts(id: self.currentCoinId, currency: Currency.currencyKey, type: self.chartType) { result,candleXAxisValues in
                     self.candleValues = result
+                    self.candleXAxis = candleXAxisValues
                 }
             }
         } 
@@ -123,12 +123,12 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
             if isLineCharts // sets line chart
             {
                 cell.candleStickChartView.isHidden = true;cell.chartView.isHidden = false; cell.chartView.delegate = self;
-                ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: values, dict: dict, chartType: chartType)
+                ChartUtil.setLineChartSettings(chartView: cell.chartView, xAxisLabelCount: cell.xAxisLabelCount, values: lineValues, dict: dict, chartType: chartType)
             }
             else // sets candle chart
             {
                 cell.candleStickChartView.isHidden = false; cell.chartView.isHidden = true; cell.candleStickChartView.delegate = self
-                ChartUtil.setCandleChartSettings(candleView: cell.candleStickChartView, xAxisLabelCount: cell.xAxisLabelCount, values: candleValues, chartType: chartType)
+                ChartUtil.setCandleChartSettings(candleView: cell.candleStickChartView, xAxisLabelCount: cell.xAxisLabelCount, values: candleValues, chartType: chartType, xAxisArray: candleXAxis)
                 
             }
             return cell
@@ -278,10 +278,22 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                     print("cem")
             }
             DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
-            CoinGeckoCharts.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
-                    self.values = chartdata
+            if isLineCharts
+            {
+                CoinGeckoCharts.getDataForCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata) in
+                        self.lineValues = chartdata
+                        DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
+                    }
+            }
+            else
+            {
+                CoinGeckoCharts.getDataForCandleCharts(id: self.currentCoinId, currency: self.currentCurrencyKey, type: chartType) { (chartdata,candleXAxisValues) in
+                    self.candleValues = chartdata
+                    self.candleXAxis = candleXAxisValues
                     DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 }
+            }
+           
         }
         else
         {
@@ -301,7 +313,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if segue.identifier == "toFullScreen"
         {
             let destinationVC = segue.destination as! FullScreenChartController
-            destinationVC.values = values
+            destinationVC.lineValues = lineValues
+            destinationVC.candleValues = candleValues
             destinationVC.charType = isLineCharts // line chart or candle chart
             destinationVC.coinId = currentCoinId
             destinationVC.dict = dict

@@ -19,6 +19,7 @@ class LaunchScreenController: UIViewController
     static var coinArray = [Coin]();
     static var currencyTypes = [String]()
     static var searchCoinArray = [SearchCoin]()
+    static var timerCount = 0
     var timer: Timer?
     
     
@@ -34,7 +35,7 @@ class LaunchScreenController: UIViewController
     {
         super.viewWillAppear(animated)
         AppUtility.lockOrientation(.portrait)
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(update), userInfo: nil, repeats: true)
     }
 
     override func viewDidLoad()
@@ -46,11 +47,12 @@ class LaunchScreenController: UIViewController
     
     @objc func update()
     {
-        if !LaunchScreenController.totalMarketValue.isEmpty && !LaunchScreenController.coinArray.isEmpty && !LaunchScreenController.mostIncIn24H.isEmpty && !LaunchScreenController.mostDecIn24H.isEmpty && !LaunchScreenController.mostIncIn7D.isEmpty && !LaunchScreenController.mostDecIn7D.isEmpty
+        if !LaunchScreenController.totalMarketValue.isEmpty && !LaunchScreenController.coinArray.isEmpty && !LaunchScreenController.mostIncIn24H.isEmpty && !LaunchScreenController.mostDecIn24H.isEmpty
         {
             DispatchQueue.main.async {self.hideActivityIndicator()}
             self.performSegue(withIdentifier:  "toAppFromLaunchScreen", sender: self)
         }
+    
     }
     
     func fillTheArrays()
@@ -161,7 +163,7 @@ class LaunchScreenController: UIViewController
                     {
                         
                             var first50Coin = result
-                            first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
+                            first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
                             LaunchScreenController.mostIncIn7D.append(contentsOf: first50Coin)
                             print("MostIncIn7D First Load.")
                     }
@@ -169,7 +171,7 @@ class LaunchScreenController: UIViewController
                     {
                         
                             var first50Coin = result
-                            first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
+                            first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
                             LaunchScreenController.mostDecIn7D.append(contentsOf: first50Coin)
                              print("MostDecIn7D First Load.")
                     }
@@ -177,7 +179,6 @@ class LaunchScreenController: UIViewController
                 
             }
             }
-            
     }
     
     ///Gets Coins from api. If update is true, func only update first 100 coin.

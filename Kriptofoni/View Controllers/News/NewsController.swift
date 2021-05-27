@@ -7,34 +7,88 @@
 
 import UIKit
 import WebKit
+import ScrollableSegmentedControl
 
-class NewsController: UIViewController {
-
-    @IBOutlet weak var webView: WKWebView!
+class NewsController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate
+{
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        guard let url = URL(string: "https://tr.investing.com/news/cryptocurrency-news") else {
-          return
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        var height = 0
+        if indexPath.row == 0
+        {
+            height = 257
         }
-        webView.load(URLRequest(url: url))
+        else
+        {
+            height = 155
+        }
+        return CGFloat(height)
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
+        if indexPath.row == 0
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "firstNewsCell", for: indexPath) as! FirstNewsCell
+            //celler hazır cell. deyip image ve title ları set edebilirsin...
+
+            return cell
+        }
+        else
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "otherNewsCell", for: indexPath) as! OtherNewsCell
+            return cell
+        }
        
-        // Do any additional setup after loading the view.
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return 2
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    var sSize: CGRect = UIScreen.main.bounds
+    @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
+    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(true)
+        
     }
-    */
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        let sWidth = sSize.width
+        segmentedView.frame.size.width = sWidth
+        setSegmentSettings()
+        tableView.delegate = self; tableView.dataSource = self
+    }
+    
+    func setSegmentSettings()
+    {
+        segmentedView.segmentStyle = .textOnly;
+        segmentedView.insertSegment(withTitle: "Handpicked",at: 0);
+        segmentedView.insertSegment(withTitle: "Trending"  ,at: 1);
+        segmentedView.insertSegment(withTitle: "Latest"    ,
+                                    at: 2);
+        segmentedView.underlineSelected = true; segmentedView.selectedSegmentIndex = 0
+        segmentedView.addTarget(self, action: #selector(MainController.segmentSelected(sender:)), for: .valueChanged)
+        self.segmentedView.backgroundColor = UIColor(named: "Header Color")
+        self.segmentedView.selectedSegmentContentColor = Util.defaultFont
+        
+    }
+    
+    /// Pushs the necessary array to table view according to segmented control
+    @objc func segmentSelected(sender:ScrollableSegmentedControl)
+    {
+        /*
+        switch sender.selectedSegmentIndex
+        {
+            
+        }
+        self.tableView.reloadData()
+        */
+    }
 
 }

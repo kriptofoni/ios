@@ -73,6 +73,7 @@ class LineChartFormatter: NSObject, IAxisValueFormatter
     }
 }
 
+
 class ChartUtil
 {
     static func setLineChartSettings(chartView : LineChartView, xAxisLabelCount : Int, values: [ChartDataEntry], dict : [String:Any], chartType: String)
@@ -102,7 +103,6 @@ class ChartUtil
         let data = LineChartData(dataSet: set1)
         let chartDataFormatter = LineChartFormatter(type: chartType)
         let xAxis = XAxis()
-        for variable in values {_ = chartDataFormatter.stringForValue(variable.y, axis: xAxis)}
         xAxis.valueFormatter = chartDataFormatter
         xAxis.labelPosition = .bottom
         chartView.xAxis.valueFormatter = xAxis.valueFormatter
@@ -110,7 +110,7 @@ class ChartUtil
         chartView.data = data
     }
     
-    static func setCandleChartSettings(candleView: CandleStickChartView, xAxisLabelCount: Int, values : [CandleChartDataEntry], chartType: String)
+    static func setCandleChartSettings(candleView: CandleStickChartView, xAxisLabelCount: Int, values : [CandleChartDataEntry], chartType: String, xAxisArray : [Double])
     {
         candleView.chartDescription!.enabled = false
         candleView.dragEnabled = true
@@ -127,17 +127,22 @@ class ChartUtil
         set1.shadowColor = .darkGray
         set1.shadowWidth = 0.7
         set1.decreasingColor = Util.newRed
-        set1.decreasingFilled = false
+        set1.decreasingFilled = true
         set1.increasingColor = Util.newGreen
-        set1.increasingFilled = false
+        set1.increasingFilled = true
         set1.neutralColor = .blue
         let data = CandleChartData(dataSet: set1)
         let chartDataFormatter = LineChartFormatter(type: chartType)
         let xAxis = XAxis()
-        for variable in values {_ = chartDataFormatter.stringForValue(variable.y, axis: xAxis)}
         xAxis.valueFormatter = chartDataFormatter
         xAxis.labelPosition = .bottom
         candleView.xAxis.valueFormatter = xAxis.valueFormatter
+        var count = 0.0
+        for item in values
+        {
+            item.x = count
+            count = count + 1//UĞRaş
+        }
         data.setDrawValues(false)
         candleView.data = data
     }

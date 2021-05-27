@@ -16,7 +16,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     @IBOutlet weak var threeMonth: UIButton!;@IBOutlet weak var sixMonth: UIButton!
     @IBOutlet weak var oneYear: UIButton!;@IBOutlet weak var all: UIButton!
     var activityView: UIActivityIndicatorView?
-    var values = [ChartDataEntry]()
+    var lineValues = [ChartDataEntry](); var candleValues = [CandleChartDataEntry](); var candleXAxis = [Double]()
     var coinId : String = "";
     var charType = true; //true for line chart, false for candle
     let coingecko = CoinGecko.init()
@@ -44,12 +44,13 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         if charType
         {
             candleView.isHidden = true; chartView.isHidden = false
-            ChartUtil.setLineChartSettings(chartView: chartView, xAxisLabelCount: xAxisLabelCount, values: values, dict: dict, chartType: chartType)
+            ChartUtil.setLineChartSettings(chartView: chartView, xAxisLabelCount: xAxisLabelCount, values: lineValues, dict: dict, chartType: chartType)
 
         }
         else
         {
             candleView.isHidden = false; chartView.isHidden = true
+            ChartUtil.setCandleChartSettings(candleView: candleView, xAxisLabelCount: xAxisLabelCount, values: candleValues, chartType: chartType, xAxisArray: candleXAxis)
         }
     }
     
@@ -87,10 +88,21 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     func getChartData(type : String)
     {
         DispatchQueue.main.async{self.hideActivityIndicator();self.showActivityIndicator()}
-        CoinGeckoCharts.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
-                self.values = chartdata
+        if charType
+        {
+            CoinGeckoCharts.getDataForCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (chartdata) in
+                    self.lineValues = chartdata
+                    DispatchQueue.main.async{self.hideActivityIndicator();self.updateChart()}
+                }
+        }
+        else
+        {
+            CoinGeckoCharts.getDataForCandleCharts(id: self.coinId, currency: Currency.currencyKey, type: type) { (candleValues, candlexAxisValues) in
+                self.candleValues = candleValues
+                self.candleXAxis = candlexAxisValues
                 DispatchQueue.main.async{self.hideActivityIndicator();self.updateChart()}
             }
+        }
     }
     
     ///Shows spinner

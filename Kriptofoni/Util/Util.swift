@@ -33,14 +33,26 @@ class Util
             label.textColor = Util.defaultFont
         }
     }
+    
+
     //Set cell attributes's value in CurrencyCell
-    static func setCurrencyCell(cell: CurrencyCell, coin: Coin, index : Int, mainPage : Bool)
+    static func setCurrencyCell(cell: CurrencyCell, coin: Coin, index : Int, mainPage : Bool, sevenDay : Bool)
     {
         let url = URL(string: coin.getIconViewUrl())
         cell.iconView.sd_setImage(with: url) { (_, _, _, _) in}
         cell.name.text = coin.getName()
-        let percent = coin.getPercent()
-        let change = coin.getChange()
+        var percent : NSNumber = 0
+        var change : NSNumber = 0
+        if sevenDay
+        {
+            percent = coin.getPercent7d()
+            change = coin.getChange7d()
+        }
+        else
+        {
+            percent = coin.getPercent()
+            change = coin.getChange()
+        }
         cell.percent.text = "%" + String(format: "%.2f", percent.doubleValue)
         cell.change.text = String(format: "%.2f", change.doubleValue)
         if percent.doubleValue > 0

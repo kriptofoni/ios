@@ -13,7 +13,7 @@ import Charts
 class CoinGeckoCharts
 {
     
-    static func getDataForCandleCharts(id: String, currency: String, type : String, completionBlock: @escaping ([CandleChartDataEntry]) -> Void)  -> Void
+    static func getDataForCandleCharts(id: String, currency: String, type : String, completionBlock: @escaping ([CandleChartDataEntry],[Double]) -> Void)  -> Void
     {
         var array = [CandleChartDataEntry]()
         let now = NSDate().timeIntervalSince1970
@@ -57,12 +57,16 @@ class CoinGeckoCharts
                 {
                     
                     let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! [NSArray]
+                    var xAxisValues = [Double]()
+                    var x = 0
                     for values in jSONResult as! [[NSNumber]]
                     {
                         let chartData = CandleChartDataEntry(x: values[0].doubleValue, shadowH: values[2].doubleValue, shadowL: values[3].doubleValue, open: values[1].doubleValue, close: values[4].doubleValue)
+                        x = x + 1
+                        xAxisValues.append(values[0].doubleValue)
                         array.append(chartData)
                     }
-                    completionBlock(array)
+                    completionBlock(array,xAxisValues)
                 }
                 catch{print("API FETCH FAILED CALL COUNT getDataForChartsCandle")}
             }

@@ -301,17 +301,17 @@ class CoinGecko
                                         let currentPrice = (jsonElement["current_price"] as? NSNumber) ?? 0 as NSNumber
                                         let percent = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber)  ?? 0 as NSNumber
                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
+                                        let change7d = currentPrice.doubleValue - (currentPrice.doubleValue/(priceChangePercentage7D.doubleValue/100 + 1))
                                         if hashMap.isEmpty
                                         {
-                                            let currency = Coin(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D)
+                                            let currency = Coin(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d))
                                             array.append(currency)
                                         }
                                         else
                                         {
-                                            let currency = Coin(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D)
+                                            let currency = Coin(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d))
                                             array.append(currency)
                                         }
-                                        
                                     }
                                     else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
                                 }
