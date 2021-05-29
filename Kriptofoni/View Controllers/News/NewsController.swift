@@ -30,7 +30,7 @@ class NewsController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: "firstNewsCell", for: indexPath) as! FirstNewsCell
-            //celler hazır cell. deyip image ve title ları set edebilirsin...
+            //cellerhazır cell. deyip image ve title ları set edebilirsin...
 
             return cell
         }
