@@ -1368,6 +1368,7 @@
                     </view>
                     <connections>
                         <segue destination="Leh-9D-fbB" kind="presentation" identifier="toAppFromLaunchScreen" modalPresentationStyle="fullScreen" id="Srk-pV-hi6"/>
+                        <segue destination="NIc-d1-yKh" kind="presentation" identifier="welcomeController" modalPresentationStyle="fullScreen" id="fQT-gQ-g1h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q4h-0m-1uq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1382,28 +1383,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="welcome" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emt-WJ-yLG">
-                                <rect key="frame" x="153" y="103" width="68" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="welcome page you will see this page just one time slayt göstericez" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emt-WJ-yLG">
+                                <rect key="frame" x="33" y="103" width="326" height="394"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DUG-gt-oU2">
+                                <rect key="frame" x="164" y="467" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="buttonClicked:" destination="NIc-d1-yKh" eventType="touchUpInside" id="wMJ-Cn-J0c"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DvB-j2-1jO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="emt-WJ-yLG" firstAttribute="top" secondItem="DvB-j2-1jO" secondAttribute="top" constant="103" id="Aec-lV-YRo"/>
-                            <constraint firstItem="emt-WJ-yLG" firstAttribute="leading" secondItem="DvB-j2-1jO" secondAttribute="leading" constant="153" id="FgQ-zn-VbH"/>
-                            <constraint firstItem="emt-WJ-yLG" firstAttribute="centerX" secondItem="eK3-D8-0qg" secondAttribute="centerX" id="Pn0-j6-AtA"/>
+                            <constraint firstItem="emt-WJ-yLG" firstAttribute="leading" secondItem="DvB-j2-1jO" secondAttribute="leading" constant="33" id="FgQ-zn-VbH"/>
+                            <constraint firstItem="DUG-gt-oU2" firstAttribute="bottom" secondItem="emt-WJ-yLG" secondAttribute="bottom" id="MGm-44-9la"/>
+                            <constraint firstItem="DUG-gt-oU2" firstAttribute="top" secondItem="DvB-j2-1jO" secondAttribute="top" constant="467" id="MLt-ne-qXK"/>
+                            <constraint firstItem="emt-WJ-yLG" firstAttribute="centerX" secondItem="eK3-D8-0qg" secondAttribute="centerX" constant="8.5" id="Pn0-j6-AtA"/>
+                            <constraint firstItem="DUG-gt-oU2" firstAttribute="leading" secondItem="DvB-j2-1jO" secondAttribute="leading" constant="164" id="kTZ-yt-ZSB"/>
+                            <constraint firstItem="DUG-gt-oU2" firstAttribute="centerX" secondItem="eK3-D8-0qg" secondAttribute="centerX" id="vvV-mr-CYY"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="44N-bE-rx3"/>
                     <connections>
+                        <outlet property="button" destination="DUG-gt-oU2" id="T1G-dI-Etm"/>
                         <segue destination="Leh-9D-fbB" kind="presentation" identifier="toAppFromWelcome" modalPresentationStyle="fullScreen" id="h2f-eF-Ylx"/>
+                        <segue destination="8Aw-54-lpA" kind="presentation" identifier="launcherBack" modalPresentationStyle="fullScreen" id="okm-ic-PNK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qda-2I-7YW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="540" y="-699"/>
+            <point key="canvasLocation" x="885.60000000000002" y="-699.40029985007504"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="AMK-k6-p2R">
@@ -2901,7 +2916,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Srk-pV-hi6"/>
+        <segue reference="h2f-eF-Ylx"/>
         <segue reference="XYr-1L-vq5"/>
         <segue reference="Tjv-VU-jcb"/>
         <segue reference="l8T-uk-jBf"/>

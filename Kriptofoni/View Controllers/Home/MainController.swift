@@ -24,7 +24,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     var selectedIndexPath = IndexPath(row: 0, section: 0);var selectedAttributesIndexPath = IndexPath(row: 0, section: 1)
     var buttons = [UIBarButtonItem]()
     var mostIncIn24H = [Coin]();var mostDecIn24H = [Coin]();var mostIncIn7D = [Coin]();var mostDecIn7D = [Coin]();var coinArray = [Coin]()
-    var searchCoinArray = [SearchCoin](); var searchActiveArray = [SearchCoin](); var currencyTypes = [String]()
+    var searchCoinArray = [Coin](); var searchActiveArray = [Coin](); var currencyTypes = [String]()
     let coinGecko = CoinGecko()
     var tableViewPosition = 0;
     static var coinsPage = 1
@@ -33,7 +33,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     static var mostIncIn7dPage = 1
     static var mostDecIn7dPage  = 1
     static var isCoreDataUpdated = false
-    var selectedCoin = Coin(); var selectedSearchCoin = SearchCoin()
+    var selectedCoin = Coin(); var selectedSearchCoin = Coin()
     var searchActive = false
     var timer: Timer?
     var isFirstTime = true
@@ -59,7 +59,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         self.tableView.delegate = self;self.tableView.dataSource = self;self.searchBar.delegate = self
         buttons.append(searchButton); buttons.append(currencyButton)
         appStartingControls()
-        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(update), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 20, target: self, selector: #selector(updateMain), userInfo: nil, repeats: true)
         
     }
     
@@ -72,146 +72,105 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func appStartingControls()
     {
-        if CoreData.isEmpty()  // First opening after downloading app, core data must be empty.
-        {
-            print("CORE DATA IS EMPTY.")
-            showActivityIndicator(scroll: false)
-            CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
-                DispatchQueue.main.async
-                {
-                    self.navigationItem.title = navigationTitle
-                    self.saveCurrencies()
-                    self.getSearchArray()
-                    self.hideActivityIndicator()
-                }
-            }
-        }
-        else  //Core must not be empty
-        {
-            print("CORE DATA IS NOT EMPTY")
             if !MainController.isCoreDataUpdated //App just update one time its core data for every time app has been launched
             {
                 MainController.isCoreDataUpdated = true
                 self.navigationItem.title = LaunchScreenController.totalMarketValue
                 self.currencyTypes = LaunchScreenController.currencyTypes
                 self.coinArray = LaunchScreenController.coinArray ; print(coinArray.count); print("Coin Array")
+                self.searchCoinArray = LaunchScreenController.searchCoinArray
                 self.mostIncIn24H = LaunchScreenController.mostIncIn24H
                 self.mostDecIn24H = LaunchScreenController.mostDecIn24H
                 self.mostIncIn7D = LaunchScreenController.mostIncIn7D
                 self.mostDecIn7D = LaunchScreenController.mostDecIn7D
-                self.searchCoinArray = LaunchScreenController.searchCoinArray
-                DispatchQueue.global(qos: .background).async
+                if !WelcomeController.isWelcomeOpened
                 {
-                        self.getSearchArray()
+                    DispatchQueue.global(qos: .background).async
+                    {
+                        self.updateAllCoins()
                         self.updateCurrencies()
-                        print("CORE DATA IS UPDATED.")
-                        print("This is run on the background queue")
+                        
+                    }
                 }
+               
             }
             else //controller opening 
             {
-                update()
+                updateMain()
             }
-        }
     }
    
     
-    @objc func update()
+    @objc func updateMain()
     {
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }
         getCoins(page: 1, update: true, scroll: false)
-        getCoinsFor24(page: 1, type: "INC",update: true, scroll: false);getCoinsFor24(page: 1, type: "DEC",update: true, scroll: false)
-        getCoinsFor7(page: 1, type: "INC", update: true,scroll: false);getCoinsFor7(page: 1, type: "DEC", update: true,scroll: false)
     }
     
-    func getSearchArray()
+    func updateAllCoins()
     {
         let myGroup = DispatchGroup()
-        self.searchCoinArray.removeAll(keepingCapacity: false)
+        var tempAllCoins = [Coin]()
         for n in 1...27
         {
             myGroup.enter()
-            CoinGecko.getCoinMarkets(vs_currency: "usd", order: "id_asc", per_page: 250, page: n, sparkline: false, priceChangePercentage: "24h,7d", index: n) {(result) in
-                self.searchCoinArray.append(contentsOf: result)
-                DispatchQueue.main.async{self.tableView.reloadData()}
+            CoinGecko.getCoins(vs_currency: "usd", ids: "", order: "id_asc", per_page: 250, page: n, sparkline: false, hashMap: [String : Int](), priceChangePercentage: "24h,7d") { result in
+                tempAllCoins.append(contentsOf: result)
                 myGroup.leave()
             }
-           
         }
         myGroup.notify(queue: .main)
         {
-            print(String(self.searchCoinArray.count) + "SEARCH CURRENCY ARRAY COUNT")
-            if CoreData.isEmpty() //If it is the first time after downloading app
+            self.searchCoinArray = tempAllCoins
+            let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
+            fetchRequest.returnsObjectsAsFaults = false
+            do
             {
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                let context = appDelegate.persistentContainer.newBackgroundContext()
-                let jsonCompatibleArray = self.searchCoinArray.map { model in
-                        return [
-                            "id":model.getId(),
-                            "symbol":model.getSymbol(),
-                            "name":model.getName(),
-                            "image":model.getImageUrl(),
-                            "market_cap_rank":model.getMarketCapRank(),
-                            "price_change_24h":model.getPriceChange24(),
-                            "price_change_percentage_24h_in_currency":model.getPriceChangePercantage24H(),
-                            "price_change_percentage_7d_in_currency":model.getPriceChangePercantage7D()
-                        ]
-                }
-                do
+                let results = try managedObjectContext.fetch(fetchRequest)
+                for managedObject in results
                 {
-                    let data = try JSONSerialization.data(withJSONObject: jsonCompatibleArray, options: .prettyPrinted)
-                    let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-                    let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "StringCurrency", into: context)
-                    newCurrency.setValue(jsonString, forKey: "string")
-                    do
-                    {
-                        try context.save()
-                        print("CURRENCIES ARE SAVED.")
-                        CoreData.getCoins { [self] (result) in
-                            self.searchCoinArray = result
-                            self.getCoinsFor24(page: 1, type: "INC",update: false,scroll: false);self.getCoinsFor24(page: 1, type: "DEC",update: false, scroll: false)
-                            self.getCoinsFor7(page: 1, type: "INC",update: false, scroll: false);self.getCoinsFor7(page: 1, type: "DEC",update: false, scroll: false)
-                        } 
-                    }
-                    catch{print("error")}
+                    let managedObjectData:NSManagedObject = managedObject as! NSManagedObject
+                    managedObjectContext.delete(managedObjectData)
                 }
-                catch{print("ERROR")}
+                try managedObjectContext.save()
+                print("Core data deleted.")
             }
-            else//Updating session
+            catch
             {
-                print("Memory Coins Updated.")
-                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
-                let result = try? managedObjectContext.fetch(fetchRequest)
-                let resultData = result?[0] as! NSManagedObject
-                let jsonCompatibleArray = self.searchCoinArray.map { model in
+                print("Core data cannot be deleted")
+            }
+            let jsonCompatibleArray = self.searchCoinArray.map { model in
                     return [
-                            "id":model.getId(),
-                            "symbol":model.getSymbol(),
-                            "name":model.getName(),
-                            "image":model.getImageUrl(),
-                            "market_cap_rank":model.getMarketCapRank(),
-                            "price_change_24h":model.getPriceChange24(),
-                            "price_change_percentage_24h_in_currency":model.getPriceChangePercantage24H(),
-                            "price_change_percentage_7d_in_currency":model.getPriceChangePercantage7D()
+                        "id":model.getId(),
+                        "symbol":model.getShortening(),
+                        "name":model.getName(),
+                        "image":model.getIconViewUrl(),
+                        "market_cap_rank":model.getMarketCapRank(),
+                        "price_change_24h":model.getChange(),
+                        "price_change_percentage_24h_in_currency":model.getPercent(),
+                        "price_change_percentage_7d_in_currency":model.getPercent7d(),
+                        "current_price":model.getPrice()
                     ]
-                }
+            }
+            do
+            {
+                let data = try JSONSerialization.data(withJSONObject: jsonCompatibleArray, options: .prettyPrinted)
+                let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+                let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "StringCurrency", into: managedObjectContext)
+                newCurrency.setValue(jsonString, forKey: "string")
                 do
                 {
-                    let data = try JSONSerialization.data(withJSONObject: jsonCompatibleArray, options: .prettyPrinted)
-                    let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-                    resultData.setValue(jsonString, forKey: "string")
-                    do
-                    {
-                        try managedObjectContext.save()
-                        print("CURRENCIES ARE UPDATED.")
-                    }
-                    catch{print("Error")}
+                    try managedObjectContext.save()
+                    print("COINS ARE UPDATED.")
+                    WelcomeController.isWelcomeOpened = true
+                    WelcomeController.coinsCompleted = true
                 }
-                catch{print("Error")}
+                catch{print("error")}
             }
+            catch{print("ERROR")}
         }
     }
     
@@ -239,204 +198,15 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 self.coinArray.append(contentsOf: result)
                 print("Page1 First load.")
             }
-            DispatchQueue.main.async {
+            DispatchQueue.main.async
+            {
                 if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
                 self.tableView.reloadData()
             }
         }
     }
     
-    /// Get coins according to 24H changes, type is for selecting INC or DEC
-    func getCoinsFor24(page: Int, type : String, update: Bool, scroll: Bool)
-    {
-        if scroll {showActivityIndicator(scroll: true)}
-        var copyArray = self.searchCoinArray
-        var coinNumber = [String : Int]()
-        print(String(copyArray.count) + "Cop6 sl")
-        if copyArray.count > 6000
-        {
-            var newString = ""
-            if type == "INC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue > $1.getPriceChangePercantage24H().doubleValue})}
-            else if type == "DEC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage24H().doubleValue < $1.getPriceChangePercantage24H().doubleValue})}
-            for m in ((page-1)*50)...((page*50)-1)
-            {
-                    newString += copyArray[m].getId() + ","
-                    coinNumber[copyArray[m].getId()] = m + 1
-            }
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
-                if type == "INC"
-                {
-                    if update
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
-                        for (index,coin) in first50Coin.enumerated()
-                        {
-                            self.mostIncIn24H[index] = coin
-                        }
-                        print("MostIncIn24H Updated.")
-                    }
-                    else if scroll
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
-                        self.mostIncIn24H.append(contentsOf: first50Coin)
-                        print(String(self.mostIncIn24H.count) + "Count" + String(page) + "Page")
-                    }
-                    else if !update && !scroll //First load
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue > $1.getPercent().doubleValue})
-                        self.mostIncIn24H.append(contentsOf: first50Coin)
-                        print("MostIncIn24H First Load.")
-                    }
-                }
-                else if type == "DEC"
-                {
-                    if update
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                        for (index,coin) in first50Coin.enumerated()
-                        {
-                            self.mostDecIn24H[index] = coin
-                        }
-                        print("MostDecIn24H Updated.")
-                    }
-                    else if scroll
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                        self.mostDecIn24H.append(contentsOf: first50Coin)
-                        print(String(self.mostDecIn24H.count) + "Count" + String(page) + "Page")
-                    }
-                    else if !update && !scroll //First load
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent().doubleValue < $1.getPercent().doubleValue})
-                        self.mostDecIn24H.append(contentsOf: first50Coin)
-                        print("MostIncIn24H Updated.")
-                    }
-                }
-                DispatchQueue.main.async
-                {
-                    if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
-                    self.tableView.reloadData()
-                }
-            }
-          
-        }
-    }
-    
-    /// Gets coins according to 7D changes, type is for selecting INC or DEC
-    func getCoinsFor7(page: Int, type: String, update: Bool, scroll: Bool)
-    {
-        if scroll {showActivityIndicator(scroll: true)}
-        var copyArray = self.searchCoinArray
-        var coinNumber = [String : Int]()
-        if copyArray.count > 6000
-        {
-            var newString = ""
-            if type == "INC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue > $1.getPriceChangePercantage7D().doubleValue})}
-            else if type == "DEC"{copyArray = copyArray.sorted(by: {$0.getPriceChangePercantage7D().doubleValue < $1.getPriceChangePercantage7D().doubleValue})}
-            for m in ((page-1)*50)...((page*50)-1)
-            {
-                    newString += copyArray[m].getId() + ","
-                    coinNumber[copyArray[m].getId()] = m + 1
-            }
-            CoinGecko.getCoins(vs_currency: Currency.currencyKey,ids: newString, order: "market_cap_desc", per_page: 50, page: 1 , sparkline: false, hashMap: coinNumber, priceChangePercentage: "24h,7d") { (result) in
-                if type == "INC"
-                {
-                    if update
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
-                        if !first50Coin.isEmpty
-                        {
-                            for (index,coin) in first50Coin.enumerated()
-                            {
-                                self.mostIncIn7D[index] = coin
-                            }
-                            print("MostIncIn7D Updated.")
-                        }
-                    }
-                    else if scroll
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
-                        self.mostIncIn7D.append(contentsOf: first50Coin)
-                    }
-                    else if !update && !scroll //First load
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue > $1.getPercent7d().doubleValue})
-                        self.mostIncIn7D.append(contentsOf: first50Coin)
-                    }
-                }
-                else if type == "DEC"
-                {
-                    if update
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
-                        if !first50Coin.isEmpty
-                        {
-                            for (index,coin) in first50Coin.enumerated()
-                            {
-                                self.mostDecIn7D[index] = coin
-                            }
-                            print("MostDecIn7D Updated.")
-                        }
-                        
-                    }
-                    else if scroll
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
-                        self.mostDecIn7D.append(contentsOf: first50Coin)
-                    }
-                    else if !update && !scroll //First load
-                    {
-                        var first50Coin = result
-                        first50Coin = first50Coin.sorted(by: {$0.getPercent7d().doubleValue < $1.getPercent7d().doubleValue})
-                        self.mostDecIn7D.append(contentsOf: first50Coin)
-                    }
 
-                }
-                DispatchQueue.main.async
-                {
-                    if scroll {self.hideActivityIndicator(); self.scrollingFetchProcess = false}
-                    self.tableView.reloadData()
-                }
-
-            }
-            
-        }
-    }
-    
-    ///Gets supported currencies from api and saves them to core data
-    func saveCurrencies()
-    {
-        CoinGecko.getSupportedCurrencies() { (resultString) in
-            DispatchQueue.main.async
-            {
-                let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
-                do
-                {
-                    let type = NSEntityDescription.insertNewObject(forEntityName: "CurrencyTypes", into: managedObjectContext)
-                    type.setValue(resultString, forKey: "types")
-                    do
-                    {
-                        try managedObjectContext.save()
-                        print("CURRENCY TYPES ARE SAVED.")
-                        self.currencyTypes = resultString.components(separatedBy: ",")//first index will be empty so be careful in table view
-                    }
-                    catch{print("error")}
-                }
-            }
-        }
-    }
-    
     ///Gets supported currencies from api and updates into old data
     func updateCurrencies()
     {
@@ -456,6 +226,8 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                         try managedObjectContext.save()
                         print("CURRENCY TYPES ARE UPDATED.")
                         self.currencyTypes = resultString.components(separatedBy: ",")//first index will be empty so be careful in table view
+                        return
+                       
                     }
                     catch{print("Error")}
                 }
@@ -470,40 +242,16 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if !searchActive
         {
             var coins = [Coin]()
-            switch segmentedView.selectedSegmentIndex
+            if segmentedView.selectedSegmentIndex == 0
             {
-                case 0:
-                        coins = self.coinArray;
-                        if indexPath.row == coins.count-1 && !scrollingFetchProcess
-                        {
-                            MainController.coinsPage += 1;
-                            getCoins(page: MainController.coinsPage, update: false, scroll: true);
-                            scrollingFetchProcess = true
-                        
-                        }
-                case 1:
-                        coins = self.mostIncIn24H;
-                        if indexPath.row == coins.count-1 && !scrollingFetchProcess
-                        {
-                            print("cem")
-                            MainController.mostIncIn24Page += 1
-                            getCoinsFor24(page: MainController.mostIncIn24Page, type: "INC",update: false,scroll: true);
-                            scrollingFetchProcess = true
-                        }
-                    
-                case 2:
-                       coins = self.mostDecIn24H
-                       if indexPath.row == coins.count-1 && !scrollingFetchProcess {MainController.mostDecIn24Page += 1;getCoinsFor24(page: MainController.mostDecIn24Page, type: "DEC",update: false,scroll: true);scrollingFetchProcess = true}
-                    
-                case 3:
-                      coins = self.mostIncIn7D;
-                      if indexPath.row == coins.count-1 && !scrollingFetchProcess { MainController.mostIncIn7dPage += 1;getCoinsFor7(page: MainController.mostIncIn7dPage, type: "INC", update: false, scroll: true);scrollingFetchProcess = true}
-                    
-                case 4:
-                      coins = self.mostDecIn7D;
-                      if indexPath.row == coins.count-1 && !scrollingFetchProcess {MainController.mostDecIn7dPage += 1;getCoinsFor7(page: MainController.mostDecIn7dPage, type: "DEC", update: false,scroll: true);scrollingFetchProcess = true}
-                    
-                default: print("Error")
+                coins = self.coinArray;
+                if indexPath.row == coins.count-1 && !scrollingFetchProcess
+                {
+                    MainController.coinsPage += 1;
+                    getCoins(page: MainController.coinsPage, update: false, scroll: true);
+                    scrollingFetchProcess = true
+                
+                }
             }
         }
     }
@@ -552,7 +300,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
             let cellSearchArrayGetIndex = self.searchActiveArray[indexPath.row]
             cell.label.text = cellSearchArrayGetIndex.getName()
-            let url = URL(string: cellSearchArrayGetIndex.getImageUrl() )
+            let url = URL(string: cellSearchArrayGetIndex.getIconViewUrl() )
             cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
             return cell
         }
@@ -562,7 +310,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     /// Table view func that is called when user press any cell, we are getting index of the selected cell and we are getting id of this currency
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if searchActive{ self.selectedSearchCoin = self.searchActiveArray[indexPath.row]}
+        if searchActive {self.selectedSearchCoin = self.searchActiveArray[indexPath.row]}
         else
         {
             switch tableViewPosition
@@ -664,22 +412,16 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if segue.identifier == "toCoinDetails"//We give our selected restaurant to next page
         {
             let destinationVC = segue.destination as! CoinDetailsController
-            
             if searchActive
             {
-                destinationVC.selectedSearchCoin = self.selectedSearchCoin
-                destinationVC.type = 0 //it means we will come this page from a search operation
-                destinationVC.currencyTypes = self.currencyTypes
-                
+                destinationVC.selectedCoin = self.selectedSearchCoin
             }
             else
             {
                 destinationVC.selectedCoin = self.selectedCoin
-                destinationVC.type = 1 // it means we will come this page from a normal selection operation
-                destinationVC.currencyTypes = self.currencyTypes
-                self.navigationItem.title = ""
             }
-           
+            destinationVC.currencyTypes = self.currencyTypes
+            self.navigationItem.title = ""
         }
     }
     

@@ -69,7 +69,7 @@ class CoreDataPortfolio
             }
             else
             {
-                print("Error : There is no currency type in portfolio.")
+                print("There is no coin in portfolio.")
                 completionBlock(portfolioOperations)
             }
         }

@@ -22,7 +22,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     var activityView: UIActivityIndicatorView?
     var dict : [String:Any] = [:]; var linkArray = [String](); var webSiteLink = String(); var twitterLink = String(); var redditLink = String()
     var currencyTypes = [String]()
-    var selectedSearchCoin = SearchCoin();var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
+    var selectedCoin = Coin() // if the type variable is 0, we will use selectedSearchCoin instance and if the type type variable is 1, we will use selectedCoin variable
     var type = 0 // 0 means that we are coming this page from a search operation, 1 means that we are coming this page from normal currency selecting. I check that becuase we have two models as Coin and Search Coin and we need to know which one is usable or not to escape bugs.
     var sSize: CGRect = UIScreen.main.bounds
 
@@ -52,18 +52,9 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
     /// Starter function for view controller
     func controllerStarter()
     {
-        if type == 0  //0 means that we are coming this page from a search operation
-        {
-            self.currentCoinId = self.selectedSearchCoin.getId()
-            self.currentCoinShortening = self.selectedSearchCoin.getSymbol()
-            getData(id: self.currentCoinId, name: self.selectedSearchCoin.getName(), shortening: self.selectedSearchCoin.getSymbol(), url: self.selectedSearchCoin.getImageUrl())
-        }
-        else //1 means that we are coming this page from normal currency selecting
-        {
             self.currentCoinId = self.selectedCoin.getId()
             self.currentCoinShortening = self.selectedCoin.getShortening()
             getData(id: self.currentCoinId, name: self.selectedCoin.getName(), shortening: self.selectedCoin.getShortening(), url: self.selectedCoin.getIconViewUrl())
-        }
     }
     
     //Gets data from coin gecko api

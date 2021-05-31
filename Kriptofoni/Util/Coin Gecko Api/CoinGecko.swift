@@ -151,69 +151,10 @@ class CoinGecko
         task.resume()
     }
 
-    static func getCoinMarkets(vs_currency :String,  order : String, per_page : Int,  page : Int, sparkline : Bool, priceChangePercentage : String , index : Int, completionBlock: @escaping ([SearchCoin]) -> Void) -> Void
-    {
-        let baseUrl = "https://api.coingecko.com/api/v3/"
-        let newString = baseUrl + "coins/markets/"
-        var array = [SearchCoin]()
-        var components = URLComponents(string: newString)
-        
-        components?.queryItems =
-        [
-            URLQueryItem(name: "vs_currency", value: vs_currency),
-            URLQueryItem(name: "order", value: order),
-            URLQueryItem(name: "per_page", value: String(per_page)),
-            URLQueryItem(name: "page", value: String(page)),
-            URLQueryItem(name: "sparkline", value: String(sparkline)),
-            URLQueryItem(name: "price_change_percentage", value: priceChangePercentage)
-        ]
-        var request = URLRequest(url: (components?.url)!)
-        request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            // Check if Error took place
-            if let error = error
-            {
-                print("Error took place \(error)")
-                return
-            }
-           
-            if let data = data
-            {
-                do
-                {
-                    apiCallCount += 1
-                    let jSONResult = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSArray
-                    for jsonElement in jSONResult as! [[String: Any]]
-                    {
-                        if let id = jsonElement["id"] as? String
-                        {
-                            if let symbol = jsonElement["symbol"] as? String
-                            {
-                                if let name = jsonElement["name"] as? String
-                                {
-                                    if let image = jsonElement["image"] as? String
-                                    {
-                                         let marketCapRank = (jsonElement["market_cap_rank"] as? NSNumber) ?? 100000000000 as NSNumber
-                                         let priceChange24H = (jsonElement["price_change_24h"] as? NSNumber) ?? 0 as NSNumber
-                                         let priceChangePercentage24H = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber) ?? 0 as NSNumber
-                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
-                                         let newCurrency = SearchCoin(id: id, imageUrl: image, name: name, symbol: symbol, marketCapRank: marketCapRank, priceChange24H: priceChange24H,priceChangePercentage24H: priceChangePercentage24H, priceChangePercentage7D: priceChangePercentage7D)
-                                         array.append(newCurrency)
-                                    }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                                }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                            }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                        }else{print("JSON Error : Cannot get one of the attirbutes of coin...")}
-                    }
-                    completionBlock(array);
-                }
-                catch{print("API FETCH FAILED CALL COUNT getCoinMarkets" + String(apiCallCount))}
-            }
-        }
-        task.resume()
-    }
     
     static func getTotalMarketValue(currency : String, symbol: String, completionBlock: @escaping (String) -> Void) -> Void
     {
+        print("MArket2")
         var navigationTitle = String()
         let baseUrl = "https://api.coingecko.com/api/v3/global"
         let url = NSURL(string: baseUrl)
@@ -239,7 +180,7 @@ class CoinGecko
                         {
                             if let totalVolumeForCurrency = totalVolumeDict[currency] as? NSNumber
                             {
-                                print(totalVolumeForCurrency)
+                                print(totalVolumeForCurrency.stringValue + "cem")
                                 navigationTitle = Util.toPrice(totalVolumeForCurrency.doubleValue, isCoinDetailPrice: false) + " " + symbol
                                 completionBlock(navigationTitle);
                             }
@@ -301,15 +242,16 @@ class CoinGecko
                                         let currentPrice = (jsonElement["current_price"] as? NSNumber) ?? 0 as NSNumber
                                         let percent = (jsonElement["price_change_percentage_24h_in_currency"] as? NSNumber)  ?? 0 as NSNumber
                                         let priceChangePercentage7D = (jsonElement["price_change_percentage_7d_in_currency"] as? NSNumber) ?? 0 as NSNumber
+                                        let marketCapRank = (jsonElement["market_cap_rank"] as? NSNumber) ?? 100000000000 as NSNumber
                                         let change7d = currentPrice.doubleValue - (currentPrice.doubleValue/(priceChangePercentage7D.doubleValue/100 + 1))
                                         if hashMap.isEmpty
                                         {
-                                            let currency = Coin(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d))
+                                            let currency = Coin(id: id, count: 0, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d), marketCapRank: marketCapRank)
                                             array.append(currency)
                                         }
                                         else
                                         {
-                                            let currency = Coin(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d))
+                                            let currency = Coin(id: id, count: hashMap[id]!, iconViewUrl: image, name: name, percent: percent, change: change, price: currentPrice, shortening: symbol, percent7d: priceChangePercentage7D, change7d: NSNumber(value: change7d), marketCapRank: marketCapRank)
                                             array.append(currency)
                                         }
                                     }

@@ -19,7 +19,7 @@ class AlertsController: UIViewController,UITableViewDelegate, UITableViewDataSou
     var activityView: UIActivityIndicatorView?
     var alarmsArray = [Alarm]()
     var watchingList = [Coin]()
-    var searchCoinArray = [SearchCoin]()
+    var searchCoinArray = [Coin]()
     var watchingListId = [String]()
     var sSize: CGRect = UIScreen.main.bounds
     var selectedCoin = Coin()

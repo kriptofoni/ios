@@ -12,8 +12,8 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
     @IBOutlet weak var searchButton: UIBarButtonItem!
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
-    var searchCoinArray = [SearchCoin]()
-    var searchActiveCoinArray = [SearchCoin]()
+    var searchCoinArray = [Coin]()
+    var searchActiveCoinArray = [Coin]()
     var searchActive = false
     var buttons = [UIBarButtonItem]()
     var parentController = "none"
@@ -30,7 +30,8 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        if searchActive{
+        if searchActive
+        {
             return searchActiveCoinArray.count
         }
         return searchCoinArray.count
@@ -39,7 +40,7 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         
-        var searchCoin = SearchCoin()
+        var searchCoin = Coin()
         if searchActive
         {
             searchCoin = self.searchActiveCoinArray[indexPath.row]
@@ -50,7 +51,7 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
         cell.label.text = searchCoin.getName()
-        let url = URL(string: searchCoin.getImageUrl() )
+        let url = URL(string: searchCoin.getIconViewUrl() )
         cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
         return cell
     }
@@ -60,7 +61,7 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
         //When user selects coin
         if parentController == "watchList" // if parent controller is watchlist, it adds this coin to watchlist
         {
-            var searchCoin = SearchCoin()
+            var searchCoin = Coin()
             if searchActive
             {
                 searchCoin = self.searchActiveCoinArray[indexPath.row]
@@ -83,13 +84,13 @@ class CoinSelector: UIViewController, UITableViewDelegate, UITableViewDataSource
             if searchActive
             {
                 Currency.coinKey = self.searchActiveCoinArray[indexPath.row].getId()
-                Currency.coinShortening = self.searchActiveCoinArray[indexPath.row].getSymbol()
+                Currency.coinShortening = self.searchActiveCoinArray[indexPath.row].getShortening()
                 self.navigationController?.popViewController(animated: true)
             }
             else
             {
                 Currency.coinKey = self.searchCoinArray[indexPath.row].getId()
-                Currency.coinShortening = self.searchCoinArray[indexPath.row].getSymbol()
+                Currency.coinShortening = self.searchCoinArray[indexPath.row].getShortening()
                 self.navigationController?.popViewController(animated: true)
             }
         }

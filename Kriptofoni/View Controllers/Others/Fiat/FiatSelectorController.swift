@@ -13,8 +13,8 @@ class FiatSelectorController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var searchBar: UISearchBar!
     var currencyArray = [String]()
-    var coinArray = [SearchCoin]()
-    var searchActiveCoinArray = [SearchCoin]()
+    var coinArray = [Coin]()
+    var searchActiveCoinArray = [Coin]()
     var searchActiveCurrency = [String]()
     var pageType = ""
     var searchActive = false
@@ -109,7 +109,7 @@ class FiatSelectorController: UIViewController, UITableViewDelegate, UITableView
             if pageType == "coin"
             {
                 cell.label.text = searchActiveCoinArray[indexPath.row].getName()
-                let url = URL(string: searchActiveCoinArray[indexPath.row].getImageUrl() )
+                let url = URL(string: searchActiveCoinArray[indexPath.row].getIconViewUrl() )
                 cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
             }
             else
@@ -122,7 +122,7 @@ class FiatSelectorController: UIViewController, UITableViewDelegate, UITableView
             if pageType == "coin"
             {
                 cell.label.text = coinArray[indexPath.row].getName()
-                let url = URL(string: coinArray[indexPath.row].getImageUrl() )
+                let url = URL(string: coinArray[indexPath.row].getIconViewUrl() )
                 cell.icon.sd_setImage(with: url) { (_, _, _, _) in}
             }
             else

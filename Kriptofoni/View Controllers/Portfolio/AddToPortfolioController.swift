@@ -16,18 +16,19 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
     var selectedCoinShorthening = ""
-    var searchCoinArray = [SearchCoin]()
+    var searchCoinArray = [Coin]()
     var pickerDate = UIDatePicker()
     var dateTimestamp : Double = 0 //holds the timestamp of date picker result
     var portfolioTotalDict  = [String:Double]()
     var operationType = true // true -> buy , false -> sell
     let numberFormatter = NumberFormatter()
     var sSize: CGRect = UIScreen.main.bounds
+    
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated);AppUtility.lockOrientation(.portrait)
         CoreDataPortfolio.calculateTotalCoin { (result) in self.portfolioTotalDict = result}
-        self.tableView.reloadData()
+        print("cem")
     }
     
     
@@ -50,12 +51,12 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         if segmentedView.selectedSegmentIndex == 1
         {
             
-            self.navigationItem.title = "Watching List"
+            self.navigationItem.title = "AL"
         }
         else
         {
             self.tableView.reloadData()
-            self.navigationItem.title = "Alarms "
+            self.navigationItem.title = "SAT"
         }
         
     }
@@ -67,9 +68,9 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         numberFormatter.locale = Locale(identifier: "en_US")
         numberFormatter.decimalSeparator = "."
         self.tableView.delegate = self;self.tableView.dataSource = self;
-        CoreData.getCoins { [self] (result) in
-            searchCoinArray = result
-            print("Count" + String(searchCoinArray.count))
+        CoreData.getCoins { result in
+            self.searchCoinArray = result
+            print("Countr" + String(result.count))
         }
     }
     

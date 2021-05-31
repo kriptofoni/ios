@@ -24,7 +24,6 @@
 		B223BA99260CD7E10071AEB9 /* KriptofoniUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223BA98260CD7E10071AEB9 /* KriptofoniUITests.swift */; };
 		B226A2C22646CC900044C082 /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B226A2C12646CC900044C082 /* WelcomeController.swift */; };
 		B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8AE2611104A007E3A4E /* CoinGecko.swift */; };
-		B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B230F8B326111A2D007E3A4E /* SearchCoin.swift */; };
 		B232A6B8262ABE1300FECF9B /* AlertsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B232A6B7262ABE1300FECF9B /* AlertsController.swift */; };
 		B232A6BD262AC0B600FECF9B /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B232A6BC262AC0B600FECF9B /* Alarm.swift */; };
 		B232A6CF262AC36600FECF9B /* EmptyWatchlistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B232A6CE262AC36600FECF9B /* EmptyWatchlistCell.swift */; };
@@ -115,7 +114,6 @@
 		B223BA9A260CD7E10071AEB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B226A2C12646CC900044C082 /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
 		B230F8AE2611104A007E3A4E /* CoinGecko.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGecko.swift; sourceTree = "<group>"; };
-		B230F8B326111A2D007E3A4E /* SearchCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoin.swift; sourceTree = "<group>"; };
 		B232A6B7262ABE1300FECF9B /* AlertsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsController.swift; sourceTree = "<group>"; };
 		B232A6BC262AC0B600FECF9B /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alarm.swift; sourceTree = "<group>"; };
 		B232A6CE262AC36600FECF9B /* EmptyWatchlistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyWatchlistCell.swift; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				B2C4BF8B26284CCD00F87340 /* Currency.swift */,
-				B230F8B326111A2D007E3A4E /* SearchCoin.swift */,
 				B271A8AC261241700088C94D /* Coin.swift */,
 				B27E6D19261C47AF004E817A /* CoinDetail.swift */,
 				B232A6BC262AC0B600FECF9B /* Alarm.swift */,
@@ -720,7 +717,6 @@
 				B27E6D1A261C47AF004E817A /* CoinDetail.swift in Sources */,
 				B215E2F9262C49CB00FB3225 /* WatchingListCell.swift in Sources */,
 				B2A1AA0F263866E40073550D /* PortfolioController.swift in Sources */,
-				B230F8B426111A2D007E3A4E /* SearchCoin.swift in Sources */,
 				B218BAEF2618B26500E45732 /* CoinDetailsController.swift in Sources */,
 				B230F8AF2611104A007E3A4E /* CoinGecko.swift in Sources */,
 				4E161178265D26980014AABD /* OtherNewsCell.swift in Sources */,

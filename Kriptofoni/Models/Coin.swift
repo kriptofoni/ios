@@ -19,8 +19,9 @@ class Coin
     private var shortening : String
     private var percent7d : NSNumber
     private var change7d : NSNumber
+    private var marketCapRank : NSNumber
     
-    init(id: String, count: Int, iconViewUrl : String, name: String, percent: NSNumber, change : NSNumber, price : NSNumber, shortening : String, percent7d : NSNumber, change7d: NSNumber)
+    init(id: String, count: Int, iconViewUrl : String, name: String, percent: NSNumber, change : NSNumber, price : NSNumber, shortening : String, percent7d : NSNumber, change7d: NSNumber, marketCapRank : NSNumber)
     {
         self.id = id
         self.count = count
@@ -32,10 +33,12 @@ class Coin
         self.shortening = shortening
         self.percent7d = percent7d
         self.change7d = change7d
+        self.marketCapRank = marketCapRank
     }
     
     
-    init() {
+    init()
+    {
         self.id = ""
         self.count = 0
         self.iconViewUrl = ""
@@ -46,7 +49,9 @@ class Coin
         self.shortening = ""
         percent7d = 0
         change7d = 0
+        marketCapRank = 0
     }
+    
     func getId() -> String{return id}
     func getCount() -> Int{return count}
     func getIconViewUrl() -> String{return iconViewUrl}
@@ -57,4 +62,5 @@ class Coin
     func getShortening() -> String{return shortening}
     func getPercent7d() -> NSNumber{return percent7d}
     func getChange7d() -> NSNumber {return change7d}
+    func getMarketCapRank() -> NSNumber {return marketCapRank}
 }
