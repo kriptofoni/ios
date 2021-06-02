@@ -12,6 +12,7 @@ import ScrollableSegmentedControl
 class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate
 {
    
+  
     @IBOutlet weak var segmentedView: ScrollableSegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     var currencyTypes = [String]()
@@ -31,36 +32,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         print("cem")
     }
     
-    
-    func setSegmentedView()
-    {
-        self.segmentedView.backgroundColor = UIColor(named: "Header Color")
-        self.segmentedView.selectedSegmentContentColor = Util.defaultFont
-        let sWidth = sSize.width
-        segmentedView.frame.size.width = sWidth
-        segmentedView.segmentStyle = .textOnly
-        segmentedView.insertSegment(withTitle: "ALARMLAR",  at: 0)
-        segmentedView.insertSegment(withTitle: "İzleme Listesi", at: 1);
-        segmentedView.underlineSelected = true
-        segmentedView.selectedSegmentIndex = 0
-        segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
-    }
-    
-    /// Pushs the necessary array to table view according to segmented control
-    @objc func segmentSelected(sender:ScrollableSegmentedControl) {
-        if segmentedView.selectedSegmentIndex == 1
-        {
-            
-            self.navigationItem.title = "AL"
-        }
-        else
-        {
-            self.tableView.reloadData()
-            self.navigationItem.title = "SAT"
-        }
-        
-    }
-    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -74,6 +45,37 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func setSegmentedView()
+    {
+        self.segmentedView.backgroundColor = UIColor(named: "Header Color")
+        self.segmentedView.selectedSegmentContentColor = Util.defaultFont
+        let sWidth = sSize.width
+        segmentedView.frame.size.width = sWidth
+        segmentedView.segmentStyle = .textOnly
+        segmentedView.insertSegment(withTitle: "Al",  at: 0)
+        segmentedView.insertSegment(withTitle:  "Sat", at: 1);
+        segmentedView.underlineSelected = true
+        segmentedView.selectedSegmentIndex = 0
+        segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
+    }
+    
+    /// Pushs the necessary array to table view according to segmented control
+    @objc func segmentSelected(sender:ScrollableSegmentedControl)
+    {
+        if segmentedView.selectedSegmentIndex == 0
+        {
+            operationType = true
+            
+        }
+        else
+        {
+            operationType = false
+        }
+        
+    }
+    
+   
+    
     
     
     // MARK: - Table View Funcs
@@ -83,13 +85,12 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
         var height = 0
-        if indexPath.row == 0 {height =  71}
-        else if indexPath.row == 1 {height =  78}
-        else if indexPath.row == 2 {height = 109}
+        if indexPath.row == 0 {height =  78}
+        else if indexPath.row == 1 {height = 109}
+        else if indexPath.row == 2 {height = 78}
         else if indexPath.row == 3 {height = 78}
-        else if indexPath.row == 4 {height = 78}
-        else if indexPath.row == 5{height = 112}
-        else if indexPath.row == 6 {height = 50}
+        else if indexPath.row == 4{height = 112}
+        else if indexPath.row == 5 {height = 50}
         return CGFloat(height)
     }
     
@@ -98,13 +99,6 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         let cell = UITableViewCell()
         switch indexPath.row {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "twoButtonOperationCell", for: indexPath) as! TwoButtonOperationCell
-            cell.buyButton.setTitle("AL", for: .normal)
-            cell.sellButton.setTitle("SAT", for: .normal)
-            cell.buyButton.addTarget(self, action: #selector(self.buyButtonClicked(sender:)), for: .touchUpInside)
-            cell.sellButton.addTarget(self, action: #selector(self.sellButtonClicked(sender:)), for: .touchUpInside)
-            return cell
-        case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
             cell.label.text = "Toplam " + Currency.coinShortening.uppercased()
             let tap = UITapGestureRecognizer(target: self, action: #selector(self.changeCoin))
@@ -113,32 +107,32 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
             cell.textField.placeholder = "Kripto Para Miktarı"
             cell.view = view
             return cell
-        case 2:
+        case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.view = view
             cell.label.text = "Tarih"
             cell.textField.placeholder = "Lütfen bir tarih seçiniz."
             createDatePicker(textField: cell.textField)
             return cell
-        case 3:
+        case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
             cell.label.text = "Ücret    " + Currency.currencySymbol
             cell.textField.placeholder = "Ücret"
             cell.view = view
             return cell
-        case 4:
+        case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationInputCell", for: indexPath) as! OperationInputCell
             cell.label.text = "Kesinti      " +  Currency.currencySymbol
             cell.textField.placeholder = "Kesinti"
             cell.view = view
             return cell
-        case 5:
+        case 4:
             let cell = tableView.dequeueReusableCell(withIdentifier: "operationDateCell", for: indexPath) as! OperationDateCell
             cell.label.text = "Notlar"
             cell.textField.placeholder = "Editlemek için dokunun."
             cell.view = view
             return cell
-        case 6:
+        case 5:
             let cell = tableView.dequeueReusableCell(withIdentifier: "addOperationButtonCell", for: indexPath) as! AddOperationButtonCell
             cell.addOperationButton.setTitle("Portföyüme Ekle", for: .normal)
             cell.addOperationButton.addTarget(self, action: #selector(self.addButtonClicked (sender:)), for: .touchUpInside)
@@ -154,78 +148,44 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     
     @objc func buyButtonClicked(sender: UIButton!) {operationType = true}
     @objc func sellButtonClicked(sender: UIButton!) {operationType = false}
-
+    
+    
+    
     @objc func addButtonClicked(sender: UIButton!)
     {
-        let quantity = getCell2(index: 1).textField.text!
-        let price = getCell2(index: 3).textField.text!
-        let fee = getCell2(index: 4).textField.text!
-        let note = getCell1(index: 5).textField.text!
+        let quantity = getCell2(index: 0).textField.text!
+        let price = getCell2(index: 2).textField.text!
+        let fee = getCell2(index: 3).textField.text!
+        let note = getCell1(index: 4).textField.text!
         
         if !quantity.isEmpty && (Double(quantity) != nil) //mandatory variable
         {
-            if !(getCell1(index: 2).textField.text!.isEmpty) // datec controll
+            if !(getCell1(index: 1).textField.text!.isEmpty) // date controll
             {
                 if !price.isEmpty && (Double(price) != nil) //mandatory variable
                 {
-                    if fee.isEmpty
+                    if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
                     {
-                        if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
+                        if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
                         {
-                            if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
+                            let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
+                            if portfolioQuantity! > Double(quantity)!
                             {
-                                let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
-                                if portfolioQuantity! > Double(quantity)!
-                                {
-                                    saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
-                                }
-                                else
-                                {
-                                    self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
-                                }
+                                saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
                             }
                             else
                             {
-                                self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
+                                self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
                             }
                         }
                         else
                         {
-                            saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
+                            self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
                         }
                     }
                     else
                     {
-                        if Double(fee) != nil
-                        {
-                            if !operationType // if this is a selling operation, we should check dict as an example if you have 3 bitcoin, you cannot sell 4 bitcoin
-                            {
-                                if portfolioTotalDict[Currency.coinKey] != nil // means we already have this coin look at the dict
-                                {
-                                    let portfolioQuantity = portfolioTotalDict[Currency.coinKey]
-                                    if portfolioQuantity! > Double(quantity)!
-                                    {
-                                        saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
-                                    }
-                                    else
-                                    {
-                                        self.makeAlert(titleInput: "Oops!", messageInput: "You have only \(portfolioQuantity!)) \(Currency.coinKey). You can sell less than this quantity.")
-                                    }
-                                }
-                                else
-                                {
-                                    self.makeAlert(titleInput: "Oops!", messageInput: "You have only 0 \(Currency.coinKey).")
-                                }
-                            }
-                            else
-                            {
-                                saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
-                            }
-                        }
-                        else
-                        {
-                            self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid fee.")
-                        }
+                        saveToPortfolio(coinId: Currency.coinKey, quantity: Double(quantity)!, date:  dateTimestamp, price: Double(price)!, fee: Double(fee) ?? 0, note: note, type: operationType)
                     }
                 }
                 else {self.makeAlert(titleInput: "Oops!", messageInput: "Please enter a valid price.")}
@@ -254,7 +214,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         let newDateTime = userCalendar.date(from: dateComponents)
         pickerDate.date = newDateTime!
         print(newDateTime!)
-        getCell1(index: 2).textField.text = dateFormatter.string(from: pickerDate.date)
+        getCell1(index: 1).textField.text = dateFormatter.string(from: pickerDate.date)
         dateTimestamp = Double(pickerDate.date.timeIntervalSince1970)
         self.view.endEditing(true)
     }
@@ -278,6 +238,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
     {
         let indexPath = NSIndexPath(row: index, section: 0)
         let operationDateCell = tableView.cellForRow(at: indexPath as IndexPath) as? OperationDateCell
+        print("crash index " + String(index))
         return operationDateCell!
     }
     
