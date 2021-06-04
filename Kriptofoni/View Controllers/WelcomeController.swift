@@ -8,6 +8,8 @@
 import UIKit
 import CoreData
 // toAppFromWelcome
+
+
 class WelcomeController: UIViewController {
 
     var searchCoinArray = [Coin]();var currencyTypes = [String]()
@@ -25,7 +27,10 @@ class WelcomeController: UIViewController {
             WelcomeController.firstTime = false
             saveCurrencies()
             getSearchArray()
+            print("WELCOMEEEEEEE")
         }
+       
+        
     }
 
     
@@ -103,6 +108,7 @@ class WelcomeController: UIViewController {
                 let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                 let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "StringCurrency", into: context)
                 newCurrency.setValue(jsonString, forKey: "string")
+                newCurrency.setValue(Date(), forKey: "time")
                 do
                 {
                     try context.save()

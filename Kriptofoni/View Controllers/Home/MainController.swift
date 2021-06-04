@@ -77,20 +77,30 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 MainController.isCoreDataUpdated = true
                 self.navigationItem.title = LaunchScreenController.totalMarketValue
                 self.currencyTypes = LaunchScreenController.currencyTypes
-                self.coinArray = LaunchScreenController.coinArray ; print(coinArray.count); print("Coin Array")
+                self.coinArray = LaunchScreenController.coinArray
                 self.searchCoinArray = LaunchScreenController.searchCoinArray
                 self.mostIncIn24H = LaunchScreenController.mostIncIn24H
                 self.mostDecIn24H = LaunchScreenController.mostDecIn24H
                 self.mostIncIn7D = LaunchScreenController.mostIncIn7D
                 self.mostDecIn7D = LaunchScreenController.mostDecIn7D
-                if !WelcomeController.isWelcomeOpened
+                /*
+                    CORE DATA UPDATE RULES
+                        -If user comes from welcome screen, we do NOT update core data.
+                        -If user have been updated in 10 min, we do not update core data before 10 min.
+                */
+                if !WelcomeController.isWelcomeOpened // UPDATING
                 {
-                    DispatchQueue.global(qos: .background).async
-                    {
-                        self.updateAllCoins()
-                        self.updateCurrencies()
-                        
-                    }
+                    CoreData.getLastUpdateTime(completionBlock: { updateDate in
+                        if Date().timeIntervalSince1970 > updateDate.timeIntervalSince1970 + 600
+                        {
+                            DispatchQueue.global(qos: .background).async
+                            {
+                                self.updateAllCoins()
+                                self.updateCurrencies()
+                            }
+                        }
+                    })
+                    
                 }
                
             }
@@ -100,15 +110,25 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             }
     }
    
-    
+    /*
+         UPDATES total market value
+         UPDATES first 100 coins in coins segment
+         UPDATES first 50 coins in INC24
+         UPDATES first 50 coins in DEC24
+         UPDATES first 50 coins in INC7
+         UPDATES first 50 coins in DEC7
+     */
     @objc func updateMain()
     {
         CoinGecko.getTotalMarketValue(currency: Currency.currencyKey, symbol: Currency.currencySymbol) { (navigationTitle) in
             DispatchQueue.main.async{self.navigationItem.title = navigationTitle}
         }
         getCoins(page: 1, update: true, scroll: false)
+        
     }
     
+    
+    ///READ update rules
     func updateAllCoins()
     {
         let myGroup = DispatchGroup()
@@ -161,6 +181,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 let jsonString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
                 let newCurrency = NSEntityDescription.insertNewObject(forEntityName: "StringCurrency", into: managedObjectContext)
                 newCurrency.setValue(jsonString, forKey: "string")
+                newCurrency.setValue(Date(), forKey: "time")
                 do
                 {
                     try managedObjectContext.save()
@@ -186,7 +207,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 {
                     self.coinArray[index] = coin
                 }
-                print("Page1 Updated.")
+                print("Coins segment Updated.")
             }
             else if scroll
             {
@@ -196,7 +217,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             else if !update && !scroll
             {
                 self.coinArray.append(contentsOf: result)
-                print("Page1 First load.")
+                print("Coins segment first load.")
             }
             DispatchQueue.main.async
             {
@@ -207,7 +228,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
 
-    ///Gets supported currencies from api and updates into old data
+    ///Gets supported currencies from api and updates into old data, READ update rules
     func updateCurrencies()
     {
         CoinGecko.getSupportedCurrencies() { (resultString) in

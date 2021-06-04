@@ -1111,6 +1111,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FrO-1D-Mfn">
+                                <rect key="frame" x="0.0" y="44" width="375" height="49"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" id="ogA-WS-VgW" customClass="ScrollableSegmentedControl" customModule="ScrollableSegmentedControl">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="tintColor" name="Special Orange"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="weG-vh-qbC">
                                 <rect key="frame" x="0.0" y="93" width="375" height="525"/>
                                 <color key="backgroundColor" name="Body Color"/>
@@ -1237,18 +1249,6 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FrO-1D-Mfn">
-                                <rect key="frame" x="0.0" y="44" width="375" height="49"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" id="ogA-WS-VgW" customClass="ScrollableSegmentedControl" customModule="ScrollableSegmentedControl">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="tintColor" name="Special Orange"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ChC-kk-nsD"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -2881,8 +2881,8 @@
         <segue reference="h2f-eF-Ylx"/>
         <segue reference="yzc-H2-Qam"/>
         <segue reference="Tjv-VU-jcb"/>
-        <segue reference="etx-9q-FrS"/>
-        <segue reference="dKn-95-bcY"/>
+        <segue reference="l8T-uk-jBf"/>
+        <segue reference="dbC-0v-BEy"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="aboutUs" width="512" height="512"/>

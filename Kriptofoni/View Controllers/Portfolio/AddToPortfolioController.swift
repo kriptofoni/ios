@@ -57,6 +57,7 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         segmentedView.underlineSelected = true
         segmentedView.selectedSegmentIndex = 0
         segmentedView.addTarget(self, action: #selector(self.segmentSelected(sender:)), for: .valueChanged)
+        addSwipeGesture()
     }
     
     /// Pushs the necessary array to table view according to segmented control
@@ -74,7 +75,30 @@ class AddToPortfolioController: UIViewController, UITableViewDelegate, UITableVi
         
     }
     
+    
+    @objc func respondToSwipeGesture(gesture: UIGestureRecognizer)
+    {
+           if let swipeGesture = gesture as? UISwipeGestureRecognizer
+           {
+               switch swipeGesture.direction
+               {
+                   case UISwipeGestureRecognizer.Direction.right: if (segmentedView.selectedSegmentIndex != 1) {segmentedView.selectedSegmentIndex += 1}
+                   case UISwipeGestureRecognizer.Direction.left:  if (segmentedView.selectedSegmentIndex != 0) {segmentedView.selectedSegmentIndex -= 1}
+                   default:break
+               }
+           }
+    }
    
+    ///Adds swipe gestures for segmentedView
+    func addSwipeGesture()
+    {
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
+        self.view.addGestureRecognizer(swipeRight)
+        self.view.addGestureRecognizer(swipeLeft)
+    }
     
     
     

@@ -14,6 +14,33 @@ class CoreData
 
 {
     //
+    
+    static func getLastUpdateTime(completionBlock: @escaping (Date) -> Void) -> Void
+    {
+        DispatchQueue.main.async
+        {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let context = appDelegate.persistentContainer.newBackgroundContext()
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "StringCurrency")
+            fetchRequest.returnsObjectsAsFaults = false
+            do
+            {
+                let results = try context.fetch(fetchRequest)
+                if results.count > 0
+                {
+                    print(String(results.count) + "RESULT.COUNT")
+                    let result = results.last as! NSManagedObject
+                    if let date = result.value(forKey: "time") as? Date
+                    {
+                        completionBlock(date)
+                    }
+                }
+                else{print("There is no crypto-currency in core data...")}
+            }
+            catch{print("There is a error")}
+        }
+    }
+    
     static func getCoins(completionBlock: @escaping ([Coin]) -> Void) -> Void
     {
         var newCoins = [Coin]()
