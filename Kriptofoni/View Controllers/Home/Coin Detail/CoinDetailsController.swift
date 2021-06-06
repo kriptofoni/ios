@@ -252,6 +252,8 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    
+    //Time buttons for chart
     @objc func tappedButton(sender : UIButton)
     {
         if sender.tag != 0 && sender.tag != 1
@@ -283,6 +285,7 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
                     self.candleXAxis = candleXAxisValues
                     DispatchQueue.main.async{self.hideActivityIndicator();self.tableView.reloadData()}
                 }
+
             }
            
         }
@@ -304,9 +307,6 @@ class CoinDetailsController: UIViewController, UITableViewDelegate, UITableViewD
         if segue.identifier == "toFullScreen"
         {
             let destinationVC = segue.destination as! FullScreenChartController
-            destinationVC.lineValues = lineValues
-            destinationVC.candleValues = candleValues
-            destinationVC.charType = isLineCharts // line chart or candle chart
             destinationVC.coinId = currentCoinId
             destinationVC.dict = dict
         }

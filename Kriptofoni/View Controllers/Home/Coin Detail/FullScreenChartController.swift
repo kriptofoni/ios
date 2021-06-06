@@ -24,7 +24,16 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     var dict = [String:Any]()
     var xAxisLabelCount = 12
     var chartType = "twentyFour_hours" // sets the time line
-        
+    
+    //Locks the screen
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeLeft)
+        getChartData(type: chartType)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);print("Disappear")}
     
     override func viewDidLoad()
     {
@@ -35,8 +44,6 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         twentyFour.setTitleColor(Util.hexStringToUIColor(hex: "F2A900"), for: .normal) // OUR YELLOW
         chartView.backgroundColor = UIColor(named: "Body Color")!; candleView.backgroundColor = UIColor(named: "Body Color")!;
         chartView.delegate = self;candleView.delegate = self
-        updateChart()
-        
     }
     
     func updateChart()
@@ -45,7 +52,7 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
         {
             candleView.isHidden = true; chartView.isHidden = false
             ChartUtil.setLineChartSettings(chartView: chartView, xAxisLabelCount: xAxisLabelCount, values: lineValues, dict: dict, chartType: chartType)
-
+            
         }
         else
         {
@@ -58,12 +65,12 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     {
         if charType // if lineChart is opened
         {
-            charType = false; updateChart() //makes candle chart visible
+            charType = false; getChartData(type: chartType) //makes candle chart visible
             changeChartTypeButton.setBackgroundImage(UIImage(named: "candlestick"), for: .normal)
         }
         else
         {
-            charType = true ; updateChart() //makes line chart visible
+            charType = true ; getChartData(type: chartType) //makes line chart visible
             changeChartTypeButton.setBackgroundImage(UIImage(named: "linechart"), for: .normal)
         }
         print("pressed")
@@ -118,8 +125,6 @@ class FullScreenChartController: UIViewController, ChartViewDelegate
     ///Hides spinner
     func hideActivityIndicator(){if (activityView != nil){activityView?.stopAnimating()}}
     
-    //Locks the screen
-    override func viewWillAppear(_ animated: Bool) {super.viewWillAppear(animated);AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeLeft)}
-    override func viewWillDisappear(_ animated: Bool) {super.viewWillDisappear(animated);print("Disappear")}
+    
 
 }

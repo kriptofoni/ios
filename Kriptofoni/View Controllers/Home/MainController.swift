@@ -72,7 +72,12 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func appStartingControls()
     {
-            if !MainController.isCoreDataUpdated //App just update one time its core data for every time app has been launched
+            /*
+                CORE DATA UPDATE RULES
+                    -If user comes from welcome screen, we do NOT update core data.
+                    -If user have been updated in 10 min, we do not update core data before 10 min.
+            */
+            if !MainController.isCoreDataUpdated
             {
                 MainController.isCoreDataUpdated = true
                 self.navigationItem.title = LaunchScreenController.totalMarketValue
@@ -83,11 +88,7 @@ class MainController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 self.mostDecIn24H = LaunchScreenController.mostDecIn24H
                 self.mostIncIn7D = LaunchScreenController.mostIncIn7D
                 self.mostDecIn7D = LaunchScreenController.mostDecIn7D
-                /*
-                    CORE DATA UPDATE RULES
-                        -If user comes from welcome screen, we do NOT update core data.
-                        -If user have been updated in 10 min, we do not update core data before 10 min.
-                */
+                
                 if !WelcomeController.isWelcomeOpened // UPDATING
                 {
                     CoreData.getLastUpdateTime(completionBlock: { updateDate in

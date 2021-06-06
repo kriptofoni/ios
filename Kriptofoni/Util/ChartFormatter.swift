@@ -137,12 +137,6 @@ class ChartUtil
         xAxis.valueFormatter = chartDataFormatter
         xAxis.labelPosition = .bottom
         candleView.xAxis.valueFormatter = xAxis.valueFormatter
-        var count = 0.0
-        for item in values
-        {
-            item.x = count
-            count = count + 1//UĞRaş
-        }
         data.setDrawValues(false)
         candleView.data = data
     }

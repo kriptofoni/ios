@@ -116,7 +116,7 @@ class PortfolioController: UIViewController, UITableViewDelegate, UITableViewDat
             currentTotalMoney += coin.getPrice().doubleValue * portfolioTotalDict[coin.getId()]!
         }
         let lossOrProfit = currentTotalMoney - principalMoney // loss or profit
-        let percentage = (currentTotalMoney - principalMoney) / 100 * principalMoney
+        let percentage = (currentTotalMoney - principalMoney) * 100 / principalMoney //loss or profit percentage
         returnArray.append(currentTotalMoney); returnArray.append(lossOrProfit); returnArray.append(percentage)
         return returnArray
     }
