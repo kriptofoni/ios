@@ -61,9 +61,10 @@ class CoinGeckoCharts
                     var x = 0
                     for values in jSONResult as! [[NSNumber]]
                     {
-                        let chartData = CandleChartDataEntry(x: values[0].doubleValue, shadowH: values[2].doubleValue, shadowL: values[3].doubleValue, open: values[1].doubleValue, close: values[4].doubleValue)
-                        chartData.x = Double(x)
+                        let chartData = CandleChartDataEntry(x: Double(x), shadowH: values[2].doubleValue, shadowL: values[3].doubleValue, open: values[1].doubleValue, close: values[4].doubleValue)
+                        print(chartData.x)
                         x = x + 1
+                        xAxisValues.append(values[0].doubleValue)
                         array.append(chartData)
                     }
                     completionBlock(array,xAxisValues)

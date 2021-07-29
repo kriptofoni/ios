@@ -1,7 +1,7 @@
 //
 //  ChartFormatter.swift
 //  Kriptofoni
-//
+//https://stackoverflow.com/questions/45537225/candlestick-chart-not-appearing-correctly-in-ios-using-danielgindi-charts-framew
 //  Created by Cem Sertkaya on 14.04.2021.
 //
 
@@ -15,10 +15,94 @@ class LineChartFormatter: NSObject, IAxisValueFormatter
     var type : String
     init(type: String) {self.type = type}
     
+    
+    
     func stringForValue(_ value: Double, axis: AxisBase?) -> String
     {
         var returnString = ""
         let date = Date(timeIntervalSince1970: value)
+        let dateFormatter = DateFormatter()
+     
+        dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
+        dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
+        dateFormatter.timeZone = .current
+        if type == "twentyFour_hours"
+        {
+            dateFormatter.setLocalizedDateFormatFromTemplate("hh")
+            let localDate = dateFormatter.string(from: date)
+            returnString = localDate
+        }
+        else if type == "one_week_before"
+        {
+            dateFormatter.setLocalizedDateFormatFromTemplate("MMM")
+            let localDateMonth = dateFormatter.string(from: date)
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd")
+            let localDateDay = dateFormatter.string(from: date)
+            returnString = localDateDay + "" + localDateMonth
+        }
+        else if type == "one_month_before"
+        {
+            dateFormatter.setLocalizedDateFormatFromTemplate("MMM")
+            let localDateMonth = dateFormatter.string(from: date)
+            dateFormatter.setLocalizedDateFormatFromTemplate("dd")
+            let localDateDay = dateFormatter.string(from: date)
+            returnString = localDateDay + "" + localDateMonth
+        }
+        else if type ==  "three_months_before"
+        {
+            dateFormatter.dateFormat = "MM"
+            let localDate = Double(dateFormatter.string(from: date))!
+            returnString = Util.toMonth(monthCount: Int(localDate))
+        }
+        else if type == "six_months_before"
+        {
+            dateFormatter.dateFormat = "MM"
+            let localDate = Double(dateFormatter.string(from: date))!
+            returnString = Util.toMonth(monthCount: Int(localDate))
+        }
+        else if type == "one_year_before"
+        {
+            dateFormatter.dateFormat = "MM"
+            let localDate = Double(dateFormatter.string(from: date))!
+            returnString = Util.toMonth(monthCount: Int(localDate))
+        }
+        else if type == "all"
+        {
+            dateFormatter.setLocalizedDateFormatFromTemplate("yyyy")
+            let localDate = dateFormatter.string(from: date)
+            returnString = localDate
+        }
+        return returnString
+    }
+}
+
+@objc(CandleChartFormatter)
+
+class CandleChartFormatter: NSObject, IAxisValueFormatter
+{
+    var type : String
+    var values : [Double]
+    var index = 0
+    init(type: String, values : [Double])
+    {
+        self.type = type
+        self.values = values
+    }
+    
+    
+    
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String
+    {
+        var returnString = ""
+        let date = Date(timeIntervalSince1970: values[index]/1000)
+        print(date)
+        if values.count == index + 1{
+            index = 0
+        }
+        else
+        {
+            index += 1
+        }
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = DateFormatter.Style.medium //Set time style
         dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
@@ -73,7 +157,6 @@ class LineChartFormatter: NSObject, IAxisValueFormatter
     }
 }
 
-
 class ChartUtil
 {
     static func setLineChartSettings(chartView : LineChartView, xAxisLabelCount : Int, values: [ChartDataEntry], dict : [String:Any], chartType: String)
@@ -112,6 +195,11 @@ class ChartUtil
     
     static func setCandleChartSettings(candleView: CandleStickChartView, xAxisLabelCount: Int, values : [CandleChartDataEntry], chartType: String, xAxisArray : [Double])
     {
+        let chartDataFormatter = CandleChartFormatter(type: chartType, values: xAxisArray)
+        let xAxis = XAxis()
+        xAxis.valueFormatter = chartDataFormatter
+        xAxis.labelPosition = .bottom
+        candleView.xAxis.valueFormatter = xAxis.valueFormatter
         candleView.chartDescription!.enabled = false
         candleView.dragEnabled = true
         candleView.setScaleEnabled(true)
@@ -132,11 +220,6 @@ class ChartUtil
         set1.increasingFilled = true
         set1.neutralColor = .blue
         let data = CandleChartData(dataSet: set1)
-        let chartDataFormatter = LineChartFormatter(type: chartType)
-        let xAxis = XAxis()
-        xAxis.valueFormatter = chartDataFormatter
-        xAxis.labelPosition = .bottom
-        candleView.xAxis.valueFormatter = xAxis.valueFormatter
         data.setDrawValues(false)
         candleView.data = data
     }

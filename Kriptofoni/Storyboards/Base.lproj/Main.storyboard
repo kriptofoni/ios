@@ -1278,7 +1278,7 @@
         <!--Launch Screen Controller-->
         <scene sceneID="7lw-S4-1xG">
             <objects>
-                <viewController id="8Aw-54-lpA" customClass="LaunchScreenController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="launch" id="8Aw-54-lpA" customClass="LaunchScreenController" customModule="Kriptofoni" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JGJ-uw-WJR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2878,7 +2878,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="h2f-eF-Ylx"/>
+        <segue reference="Srk-pV-hi6"/>
         <segue reference="yzc-H2-Qam"/>
         <segue reference="Tjv-VU-jcb"/>
         <segue reference="l8T-uk-jBf"/>
